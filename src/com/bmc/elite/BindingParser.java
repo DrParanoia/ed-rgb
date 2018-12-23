@@ -1,5 +1,7 @@
 package com.bmc.elite;
 
+import com.bmc.elite.mappings.ControlGroups;
+import com.bmc.elite.mappings.ControlNames;
 import org.w3c.dom.*;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -11,7 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class EDControlsHelper {
+public class BindingParser {
     public static String FRONTIER_BINDINGS_PATH = System.getProperty("user.home")
             + File.separator + "AppData"
             + File.separator + "Local"
@@ -108,7 +110,7 @@ public class EDControlsHelper {
 
             Node binding;
             String controlName;
-            HashMap<String, Integer[]> controlColorMap = EDControlGroups.getControlToColorMap();
+            HashMap<String, Integer[]> controlColorMap = ControlGroups.getControlToColorMap();
 
             NodeList controlChildNodes;
             Node controlChild, primaryBind, secondaryBind;
@@ -143,7 +145,7 @@ public class EDControlsHelper {
             }
 
             if(!modifierKeyList.isEmpty()) {
-                result.put(EDControls.MODIFIER, modifierKeyList);
+                result.put(ControlNames.MODIFIER, modifierKeyList);
             }
         } catch (Exception e) {
             e.printStackTrace();

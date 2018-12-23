@@ -1,6 +1,11 @@
 package com.bmc.elite;
 
-import com.bmc.elite.models.EDStatus;
+import com.bmc.elite.config.PipPresets;
+import com.bmc.elite.config.PulsatingKeys;
+import com.bmc.elite.mappings.ColorGroups;
+import com.bmc.elite.mappings.ControlGroups;
+import com.bmc.elite.models.Status;
+import com.bmc.elite.values.StatusFlags;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.logitech.gaming.LogiLED;
@@ -9,11 +14,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.*;
 
-public class EDKeyService {
+public class KeyColorService {
 
     Gson gson;
     JsonReader jsonReader;
-    EDStatus edStatus;
+    Status status;
 
     public static int PULSE_DURATION = 200;
     public static int PIP_PRESET_PULSE_DURATION = 500;
@@ -28,24 +33,22 @@ public class EDKeyService {
         return (bitmask & flag) == flag;
     }
 
-    public static HashMap<String, List<String>> eliteBindings = EDControlsHelper.getBindings();
-    public static HashMap<String, Integer[]> controlColorMap = EDControlGroups.getControlToColorMap();
+    public static HashMap<String, List<String>> eliteBindings = BindingParser.getBindings();
+    public static HashMap<String, Integer[]> controlColorMap = ControlGroups.getControlToColorMap();
 
-    public static final int[] PULSING_TOGGLES = new int[] {
-        EDStatusFlags.LANDING_GEAR, EDStatusFlags.HARDPOINTS, EDStatusFlags.SHIP_LIGHTS, EDStatusFlags.CARGO_SCOOP
-    };
+    public PulsatingKeys pulsatingKeys = new PulsatingKeys();
 
-    public EDKeyService() {
+    public KeyColorService() {
         gson = new Gson();
         setColorsFromBindings();
         setKeyColorFromStatus();
     }
 
     public void setColorsFromBindings() {
-        KeyTools.setAllKeysFromColorArray(EDColors.OTHER);
+        LedTools.setAllKeysFromColorArray(ColorGroups.OTHER);
 
-        for(Map.Entry<Integer, Integer[]> pipPresetEntry : EDPipPresets.PIP_PRESET_COLORS.entrySet()) {
-            KeyTools.setKeyFromColorArray(pipPresetEntry.getKey(), pipPresetEntry.getValue());
+        for(Map.Entry<Integer, Integer[]> pipPresetEntry : PipPresets.PIP_PRESET_COLORS.entrySet()) {
+            LedTools.setKeyFromColorArray(pipPresetEntry.getKey(), pipPresetEntry.getValue());
         }
 
         List<String> keyBinds;
@@ -54,7 +57,7 @@ public class EDKeyService {
             controlName = control.getKey();
             keyBinds = control.getValue();
             for (String bind : keyBinds) {
-                KeyTools.setEliteKeyFromColorArray(bind, controlColorMap.get(controlName));
+                LedTools.setEliteKeyFromColorArray(bind, controlColorMap.get(controlName));
             }
         }
     }
@@ -63,53 +66,53 @@ public class EDKeyService {
         try {
             jsonReader = new JsonReader(new FileReader(STATUS_FILE_PATH));
 
-            edStatus = gson.fromJson(jsonReader, EDStatus.class);
-            if(edStatus == null) {
+            status = gson.fromJson(jsonReader, Status.class);
+            if(status == null) {
                 System.out.println("Cannot get status!");
                 return;
             }
 
-            if(isBitSet(edStatus.Flags, EDStatusFlags.HUD_DISCOVERY_MODE)) {
-                KeyTools.setKeyFromColorArray(LogiLED.PERIOD, EDColors.HUD_MODE_DISCOVERY);
+            if(isBitSet(status.Flags, StatusFlags.HUD_DISCOVERY_MODE)) {
+                LedTools.setKeyFromColorArray(LogiLED.PERIOD, ColorGroups.HUD_MODE_DISCOVERY);
             } else {
-                KeyTools.setKeyFromColorArray(LogiLED.PERIOD, EDColors.HUD_MODE_COMBAT);
+                LedTools.setKeyFromColorArray(LogiLED.PERIOD, ColorGroups.HUD_MODE_COMBAT);
             }
 
             String controlName;
-            for(int pulsingStatusFlag : PULSING_TOGGLES) {
-                controlName = EDStatusFlags.STATUS_TO_CONTROL.get(pulsingStatusFlag);
-                if(isBitSet(edStatus.Flags, pulsingStatusFlag)) {
-                    KeyTools.setEliteKeysFromColorArray(
+            for(Map.Entry<String, StatusState> condition : pulsatingKeys.entrySet()) {
+                controlName = condition.getKey();
+                if(condition.getValue().conditionSatisfied(status.Flags, status.GuiFocus)) {
+                    LedTools.setEliteKeysFromColorArray(
                         eliteBindings.get(controlName),
                         controlColorMap.get(controlName)
                     );
-                    KeyTools.setEliteKeysPulseFromColorArrays(
+                    LedTools.setEliteKeysPulseFromColorArrays(
                         eliteBindings.get(controlName),
-                        EDColors.OTHER,
+                        ColorGroups.OTHER,
                         controlColorMap.get(controlName),
                         PULSE_DURATION,
                         true
                     );
                 } else {
-                    KeyTools.stopEliteKeysEffect(eliteBindings.get(controlName));
+                    LedTools.stopEliteKeysEffect(eliteBindings.get(controlName));
                 }
             }
 
-            for (Map.Entry<Integer, Integer[]> pipPreset : EDPipPresets.STATUS_TO_CONTROL.entrySet()) {
-                if(Arrays.equals(pipPreset.getValue(), edStatus.Pips)) {
-                    KeyTools.setKeyFromColorArray(
+            for (Map.Entry<Integer, Integer[]> pipPreset : PipPresets.STATUS_TO_CONTROL.entrySet()) {
+                if(Arrays.equals(pipPreset.getValue(), status.Pips)) {
+                    LedTools.setKeyFromColorArray(
                         pipPreset.getKey(),
-                        EDPipPresets.PIP_PRESET_COLORS.get(pipPreset.getKey())
+                        PipPresets.PIP_PRESET_COLORS.get(pipPreset.getKey())
                     );
-                    KeyTools.setKeyPulseFromColorArrays(
+                    LedTools.setKeyPulseFromColorArrays(
                         pipPreset.getKey(),
-                        EDColors.OTHER,
-                        EDPipPresets.PIP_PRESET_COLORS.get(pipPreset.getKey()),
+                        ColorGroups.OTHER,
+                        PipPresets.PIP_PRESET_COLORS.get(pipPreset.getKey()),
                         PIP_PRESET_PULSE_DURATION,
                         true
                     );
                 } else {
-                    KeyTools.stopKeyEffects(pipPreset.getKey());
+                    LedTools.stopKeyEffects(pipPreset.getKey());
                 }
             }
         } catch (Exception e) {

@@ -9,9 +9,9 @@ public class Main {
     public static void main(String[] args) {
         try {
             LogiLED.LogiLedInit();
-            EDKeyService edKeyService = new EDKeyService();
+            KeyColorService keyColorService = new KeyColorService();
 
-            Path statusFilePath = FileSystems.getDefault().getPath(EDKeyService.FRONTIER_DIRECTORY_PATH);
+            Path statusFilePath = FileSystems.getDefault().getPath(KeyColorService.FRONTIER_DIRECTORY_PATH);
 
             final WatchService watchService = FileSystems.getDefault().newWatchService();
             final WatchKey watchKey = statusFilePath.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
@@ -19,9 +19,9 @@ public class Main {
                 final WatchKey wk = watchService.take();
                 for (WatchEvent<?> event : wk.pollEvents()) {
                     final Path changed = (Path) event.context();
-                    if (changed.startsWith(EDKeyService.STATUS_FILE_NAME)) {
+                    if (changed.startsWith(KeyColorService.STATUS_FILE_NAME)) {
                         System.out.println("Game status has changed");
-                        edKeyService.setKeyColorFromStatus();
+                        keyColorService.setKeyColorFromStatus();
                     }
                 }
                 boolean valid = wk.reset();

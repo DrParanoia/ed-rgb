@@ -1,6 +1,6 @@
 package com.bmc.elite.models;
 
-public class EDStatus {
+public class Status {
     public String timestamp;
     public String event;
     public long Flags;

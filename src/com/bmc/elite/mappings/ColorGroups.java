@@ -1,6 +1,6 @@
-package com.bmc.elite;
+package com.bmc.elite.mappings;
 
-public class EDColors {
+public class ColorGroups {
     public static final Integer[] HUD_MODE_COMBAT = colorsToPercentArray(255, 80, 0);
     public static final Integer[] HUD_MODE_DISCOVERY = colorsToPercentArray(0, 160, 255);
 

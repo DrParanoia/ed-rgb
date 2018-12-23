@@ -1,10 +1,10 @@
-package com.bmc.elite;
+package com.bmc.elite.mappings;
 
 import com.logitech.gaming.LogiLED;
 
 import java.util.HashMap;
 
-public class EDKeysToLogitech {
+public class EliteKeysToLogitech {
     public static HashMap<String, Integer> KEY_MAP = new HashMap<String, Integer>() {
         {
             put("Key_Escape", LogiLED.ESC);

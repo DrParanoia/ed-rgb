@@ -1,6 +1,6 @@
-package com.bmc.elite;
+package com.bmc.elite.values;
 
-public class EDGuiFocus {
+public class StatusGuiFocus {
     public static final int NONE                = 0;
     public static final int PANEL_SYSTEMS       = 1;
     public static final int PANEL_NAV           = 2;
