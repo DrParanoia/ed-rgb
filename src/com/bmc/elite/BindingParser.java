@@ -48,8 +48,7 @@ public class BindingParser {
         return result;
     }
 
-    public static HashMap<String, List<String>> getBindings() {
-        HashMap<String, List<String>> result = new HashMap<>();
+    public static File getBindingsFile() {
         String presetName = readFile(PRESET_FILE).trim();
 
         File bindingsFolder = new File(FRONTIER_BINDINGS_PATH);
@@ -61,13 +60,22 @@ public class BindingParser {
                 if(currentFileName.endsWith(".binds")) {
                     if(currentFileName.startsWith(presetName + ".")) {
                         System.out.println("Found bindings: " + currentFileName);
-                        result = parseBindings(fileEntry);
+                        return fileEntry;
                     }
                 }
             }
         }
 
-        return result;
+        return null;
+    }
+
+    public static HashMap<String, List<String>> getBindings() {
+        File bindingsFile = getBindingsFile();
+        if(bindingsFile != null) {
+            return parseBindings(bindingsFile);
+        }
+
+        return null;
     }
 
     private static void processKeyBind(Node bind, List<String> keyList, List<String> modifierKeys) {

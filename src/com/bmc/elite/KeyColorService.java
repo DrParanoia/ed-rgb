@@ -4,6 +4,7 @@ import com.bmc.elite.config.PipPresets;
 import com.bmc.elite.config.PulsatingKeys;
 import com.bmc.elite.mappings.ColorGroups;
 import com.bmc.elite.mappings.ControlGroups;
+import com.bmc.elite.mappings.ControlNames;
 import com.bmc.elite.models.Status;
 import com.bmc.elite.values.StatusFlags;
 import com.google.gson.Gson;
@@ -33,13 +34,19 @@ public class KeyColorService {
         return (bitmask & flag) == flag;
     }
 
-    public static HashMap<String, List<String>> eliteBindings = BindingParser.getBindings();
-    public static HashMap<String, Integer[]> controlColorMap = ControlGroups.getControlToColorMap();
+    public static HashMap<String, List<String>> eliteBindings;
+    public static HashMap<String, Integer[]> controlColorMap;
 
     public PulsatingKeys pulsatingKeys = new PulsatingKeys();
 
     public KeyColorService() {
         gson = new Gson();
+        initColors();
+    }
+
+    public void initColors() {
+        eliteBindings = BindingParser.getBindings();
+        controlColorMap = ControlGroups.getControlToColorMap();
         setColorsFromBindings();
         setKeyColorFromStatus();
     }
@@ -73,9 +80,15 @@ public class KeyColorService {
             }
 
             if(isBitSet(status.Flags, StatusFlags.HUD_DISCOVERY_MODE)) {
-                LedTools.setKeyFromColorArray(LogiLED.PERIOD, ColorGroups.HUD_MODE_DISCOVERY);
+                LedTools.setEliteKeysFromColorArray(
+                    eliteBindings.get(ControlNames.PlayerHUDModeToggle),
+                    ColorGroups.HUD_MODE_DISCOVERY
+                );
             } else {
-                LedTools.setKeyFromColorArray(LogiLED.PERIOD, ColorGroups.HUD_MODE_COMBAT);
+                LedTools.setEliteKeysFromColorArray(
+                    eliteBindings.get(ControlNames.PlayerHUDModeToggle),
+                    ColorGroups.HUD_MODE_COMBAT
+                );
             }
 
             String controlName;
