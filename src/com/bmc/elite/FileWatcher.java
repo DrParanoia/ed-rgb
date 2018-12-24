@@ -55,18 +55,18 @@ public class FileWatcher {
                         for (WatchEvent<?> event : watchServiceKey.pollEvents()) {
                             final Path changed = (Path) event.context();
                             if (changed.startsWith(filename)) {
-                                System.out.println(filename + " has changed");
+                                if(Application.DEBUG) System.out.println(filename + " has changed");
                                 callback.fileChanged();
                             }
                         }
                         boolean valid = watchServiceKey.reset();
                         if (!valid) {
-                            System.out.println("Key has been unregistered");
+                            if(Application.DEBUG) System.out.println("Key has been unregistered");
                             break;
                         }
                     }
                 } catch (ClosedWatchServiceException closedException) {
-                    System.out.println("Stopped watching " + filename);
+                    if(Application.DEBUG) System.out.println("Stopped watching " + filename);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -53,13 +53,13 @@ public class BindingParser {
 
         File bindingsFolder = new File(FRONTIER_BINDINGS_PATH);
         String currentFileName;
-        System.out.println("Searching for preset: " + presetName);
+        if(Application.DEBUG) System.out.println("Searching for preset: " + presetName);
         for (final File fileEntry : bindingsFolder.listFiles()) {
             if (!fileEntry.isDirectory()) {
                 currentFileName = fileEntry.getName();
                 if(currentFileName.endsWith(".binds")) {
                     if(currentFileName.startsWith(presetName + ".")) {
-                        System.out.println("Found bindings: " + currentFileName);
+                        if(Application.DEBUG) System.out.println("Found bindings: " + currentFileName);
                         return fileEntry;
                     }
                 }

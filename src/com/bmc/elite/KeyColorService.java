@@ -81,7 +81,7 @@ public class KeyColorService {
 
             status = gson.fromJson(jsonReader, Status.class);
             if(status == null) {
-                System.out.println("Cannot get status!");
+                if(Application.DEBUG) System.out.println("Cannot get status!");
                 return;
             }
 
