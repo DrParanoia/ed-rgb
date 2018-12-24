@@ -101,10 +101,6 @@ public class KeyColorService {
             for(Map.Entry<String, StatusState> condition : pulsatingKeys.entrySet()) {
                 controlName = condition.getKey();
                 if(condition.getValue().conditionSatisfied(status.Flags, status.GuiFocus)) {
-                    LedTools.setEliteKeysFromColorArray(
-                        eliteBindings.get(controlName),
-                        controlColorMap.get(controlName)
-                    );
                     LedTools.setEliteKeysPulseFromColorArrays(
                         eliteBindings.get(controlName),
                         ColorGroups.OTHER,
@@ -123,15 +119,7 @@ public class KeyColorService {
                         pipPreset.getKey(),
                         PipPresets.PIP_PRESET_COLORS.get(pipPreset.getKey())
                     );
-//                    LedTools.setKeyPulseFromColorArrays(
-//                        pipPreset.getKey(),
-//                        ColorGroups.OTHER,
-//                        PipPresets.PIP_PRESET_COLORS.get(pipPreset.getKey()),
-//                        PIP_PRESET_PULSE_DURATION,
-//                        true
-//                    );
                 } else {
-//                    LedTools.stopKeyEffects(pipPreset.getKey());
                     LedTools.setKeyFromColorArray(
                             pipPreset.getKey(),
                             PipPresets.PIP_PRESET_COLORS_DISABLED.get(pipPreset.getKey())
