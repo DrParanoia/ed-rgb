@@ -48,6 +48,12 @@ public class KeyColorService {
         eliteBindings = BindingParser.getBindings();
         controlColorMap = ControlGroups.getControlToColorMap();
         setColorsFromBindings();
+        try {
+            // We need to give time for color scheme to set
+            Thread.sleep(500);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         setKeyColorFromStatus();
     }
 

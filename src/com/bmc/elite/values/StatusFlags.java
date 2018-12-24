@@ -33,6 +33,7 @@ public class StatusFlags {
     public static final int IN_FIGHTER                      = 1 << 25;
     public static final int IN_SRV                          = 1 << 26;
     public static final int HUD_DISCOVERY_MODE              = 1 << 27;
+    public static final int NIGHT_VISION                    = 1 << 28;
 
     public static final HashMap<Integer, String> STATUS_TO_CONTROL = new HashMap<Integer, String>() {
         {

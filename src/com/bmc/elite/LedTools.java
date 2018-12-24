@@ -65,4 +65,34 @@ public class LedTools {
             }
         }
     }
+    public static void saveKeyLighting(int key) {
+        LogiLED.LogiLedSaveLightingForKey(key);
+    }
+    public static void saveEliteKeyLighting(String eliteKeyName) {
+        if(EliteKeysToLogitech.KEY_MAP.containsKey(eliteKeyName)) {
+            saveKeyLighting(EliteKeysToLogitech.KEY_MAP.get(eliteKeyName));
+        }
+    }
+    public static void saveEliteKeysLighting(List<String> eliteKeyNames) {
+        if(eliteKeyNames != null) {
+            for(String key : eliteKeyNames) {
+                saveEliteKeyLighting(key);
+            }
+        }
+    }
+    public static void restoreKeyLighting(int key) {
+        LogiLED.LogiLedRestoreLightingForKey(key);
+    }
+    public static void restoreEliteKeyLighting(String eliteKeyName) {
+        if(EliteKeysToLogitech.KEY_MAP.containsKey(eliteKeyName)) {
+            restoreKeyLighting(EliteKeysToLogitech.KEY_MAP.get(eliteKeyName));
+        }
+    }
+    public static void restoreEliteKeysLighting(List<String> eliteKeyNames) {
+        if(eliteKeyNames != null) {
+            for(String key : eliteKeyNames) {
+                restoreEliteKeyLighting(key);
+            }
+        }
+    }
 }

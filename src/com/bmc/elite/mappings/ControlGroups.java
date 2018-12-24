@@ -13,7 +13,8 @@ public class ControlGroups {
                 ControlNames.IncreaseEnginesPower, ControlNames.ForwardKey, ControlNames.BackwardKey,
                 ControlNames.UseBoostJuice, ControlNames.SetSpeedMinus100, ControlNames.SetSpeedMinus75,
                 ControlNames.SetSpeedMinus50, ControlNames.SetSpeedMinus25, ControlNames.SetSpeedZero, ControlNames.SetSpeed25,
-                ControlNames.SetSpeed50, ControlNames.SetSpeed75, ControlNames.SetSpeed100, ControlNames.OrderHoldPosition
+                ControlNames.SetSpeed50, ControlNames.SetSpeed75, ControlNames.SetSpeed100,
+                ControlNames.OrderHoldPosition, ControlNames.AutoBreakBuggyButton
             });
             put(ColorGroups.MOVEMENT_SECONDARY, new String[] {
                 ControlNames.RollLeftButton, ControlNames.RollRightButton, ControlNames.PitchUpButton,
@@ -31,8 +32,9 @@ public class ControlGroups {
                 ControlNames.OrderRequestDock
             });
             put(ColorGroups.SHIP_STUFF, new String[] {
-                ControlNames.ToggleFlightAssist, ControlNames.ToggleCargoScoop, ControlNames.LandingGearToggle,
-                ControlNames.ShipSpotLightToggle, ControlNames.MODIFIER
+                ControlNames.ToggleFlightAssist, ControlNames.ToggleCargoScoop, ControlNames.ToggleCargoScoop_Buggy,
+                ControlNames.LandingGearToggle, ControlNames.ShipSpotLightToggle, ControlNames.HeadlightsBuggyButton,
+                ControlNames.MODIFIER, ControlNames.NightVisionToggle
             });
             put(ColorGroups.DEFENCE, new String[] {
                 ControlNames.IncreaseSystemsPower, ControlNames.OrderDefensiveBehaviour, ControlNames.FireChaffLauncher,
