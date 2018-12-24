@@ -12,6 +12,7 @@ public class EliteLed {
         if(!enabled) {
             enabled = true;
             LogiLED.LogiLedInit();
+            LogiLED.LogiLedSetTargetDevice(LogiLED.LOGI_DEVICETYPE_PERKEY_RGB);
             KeyColorService keyColorService = new KeyColorService();
 
             statusFileWatcher = new FileWatcher(
