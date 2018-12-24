@@ -14,8 +14,14 @@ public class EliteLed {
             LogiLED.LogiLedInit();
             KeyColorService keyColorService = new KeyColorService();
 
-            statusFileWatcher = new FileWatcher(KeyColorService.STATUS_FILE_PATH, keyColorService::setKeyColorFromStatus);
-            bindingsFileWatcher = new FileWatcher(BindingParser.getBindingsFile().getAbsolutePath(), keyColorService::initColors);
+            statusFileWatcher = new FileWatcher(
+                KeyColorService.STATUS_FILE_PATH,
+                keyColorService::setKeyColorFromStatus
+            );
+            bindingsFileWatcher = new FileWatcher(
+                BindingParser.getBindingsFile().getAbsolutePath(),
+                () -> keyColorService.initColors(true)
+            );
         }
     }
     public void disable() {

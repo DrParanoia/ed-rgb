@@ -45,7 +45,10 @@ public class KeyColorService {
     }
 
     public void initColors() {
-        eliteBindings = BindingParser.getBindings();
+        initColors(false);
+    }
+    public void initColors(boolean resetBindings) {
+        eliteBindings = BindingParser.getBindings(resetBindings);
         controlColorMap = ControlGroups.getControlToColorMap();
         setColorsFromBindings();
         try {

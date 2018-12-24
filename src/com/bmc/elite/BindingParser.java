@@ -24,6 +24,9 @@ public class BindingParser {
 
     public static String PRESET_FILE = FRONTIER_BINDINGS_PATH + File.separator + "StartPreset.start";
 
+    private static HashMap<String, List<String>> bindings = null;
+    private static File bindingsFile = null;
+
     public static String readFile(String filename) {
         String result = "";
         try {
@@ -49,6 +52,13 @@ public class BindingParser {
     }
 
     public static File getBindingsFile() {
+        return getBindingsFile(false);
+    }
+    public static File getBindingsFile(boolean resetBindings) {
+        if(!resetBindings && bindingsFile != null) {
+            return bindingsFile;
+        }
+        bindingsFile = null;
         String presetName = readFile(PRESET_FILE).trim();
 
         File bindingsFolder = new File(FRONTIER_BINDINGS_PATH);
@@ -60,22 +70,28 @@ public class BindingParser {
                 if(currentFileName.endsWith(".binds")) {
                     if(currentFileName.startsWith(presetName + ".")) {
                         if(Application.DEBUG) System.out.println("Found bindings: " + currentFileName);
-                        return fileEntry;
+                        bindingsFile = fileEntry;
+                        break;
                     }
                 }
             }
         }
 
-        return null;
+        return bindingsFile;
     }
 
-    public static HashMap<String, List<String>> getBindings() {
-        File bindingsFile = getBindingsFile();
+    public static HashMap<String, List<String>> getBindings(boolean resetBindings) {
+        if(!resetBindings && bindings != null) {
+            return bindings;
+        }
+        bindings = null;
+
+        File bindingsFile = getBindingsFile(resetBindings);
         if(bindingsFile != null) {
-            return parseBindings(bindingsFile);
+            bindings = parseBindings(bindingsFile);
         }
 
-        return null;
+        return bindings;
     }
 
     private static void processKeyBind(Node bind, List<String> keyList, List<String> modifierKeys) {
