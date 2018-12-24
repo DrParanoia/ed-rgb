@@ -31,4 +31,13 @@ public class PipPresets {
             put(LogiLED.G_5, ColorGroups.OFFENCE);
         }
     };
+    public static final HashMap<Integer, Integer[]> PIP_PRESET_COLORS_DISABLED = new HashMap<Integer, Integer[]>() {
+        {
+            put(LogiLED.G_1, ColorGroups.MOVEMENT_SPEED_DIMMED);
+            put(LogiLED.G_2, ColorGroups.DEFENCE_DIMMED);
+            put(LogiLED.G_3, ColorGroups.OFFENCE_DIMMED);
+            put(LogiLED.G_4, ColorGroups.OFFENCE_DIMMED);
+            put(LogiLED.G_5, ColorGroups.OFFENCE_DIMMED);
+        }
+    };
 }

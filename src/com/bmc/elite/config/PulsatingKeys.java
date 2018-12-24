@@ -14,7 +14,7 @@ public class PulsatingKeys extends HashMap<String, StatusState> {
         ));
         put(ControlNames.DeployHardpointToggle, new StatusState(
                 new int[] {StatusFlags.HARDPOINTS},
-                new int[] {StatusFlags.DOCKED, StatusFlags.LANDED_PLANET}
+                new int[] {StatusFlags.DOCKED, StatusFlags.LANDED_PLANET, StatusFlags.SUPERCRUISE}
         ));
         put(ControlNames.ToggleCargoScoop, new StatusState(
                 new int[] {StatusFlags.CARGO_SCOOP},

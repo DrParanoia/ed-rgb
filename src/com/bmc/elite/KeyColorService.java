@@ -22,7 +22,7 @@ public class KeyColorService {
     Status status;
 
     public static int PULSE_DURATION = 200;
-    public static int PIP_PRESET_PULSE_DURATION = 500;
+    public static int PIP_PRESET_PULSE_DURATION = 2000;
     public static String FRONTIER_DIRECTORY_PATH = System.getProperty("user.home")
         + File.separator + "Saved Games"
         + File.separator + "Frontier Developments"
@@ -117,15 +117,19 @@ public class KeyColorService {
                         pipPreset.getKey(),
                         PipPresets.PIP_PRESET_COLORS.get(pipPreset.getKey())
                     );
-                    LedTools.setKeyPulseFromColorArrays(
-                        pipPreset.getKey(),
-                        ColorGroups.OTHER,
-                        PipPresets.PIP_PRESET_COLORS.get(pipPreset.getKey()),
-                        PIP_PRESET_PULSE_DURATION,
-                        true
-                    );
+//                    LedTools.setKeyPulseFromColorArrays(
+//                        pipPreset.getKey(),
+//                        ColorGroups.OTHER,
+//                        PipPresets.PIP_PRESET_COLORS.get(pipPreset.getKey()),
+//                        PIP_PRESET_PULSE_DURATION,
+//                        true
+//                    );
                 } else {
-                    LedTools.stopKeyEffects(pipPreset.getKey());
+//                    LedTools.stopKeyEffects(pipPreset.getKey());
+                    LedTools.setKeyFromColorArray(
+                            pipPreset.getKey(),
+                            PipPresets.PIP_PRESET_COLORS_DISABLED.get(pipPreset.getKey())
+                    );
                 }
             }
         } catch (Exception e) {
