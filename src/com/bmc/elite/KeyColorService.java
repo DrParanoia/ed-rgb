@@ -59,11 +59,6 @@ public class KeyColorService {
     }
 
     public void setColorsFromBindings(Status newStatus) {
-
-        System.out.println("Status change");
-        System.out.println("Docked: " + isBitSet(newStatus.Flags, Flags.DOCKED));
-        System.out.println("Landed: " + isBitSet(newStatus.Flags, Flags.LANDED_PLANET));
-
         if(ControlGroups.UI_MODE_CONTROLS.containsKey(newStatus.GuiFocus)) {
             currentControlGroups = ControlGroups.UI_MODE_CONTROLS.get(newStatus.GuiFocus);
         } else {
