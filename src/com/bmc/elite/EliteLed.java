@@ -17,7 +17,7 @@ public class EliteLed {
 
             statusFileWatcher = new FileWatcher(
                 KeyColorService.STATUS_FILE_PATH,
-                keyColorService::setKeyColorFromStatus
+                keyColorService::updateStatus
             );
             bindingsFileWatcher = new FileWatcher(
                 BindingParser.getBindingsFile().getAbsolutePath(),

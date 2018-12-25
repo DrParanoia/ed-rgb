@@ -1,7 +1,7 @@
 package com.bmc.elite;
 
 import com.bmc.elite.mappings.ControlGroups;
-import com.bmc.elite.mappings.ControlNames;
+import com.bmc.elite.mappings.Controls;
 import org.w3c.dom.*;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -134,7 +134,6 @@ public class BindingParser {
 
             Node binding;
             String controlName;
-            HashMap<String, Integer[]> controlColorMap = ControlGroups.getControlToColorMap();
 
             NodeList controlChildNodes;
             Node controlChild, primaryBind, secondaryBind;
@@ -147,29 +146,27 @@ public class BindingParser {
                 primaryBind = null;
                 secondaryBind = null;
 
-                if(controlColorMap.containsKey(controlName)) {
-                    controlChildNodes = binding.getChildNodes();
-                    if(controlChildNodes.getLength() <= 0) continue;
-                    for(int i2 = 0, length2 = controlChildNodes.getLength(); i2 < length2; i2++) {
-                        controlChild = controlChildNodes.item(i2);
-                        if(controlChild.getNodeName().equals("Primary")) {
-                            primaryBind = controlChild;
-                        } else if(controlChild.getNodeName().equals("Secondary")) {
-                            secondaryBind = controlChild;
-                        }
+                controlChildNodes = binding.getChildNodes();
+                if(controlChildNodes.getLength() <= 0) continue;
+                for(int i2 = 0, length2 = controlChildNodes.getLength(); i2 < length2; i2++) {
+                    controlChild = controlChildNodes.item(i2);
+                    if(controlChild.getNodeName().equals("Primary")) {
+                        primaryBind = controlChild;
+                    } else if(controlChild.getNodeName().equals("Secondary")) {
+                        secondaryBind = controlChild;
                     }
+                }
 
-                    List<String> keyList = new ArrayList<>();
-                    processKeyBind(primaryBind, keyList, modifierKeyList);
-                    processKeyBind(secondaryBind, keyList, modifierKeyList);
-                    if(!keyList.isEmpty()) {
-                        result.put(controlName, keyList);
-                    }
+                List<String> keyList = new ArrayList<>();
+                processKeyBind(primaryBind, keyList, modifierKeyList);
+                processKeyBind(secondaryBind, keyList, modifierKeyList);
+                if(!keyList.isEmpty()) {
+                    result.put(controlName, keyList);
                 }
             }
 
             if(!modifierKeyList.isEmpty()) {
-                result.put(ControlNames.MODIFIER, modifierKeyList);
+                result.put(Controls.MODIFIER, modifierKeyList);
             }
         } catch (Exception e) {
             e.printStackTrace();

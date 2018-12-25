@@ -1,10 +1,10 @@
-package com.bmc.elite.values;
+package com.bmc.elite.status;
 
-import com.bmc.elite.mappings.ControlNames;
+import com.bmc.elite.mappings.Controls;
 
 import java.util.HashMap;
 
-public class StatusFlags {
+public class Flags {
     public static final int DOCKED                          = 1;
     public static final int LANDED_PLANET                   = 1 << 1;
     public static final int LANDING_GEAR                    = 1 << 2;
@@ -37,10 +37,10 @@ public class StatusFlags {
 
     public static final HashMap<Integer, String> STATUS_TO_CONTROL = new HashMap<Integer, String>() {
         {
-            put(LANDING_GEAR, ControlNames.LandingGearToggle);
-            put(HARDPOINTS, ControlNames.DeployHardpointToggle);
-            put(SHIP_LIGHTS, ControlNames.ShipSpotLightToggle);
-            put(CARGO_SCOOP, ControlNames.ToggleCargoScoop);
+            put(LANDING_GEAR, Controls.LandingGearToggle);
+            put(HARDPOINTS, Controls.DeployHardpointToggle);
+            put(SHIP_LIGHTS, Controls.ShipSpotLightToggle);
+            put(CARGO_SCOOP, Controls.ToggleCargoScoop);
         }
     };
 }

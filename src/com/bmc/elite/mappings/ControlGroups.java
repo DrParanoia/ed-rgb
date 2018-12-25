@@ -1,6 +1,6 @@
 package com.bmc.elite.mappings;
 
-import com.bmc.elite.values.StatusGuiFocus;
+import com.bmc.elite.status.GuiFocus;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -10,65 +10,103 @@ public class ControlGroups {
     public static HashMap<Integer[], String[]> MAIN_CONTROLS = new HashMap<Integer[], String[]>() {
         {
             put(ColorGroups.MOVEMENT_SPEED, new String[] {
-                ControlNames.IncreaseEnginesPower, ControlNames.ForwardKey, ControlNames.BackwardKey,
-                ControlNames.UseBoostJuice, ControlNames.SetSpeedMinus100, ControlNames.SetSpeedMinus75,
-                ControlNames.SetSpeedMinus50, ControlNames.SetSpeedMinus25, ControlNames.SetSpeedZero, ControlNames.SetSpeed25,
-                ControlNames.SetSpeed50, ControlNames.SetSpeed75, ControlNames.SetSpeed100,
-                ControlNames.OrderHoldPosition, ControlNames.AutoBreakBuggyButton
+                Controls.IncreaseEnginesPower, Controls.ForwardKey, Controls.BackwardKey,
+                Controls.UseBoostJuice, Controls.SetSpeedMinus100, Controls.SetSpeedMinus75,
+                Controls.SetSpeedMinus50, Controls.SetSpeedMinus25, Controls.SetSpeedZero, Controls.SetSpeed25,
+                Controls.SetSpeed50, Controls.SetSpeed75, Controls.SetSpeed100,
+                Controls.OrderHoldPosition, Controls.AutoBreakBuggyButton
             });
             put(ColorGroups.MOVEMENT_SECONDARY, new String[] {
-                ControlNames.RollLeftButton, ControlNames.RollRightButton, ControlNames.PitchUpButton,
-                ControlNames.PitchDownButton, ControlNames.LeftThrustButton,  ControlNames.RightThrustButton,
-                ControlNames.UpThrustButton, ControlNames.DownThrustButton, ControlNames.ForwardThrustButton,
-                ControlNames.BackwardThrustButton, ControlNames.OrderFollow
+                Controls.RollLeftButton, Controls.RollRightButton, Controls.PitchUpButton,
+                Controls.PitchDownButton, Controls.LeftThrustButton,  Controls.RightThrustButton,
+                Controls.UpThrustButton, Controls.DownThrustButton, Controls.ForwardThrustButton,
+                Controls.BackwardThrustButton, Controls.OrderFollow
             });
             put(ColorGroups.HUD, new String[] {
-                ControlNames.FocusLeftPanel, ControlNames.FocusCommsPanel, ControlNames.QuickCommsPanel,
-                ControlNames.FocusRadarPanel, ControlNames.FocusRightPanel, ControlNames.OrderAggressiveBehaviour
+                Controls.FocusLeftPanel, Controls.FocusCommsPanel, Controls.QuickCommsPanel,
+                Controls.FocusRadarPanel, Controls.FocusRightPanel, Controls.OrderAggressiveBehaviour
             });
             put(ColorGroups.NAVIGATION, new String[] {
-                ControlNames.GalaxyMapOpen, ControlNames.SystemMapOpen, ControlNames.TargetNextRouteSystem,
-                ControlNames.HyperSuperCombination, ControlNames.Supercruise, ControlNames.Hyperspace,
-                ControlNames.OrderRequestDock
+                Controls.GalaxyMapOpen, Controls.SystemMapOpen, Controls.TargetNextRouteSystem,
+                Controls.HyperSuperCombination, Controls.Supercruise, Controls.Hyperspace,
+                Controls.OrderRequestDock
             });
             put(ColorGroups.SHIP_STUFF, new String[] {
-                ControlNames.ToggleFlightAssist, ControlNames.ToggleCargoScoop, ControlNames.ToggleCargoScoop_Buggy,
-                ControlNames.LandingGearToggle, ControlNames.ShipSpotLightToggle, ControlNames.HeadlightsBuggyButton,
-                ControlNames.MODIFIER, ControlNames.NightVisionToggle
+                Controls.ToggleFlightAssist, Controls.ToggleCargoScoop, Controls.ToggleCargoScoop_Buggy,
+                Controls.LandingGearToggle, Controls.ShipSpotLightToggle, Controls.HeadlightsBuggyButton,
+                Controls.MODIFIER, Controls.NightVisionToggle
             });
             put(ColorGroups.DEFENCE, new String[] {
-                ControlNames.IncreaseSystemsPower, ControlNames.OrderDefensiveBehaviour, ControlNames.FireChaffLauncher,
-                ControlNames.UseShieldCell, ControlNames.DeployHeatSink, ControlNames.ChargeECM
+                Controls.IncreaseSystemsPower, Controls.OrderDefensiveBehaviour, Controls.FireChaffLauncher,
+                Controls.UseShieldCell, Controls.DeployHeatSink, Controls.ChargeECM
             });
             put(ColorGroups.OFFENCE, new String[] {
-                ControlNames.DeployHardpointToggle, ControlNames.SelectHighestThreat, ControlNames.CycleFireGroupPrevious,
-                ControlNames.CycleFireGroupNext, ControlNames.IncreaseWeaponsPower, ControlNames.OrderFocusTarget,
-                ControlNames.CycleNextSubsystem, ControlNames.CyclePreviousSubsystem, ControlNames.CycleNextHostileTarget,
-                ControlNames.CyclePreviousHostileTarget
+                Controls.DeployHardpointToggle, Controls.SelectHighestThreat, Controls.CycleFireGroupPrevious,
+                Controls.CycleFireGroupNext, Controls.IncreaseWeaponsPower, Controls.OrderFocusTarget,
+                Controls.CycleNextSubsystem, Controls.CyclePreviousSubsystem, Controls.CycleNextHostileTarget,
+                Controls.CyclePreviousHostileTarget
             });
             put(ColorGroups.WING, new String[] {
-                ControlNames.OrderHoldFire, ControlNames.TargetWingman0, ControlNames.TargetWingman1,
-                ControlNames.TargetWingman2, ControlNames.SelectTargetsTarget, ControlNames.WingNavLock
+                Controls.OrderHoldFire, Controls.TargetWingman0, Controls.TargetWingman1,
+                Controls.TargetWingman2, Controls.SelectTargetsTarget, Controls.WingNavLock
             });
             put(ColorGroups.MODE_ENABLE, new String[] {
-                ControlNames.PlayerHUDModeToggle, ControlNames.ExplorationFSSEnter
+                Controls.PlayerHUDModeToggle, Controls.ExplorationFSSEnter
             });
             put(ColorGroups.MODE_DISABLE, new String[] {});
             put(ColorGroups.CAMERA, new String[] {});
         }
     };
+    public static HashMap<Integer[], String[]> GALAXY_MAP = new HashMap<Integer[], String[]>() {
+        {
+            put(ColorGroups.MOVEMENT_SPEED, new String[] {
+                Controls.CamTranslateForward, Controls.CamTranslateBackward, Controls.CamTranslateLeft,
+                Controls.CamTranslateRight
+            });
+            put(ColorGroups.MOVEMENT_SECONDARY, new String[] {
+                Controls.CamPitchUp, Controls.CamPitchDown, Controls.CamTranslateUp, Controls.CamTranslateDown,
+                Controls.CamYawLeft, Controls.CamYawRight, Controls.CamZoomIn, Controls.CamZoomOut
+            });
+            put(ColorGroups.HUD, new String[] {
+                Controls.UI_Back, Controls.UI_Select
+            });
+            put(ColorGroups.NAVIGATION, new String[] {
+                Controls.GalaxyMapOpen, Controls.SystemMapOpen
+            });
+        }
+    };
+    public static HashMap<Integer[], String[]> SYSTEM_MAP = new HashMap<Integer[], String[]>() {
+        {
+            put(ColorGroups.MOVEMENT_SPEED, new String[] {
+                Controls.CamTranslateForward, Controls.CamTranslateBackward, Controls.CamTranslateLeft,
+                Controls.CamTranslateRight
+            });
+            put(ColorGroups.MOVEMENT_SECONDARY, new String[] {
+                Controls.CamZoomIn, Controls.CamZoomOut
+            });
+            put(ColorGroups.HUD, new String[] {
+                Controls.UI_Back, Controls.UI_Select
+            });
+            put(ColorGroups.NAVIGATION, new String[] {
+                Controls.GalaxyMapOpen, Controls.SystemMapOpen
+            });
+        }
+    };
 
-    public static final HashMap<Integer, HashMap<Integer[], String[]>> UI_MODE_CONTROLS =
-        new HashMap<Integer, HashMap<Integer[], String[]>>() {
+
+    public static final HashMap<Integer, HashMap<String, Integer[]>> UI_MODE_CONTROLS =
+        new HashMap<Integer, HashMap<String, Integer[]>>() {
             {
-                put(StatusGuiFocus.NONE, MAIN_CONTROLS);
+                put(GuiFocus.NONE, getControlToColorMap(MAIN_CONTROLS));
+                put(GuiFocus.MAP_GALAXY, getControlToColorMap(GALAXY_MAP));
+                put(GuiFocus.MAP_SYSTEM, getControlToColorMap(SYSTEM_MAP));
             }
         };
 
-    public static HashMap<String, Integer[]> getControlToColorMap() {
+    public static HashMap<String, Integer[]> getControlToColorMap(HashMap<Integer[], String[]> controlMap) {
         HashMap<String, Integer[]> result = new HashMap<>();
 
-        Iterator it = MAIN_CONTROLS.entrySet().iterator();
+        Iterator it = controlMap.entrySet().iterator();
         Map.Entry pair;
         while (it.hasNext()) {
             pair = (Map.Entry) it.next();

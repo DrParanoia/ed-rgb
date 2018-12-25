@@ -1,6 +1,6 @@
 package com.bmc.elite.mappings;
 
-public class ControlNames {
+public class Controls {
     public static final String MODIFIER = "MODIFIER";
     public static final String MouseReset = "MouseReset";
     public static final String YawLeftButton = "YawLeftButton";
