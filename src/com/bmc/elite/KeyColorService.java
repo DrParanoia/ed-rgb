@@ -2,7 +2,7 @@ package com.bmc.elite;
 
 import com.bmc.elite.config.PipPresets;
 import com.bmc.elite.config.PulsatingKeys;
-import com.bmc.elite.mappings.ColorGroups;
+import com.bmc.elite.mappings.Colors;
 import com.bmc.elite.mappings.ControlGroups;
 import com.bmc.elite.mappings.Controls;
 import com.bmc.elite.models.Status;
@@ -38,7 +38,8 @@ public class KeyColorService {
 
     public static HashMap<String, Integer[]> MAIN_CONTROLS = ControlGroups.getControlToColorMap(ControlGroups.MAIN_CONTROLS);
 
-    HashMap<String, Integer[]> currentControlGroup;
+    LinkedHashMap<String, Integer[]> currentControlGroup;
+    Status currentStatus = null;
 
     public PulsatingKeys pulsatingKeys = new PulsatingKeys();
 
@@ -56,13 +57,22 @@ public class KeyColorService {
     }
 
     public void setColorsFromBindings(Status newStatus) {
-        LedTools.setAllKeysFromColorArray(ColorGroups.OTHER);
 
+        LinkedHashMap<String, Integer[]> newControlGroup;
         if(ControlGroups.UI_MODE_CONTROLS.containsKey(newStatus.GuiFocus)) {
-            currentControlGroup = ControlGroups.UI_MODE_CONTROLS.get(newStatus.GuiFocus);
+            newControlGroup = ControlGroups.UI_MODE_CONTROLS.get(newStatus.GuiFocus);
         } else {
-            currentControlGroup = ControlGroups.UI_MODE_CONTROLS.get(GuiFocus.NONE);
+            newControlGroup = ControlGroups.UI_MODE_CONTROLS.get(GuiFocus.NONE);
         }
+
+        if(newControlGroup == currentControlGroup) {
+            if(Application.DEBUG) System.out.println("Control groups match, won't re-highlight");
+            return;
+        }
+
+        LedTools.setAllKeysFromColorArray(Colors.OTHER);
+
+        currentControlGroup = newControlGroup;
 
         List<String> keys;
         for(Map.Entry<String, Integer[]> controlColors : currentControlGroup.entrySet()) {
@@ -93,6 +103,7 @@ public class KeyColorService {
             }
             setColorsFromBindings(newStatus);
             setKeyColorFromStatus(newStatus);
+            currentStatus = newStatus;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -119,12 +130,12 @@ public class KeyColorService {
             if(isBitSet(newStatus.Flags, Flags.HUD_DISCOVERY_MODE)) {
                 LedTools.setEliteKeysFromColorArray(
                     eliteBindings.get(Controls.PlayerHUDModeToggle),
-                    ColorGroups.HUD_MODE_DISCOVERY
+                    Colors.HUD_MODE_DISCOVERY
                 );
             } else {
                 LedTools.setEliteKeysFromColorArray(
                     eliteBindings.get(Controls.PlayerHUDModeToggle),
-                    ColorGroups.HUD_MODE_COMBAT
+                    Colors.HUD_MODE_COMBAT
                 );
             }
         }
@@ -141,7 +152,7 @@ public class KeyColorService {
                 ) {
                     LedTools.setEliteKeysPulseFromColorArrays(
                         eliteBindings.get(controlName),
-                        ColorGroups.OTHER,
+                        Colors.OTHER,
                         MAIN_CONTROLS.get(controlName),
                         PULSE_DURATION,
                         true

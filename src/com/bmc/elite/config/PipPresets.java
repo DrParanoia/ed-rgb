@@ -1,6 +1,6 @@
 package com.bmc.elite.config;
 
-import com.bmc.elite.mappings.ColorGroups;
+import com.bmc.elite.mappings.Colors;
 import com.logitech.gaming.LogiLED;
 
 import java.util.HashMap;
@@ -24,20 +24,20 @@ public class PipPresets {
 
     public static final HashMap<Integer, Integer[]> PIP_PRESET_COLORS = new HashMap<Integer, Integer[]>() {
         {
-            put(LogiLED.G_1, ColorGroups.MOVEMENT_SPEED);
-            put(LogiLED.G_2, ColorGroups.DEFENCE);
-            put(LogiLED.G_3, ColorGroups.OFFENCE);
-            put(LogiLED.G_4, ColorGroups.OFFENCE);
-            put(LogiLED.G_5, ColorGroups.OFFENCE);
+            put(LogiLED.G_1, Colors.MOVEMENT_SPEED);
+            put(LogiLED.G_2, Colors.DEFENCE);
+            put(LogiLED.G_3, Colors.OFFENCE);
+            put(LogiLED.G_4, Colors.OFFENCE);
+            put(LogiLED.G_5, Colors.OFFENCE);
         }
     };
     public static final HashMap<Integer, Integer[]> PIP_PRESET_COLORS_DISABLED = new HashMap<Integer, Integer[]>() {
         {
-            put(LogiLED.G_1, ColorGroups.MOVEMENT_SPEED_DIMMED);
-            put(LogiLED.G_2, ColorGroups.DEFENCE_DIMMED);
-            put(LogiLED.G_3, ColorGroups.OFFENCE_DIMMED);
-            put(LogiLED.G_4, ColorGroups.OFFENCE_DIMMED);
-            put(LogiLED.G_5, ColorGroups.OFFENCE_DIMMED);
+            put(LogiLED.G_1, Colors.MOVEMENT_SPEED_DIMMED);
+            put(LogiLED.G_2, Colors.DEFENCE_DIMMED);
+            put(LogiLED.G_3, Colors.OFFENCE_DIMMED);
+            put(LogiLED.G_4, Colors.OFFENCE_DIMMED);
+            put(LogiLED.G_5, Colors.OFFENCE_DIMMED);
         }
     };
 }
