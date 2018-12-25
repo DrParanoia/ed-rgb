@@ -21,7 +21,7 @@ public class ControlGroups {
                 Controls.UpThrustButton, Controls.DownThrustButton, Controls.ForwardThrustButton,
                 Controls.BackwardThrustButton, Controls.OrderFollow
             ))),
-            new ControlGroup(Colors.HUD, new ArrayList<>(Arrays.asList(
+            new ControlGroup(Colors.UI, new ArrayList<>(Arrays.asList(
                 Controls.FocusLeftPanel, Controls.FocusCommsPanel, Controls.QuickCommsPanel,
                 Controls.FocusRadarPanel, Controls.FocusRightPanel, Controls.OrderAggressiveBehaviour,
                 Controls.UI_Select, Controls.PlayerHUDModeToggle
@@ -65,7 +65,7 @@ public class ControlGroups {
             new ControlGroup(Colors.MOVEMENT_SECONDARY, new ArrayList<>(Arrays.asList(
                 Controls.CamZoomIn, Controls.CamZoomOut
             ))),
-            new ControlGroup(Colors.HUD, new ArrayList<>(Arrays.asList(
+            new ControlGroup(Colors.UI, new ArrayList<>(Arrays.asList(
                 Controls.UI_Back, Controls.UI_Select
             ))),
             new ControlGroup(Colors.NAVIGATION, new ArrayList<>(Arrays.asList(
@@ -84,9 +84,12 @@ public class ControlGroups {
 
     public static List<ControlGroup> UI_PANELS = new ArrayList<ControlGroup>(MAIN_CONTROLS) {
         {
-            add(new ControlGroup(Colors.HUD, new ArrayList<>(Arrays.asList(
+            add(new ControlGroup(Colors.UI, new ArrayList<>(Arrays.asList(
                 Controls.UI_Left, Controls.UI_Right, Controls.UI_Up, Controls.UI_Down,
-                Controls.UI_Select, Controls.UI_Back, Controls.CyclePreviousPanel, Controls.CycleNextPanel
+                Controls.UI_Select, Controls.UI_Back
+            ))));
+            add(new ControlGroup(Colors.UI_ALT, new ArrayList<>(Arrays.asList(
+                Controls.CyclePreviousPanel, Controls.CycleNextPanel
             ))));
         }
     };
