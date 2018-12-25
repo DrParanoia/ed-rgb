@@ -25,7 +25,7 @@ public class ControlGroups {
             put(ColorGroups.HUD, new String[] {
                 Controls.FocusLeftPanel, Controls.FocusCommsPanel, Controls.QuickCommsPanel,
                 Controls.FocusRadarPanel, Controls.FocusRightPanel, Controls.OrderAggressiveBehaviour,
-                Controls.UI_Select
+                Controls.UI_Select, Controls.PlayerHUDModeToggle
             });
             put(ColorGroups.NAVIGATION, new String[] {
                 Controls.GalaxyMapOpen, Controls.SystemMapOpen, Controls.TargetNextRouteSystem,
@@ -52,7 +52,7 @@ public class ControlGroups {
                 Controls.TargetWingman2, Controls.SelectTargetsTarget, Controls.WingNavLock
             });
             put(ColorGroups.MODE_ENABLE, new String[] {
-                Controls.PlayerHUDModeToggle, Controls.ExplorationFSSEnter
+                Controls.ExplorationFSSEnter
             });
             put(ColorGroups.MODE_DISABLE, new String[] {});
             put(ColorGroups.CAMERA, new String[] {});

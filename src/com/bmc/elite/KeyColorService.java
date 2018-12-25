@@ -21,6 +21,7 @@ public class KeyColorService {
     JsonReader jsonReader;
 
     public static int PULSE_DURATION = 200;
+    public static int DELEY_AFTER_COLOR_SET = 250;
     public static int PIP_PRESET_PULSE_DURATION = 2000;
     public static String FRONTIER_DIRECTORY_PATH = System.getProperty("user.home")
         + File.separator + "Saved Games"
@@ -57,20 +58,6 @@ public class KeyColorService {
     public void setColorsFromBindings(Status newStatus) {
         LedTools.setAllKeysFromColorArray(ColorGroups.OTHER);
 
-        for (Map.Entry<Integer, Integer[]> pipPreset : PipPresets.STATUS_TO_CONTROL.entrySet()) {
-            if(Arrays.equals(pipPreset.getValue(), newStatus.Pips)) {
-                LedTools.setKeyFromColorArray(
-                    pipPreset.getKey(),
-                    PipPresets.PIP_PRESET_COLORS.get(pipPreset.getKey())
-                );
-            } else {
-                LedTools.setKeyFromColorArray(
-                    pipPreset.getKey(),
-                    PipPresets.PIP_PRESET_COLORS_DISABLED.get(pipPreset.getKey())
-                );
-            }
-        }
-
         if(ControlGroups.UI_MODE_CONTROLS.containsKey(newStatus.GuiFocus)) {
             currentControlGroup = ControlGroups.UI_MODE_CONTROLS.get(newStatus.GuiFocus);
         } else {
@@ -85,9 +72,11 @@ public class KeyColorService {
             }
         }
 
+        setToggleKeyColors(newStatus);
+
         try {
             // We need to give time for color scheme to set
-            Thread.sleep(500);
+            Thread.sleep(DELEY_AFTER_COLOR_SET);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -109,22 +98,40 @@ public class KeyColorService {
         }
     }
 
+    public void setToggleKeyColors(Status newStatus) {
+        // Custom PIP presets for G keys
+        for (Map.Entry<Integer, Integer[]> pipPreset : PipPresets.STATUS_TO_CONTROL.entrySet()) {
+            if(Arrays.equals(pipPreset.getValue(), newStatus.Pips)) {
+                LedTools.setKeyFromColorArray(
+                    pipPreset.getKey(),
+                    PipPresets.PIP_PRESET_COLORS.get(pipPreset.getKey())
+                );
+            } else {
+                LedTools.setKeyFromColorArray(
+                    pipPreset.getKey(),
+                    PipPresets.PIP_PRESET_COLORS_DISABLED.get(pipPreset.getKey())
+                );
+            }
+        }
+
+        // Change HUD Mode key color based on current HUD mode (Discovery/Combat)
+        if(currentControlGroup.containsKey(Controls.PlayerHUDModeToggle)) {
+            if(isBitSet(newStatus.Flags, Flags.HUD_DISCOVERY_MODE)) {
+                LedTools.setEliteKeysFromColorArray(
+                    eliteBindings.get(Controls.PlayerHUDModeToggle),
+                    ColorGroups.HUD_MODE_DISCOVERY
+                );
+            } else {
+                LedTools.setEliteKeysFromColorArray(
+                    eliteBindings.get(Controls.PlayerHUDModeToggle),
+                    ColorGroups.HUD_MODE_COMBAT
+                );
+            }
+        }
+    }
+
     public void setKeyColorFromStatus(Status newStatus) {
         try {
-            if(currentControlGroup.containsKey(Controls.PlayerHUDModeToggle)) {
-                if(isBitSet(newStatus.Flags, Flags.HUD_DISCOVERY_MODE)) {
-                    LedTools.setEliteKeysFromColorArray(
-                        eliteBindings.get(Controls.PlayerHUDModeToggle),
-                        ColorGroups.HUD_MODE_DISCOVERY
-                    );
-                } else {
-                    LedTools.setEliteKeysFromColorArray(
-                        eliteBindings.get(Controls.PlayerHUDModeToggle),
-                        ColorGroups.HUD_MODE_COMBAT
-                    );
-                }
-            }
-
             String controlName;
             for(Map.Entry<String, StatusState> condition : pulsatingKeys.entrySet()) {
                 controlName = condition.getKey();
