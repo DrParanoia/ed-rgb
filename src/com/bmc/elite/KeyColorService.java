@@ -6,6 +6,8 @@ import com.bmc.elite.mappings.Colors;
 import com.bmc.elite.mappings.ControlGroups;
 import com.bmc.elite.mappings.Controls;
 import com.bmc.elite.lists.LogitechKeysList;
+import com.bmc.elite.models.ControlGroup;
+import com.bmc.elite.models.ControlGroupList;
 import com.bmc.elite.models.Status;
 import com.bmc.elite.status.Flags;
 import com.bmc.elite.status.GuiFocus;
@@ -38,7 +40,7 @@ public class KeyColorService {
 
     public static HashMap<String, Integer[]> MAIN_CONTROLS = ControlGroups.getControlToColorMap(ControlGroups.MAIN_CONTROLS);
 
-    LinkedHashMap<String, Integer[]> currentControlGroup;
+    ControlGroupList currentControlGroups;
     Status currentStatus = null;
 
     public PulsatingKeys pulsatingKeys = new PulsatingKeys();
@@ -58,31 +60,34 @@ public class KeyColorService {
 
     public void setColorsFromBindings(Status newStatus) {
 
-        LinkedHashMap<String, Integer[]> newControlGroup;
+        ControlGroupList newControlGroups;
         if(ControlGroups.UI_MODE_CONTROLS.containsKey(newStatus.GuiFocus)) {
-            newControlGroup = ControlGroups.UI_MODE_CONTROLS.get(newStatus.GuiFocus);
+            newControlGroups = ControlGroups.UI_MODE_CONTROLS.get(newStatus.GuiFocus);
         } else {
-            newControlGroup = ControlGroups.UI_MODE_CONTROLS.get(GuiFocus.NONE);
+            newControlGroups = ControlGroups.UI_MODE_CONTROLS.get(GuiFocus.NONE);
         }
 
-        if(newControlGroup == currentControlGroup) {
+        if(newControlGroups == currentControlGroups) {
             if(Application.DEBUG) System.out.println("Control groups match, won't re-highlight");
             return;
         }
 
-        currentControlGroup = newControlGroup;
+        currentControlGroups = newControlGroups;
 
         List<Integer> remainingLogitechKeys = new LogitechKeysList();
         List<String> keys;
-        Integer[] currentColor;
-        for(Map.Entry<String, Integer[]> controlColors : currentControlGroup.entrySet()) {
-            keys = eliteBindings.get(controlColors.getKey());
-            if(keys != null) {
-                currentColor = controlColors.getValue();
-                if(Arrays.equals(currentColor, Colors.OTHER)) {
-                    continue;
+        for(ControlGroup controlGroup : currentControlGroups) {
+            if(controlGroup.neededStatus != null && !controlGroup.neededStatus.conditionSatisfied(newStatus)) {
+                continue;
+            }
+            for(String control : controlGroup.controls) {
+                keys = eliteBindings.get(control);
+                if(keys != null) {
+                    if(Arrays.equals(controlGroup.color, Colors.OTHER)) {
+                        continue;
+                    }
+                    remainingLogitechKeys.removeAll(LedTools.setEliteKeysFromColorArray(keys, controlGroup.color));
                 }
-                remainingLogitechKeys.removeAll(LedTools.setEliteKeysFromColorArray(keys, controlColors.getValue()));
             }
         }
 
@@ -134,7 +139,7 @@ public class KeyColorService {
         }
 
         // Change HUD Mode key color based on current HUD mode (Discovery/Combat)
-        if(currentControlGroup.containsKey(Controls.PlayerHUDModeToggle)) {
+        if(currentControlGroups.allControls.contains(Controls.PlayerHUDModeToggle)) {
             if(isBitSet(newStatus.Flags, Flags.HUD_DISCOVERY_MODE)) {
                 LedTools.setEliteKeysFromColorArray(
                     eliteBindings.get(Controls.PlayerHUDModeToggle),
@@ -155,8 +160,8 @@ public class KeyColorService {
             for(Map.Entry<String, StatusState> condition : pulsatingKeys.entrySet()) {
                 controlName = condition.getKey();
                 if(
-                    currentControlGroup.containsKey(controlName)
-                    && condition.getValue().conditionSatisfied(newStatus.Flags, newStatus.GuiFocus)
+                    currentControlGroups.allControls.contains(controlName)
+                    && condition.getValue().conditionSatisfied(newStatus)
                 ) {
                     LedTools.setEliteKeysPulseFromColorArrays(
                         eliteBindings.get(controlName),
