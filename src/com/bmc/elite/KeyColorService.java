@@ -23,7 +23,6 @@ public class KeyColorService {
 
     public static int PULSE_DURATION = 200;
     public static int DELEY_AFTER_COLOR_SET = 250;
-    public static int PIP_PRESET_PULSE_DURATION = 2000;
     public static String FRONTIER_DIRECTORY_PATH = System.getProperty("user.home")
         + File.separator + "Saved Games"
         + File.separator + "Frontier Developments"
