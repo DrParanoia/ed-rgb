@@ -37,7 +37,7 @@ public class EliteProcessWatcherRunnable implements Runnable {
                             if(Application.DEBUG) System.out.println("Elite is in focus, starting highlighting");
                             eliteInFocus = true;
                             // Wait for logitech app to load any existing game profile
-                            Thread.sleep(200);
+                            Thread.sleep(250);
                             eliteLed.enable();
                         } else {
                             if(Application.DEBUG && eliteInFocus) System.out.println("Elite lost focus, stopping highlighting");
