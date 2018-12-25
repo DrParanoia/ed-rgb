@@ -2,7 +2,9 @@ package com.bmc.elite;
 
 import com.bmc.elite.mappings.EliteKeysToLogitech;
 import com.logitech.gaming.LogiLED;
+import com.sun.istack.internal.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LedTools {
@@ -11,22 +13,38 @@ public class LedTools {
             LogiLED.LogiLedSetLighting(colorArray[0], colorArray[1], colorArray[2]);
         }
     }
-    public static void setKeyFromColorArray(int key, Integer[] colorArray) {
+
+    @Nullable
+    public static Integer setKeyFromColorArray(int key, Integer[] colorArray) {
+        Integer logitechKey = null;
         if(colorArray != null) {
             LogiLED.LogiLedSetLightingForKeyWithKeyName(key, colorArray[0], colorArray[1], colorArray[2]);
+            logitechKey = key;
         }
+
+        return logitechKey;
     }
-    public static void setEliteKeyFromColorArray(String eliteKeyName, Integer[] colorArray) {
+    @Nullable
+    public static Integer setEliteKeyFromColorArray(String eliteKeyName, Integer[] colorArray) {
+        Integer logitechKey = null;
         if(EliteKeysToLogitech.KEY_MAP.containsKey(eliteKeyName)) {
-            setKeyFromColorArray(EliteKeysToLogitech.KEY_MAP.get(eliteKeyName), colorArray);
+            logitechKey = setKeyFromColorArray(EliteKeysToLogitech.KEY_MAP.get(eliteKeyName), colorArray);
         }
+
+        return logitechKey;
     }
-    public static void setEliteKeysFromColorArray(List<String> eliteKeyNames, Integer[] colorArray) {
+    public static List<Integer> setEliteKeysFromColorArray(List<String> eliteKeyNames, Integer[] colorArray) {
+        List<Integer> logitechKeys = new ArrayList<>();
         if(eliteKeyNames != null) {
             for(String key : eliteKeyNames) {
-                setEliteKeyFromColorArray(key,colorArray);
+                Integer logitechKey = setEliteKeyFromColorArray(key,colorArray);
+                if(logitechKey != null) {
+                    logitechKeys.add(logitechKey);
+                }
             }
         }
+
+        return logitechKeys;
     }
     public static void setKeyPulseFromColorArrays(int key, Integer[] colorArray1, Integer[] colorArray2, int msDuration, boolean isInfinite) {
         if(colorArray1 != null && colorArray2 != null) {

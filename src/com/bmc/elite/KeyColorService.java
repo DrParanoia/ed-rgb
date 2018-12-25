@@ -5,6 +5,7 @@ import com.bmc.elite.config.PulsatingKeys;
 import com.bmc.elite.mappings.Colors;
 import com.bmc.elite.mappings.ControlGroups;
 import com.bmc.elite.mappings.Controls;
+import com.bmc.elite.lists.LogitechKeysList;
 import com.bmc.elite.models.Status;
 import com.bmc.elite.status.Flags;
 import com.bmc.elite.status.GuiFocus;
@@ -70,16 +71,24 @@ public class KeyColorService {
             return;
         }
 
-        LedTools.setAllKeysFromColorArray(Colors.OTHER);
-
         currentControlGroup = newControlGroup;
 
+        List<Integer> remainingLogitechKeys = new LogitechKeysList();
         List<String> keys;
+        Integer[] currentColor;
         for(Map.Entry<String, Integer[]> controlColors : currentControlGroup.entrySet()) {
             keys = eliteBindings.get(controlColors.getKey());
             if(keys != null) {
-                LedTools.setEliteKeysFromColorArray(keys, controlColors.getValue());
+                currentColor = controlColors.getValue();
+                if(Arrays.equals(currentColor, Colors.OTHER)) {
+                    continue;
+                }
+                remainingLogitechKeys.removeAll(LedTools.setEliteKeysFromColorArray(keys, controlColors.getValue()));
             }
+        }
+
+        for(Integer logitechKey : remainingLogitechKeys) {
+            LedTools.setKeyFromColorArray(logitechKey, Colors.OTHER);
         }
 
         setToggleKeyColors(newStatus);
