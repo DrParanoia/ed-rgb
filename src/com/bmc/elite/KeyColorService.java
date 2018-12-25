@@ -19,7 +19,6 @@ public class KeyColorService {
 
     Gson gson;
     JsonReader jsonReader;
-    Status status;
 
     public static int PULSE_DURATION = 200;
     public static int PIP_PRESET_PULSE_DURATION = 2000;
@@ -33,8 +32,6 @@ public class KeyColorService {
     public static boolean isBitSet(long bitmask, int flag) {
         return (bitmask & flag) == flag;
     }
-
-    Status lastStatus = null;
 
     public static HashMap<String, List<String>> eliteBindings;
 
@@ -57,15 +54,25 @@ public class KeyColorService {
         updateStatus();
     }
 
-    public void setColorsFromBindings(Status status) {
+    public void setColorsFromBindings(Status newStatus) {
         LedTools.setAllKeysFromColorArray(ColorGroups.OTHER);
 
-        for(Map.Entry<Integer, Integer[]> pipPresetEntry : PipPresets.PIP_PRESET_COLORS.entrySet()) {
-            LedTools.setKeyFromColorArray(pipPresetEntry.getKey(), pipPresetEntry.getValue());
+        for (Map.Entry<Integer, Integer[]> pipPreset : PipPresets.STATUS_TO_CONTROL.entrySet()) {
+            if(Arrays.equals(pipPreset.getValue(), newStatus.Pips)) {
+                LedTools.setKeyFromColorArray(
+                    pipPreset.getKey(),
+                    PipPresets.PIP_PRESET_COLORS.get(pipPreset.getKey())
+                );
+            } else {
+                LedTools.setKeyFromColorArray(
+                    pipPreset.getKey(),
+                    PipPresets.PIP_PRESET_COLORS_DISABLED.get(pipPreset.getKey())
+                );
+            }
         }
 
-        if(ControlGroups.UI_MODE_CONTROLS.containsKey(status.GuiFocus)) {
-            currentControlGroup = ControlGroups.UI_MODE_CONTROLS.get(status.GuiFocus);
+        if(ControlGroups.UI_MODE_CONTROLS.containsKey(newStatus.GuiFocus)) {
+            currentControlGroup = ControlGroups.UI_MODE_CONTROLS.get(newStatus.GuiFocus);
         } else {
             currentControlGroup = ControlGroups.UI_MODE_CONTROLS.get(GuiFocus.NONE);
         }
@@ -90,31 +97,30 @@ public class KeyColorService {
         try {
             jsonReader = new JsonReader(new FileReader(STATUS_FILE_PATH));
 
-            status = gson.fromJson(jsonReader, Status.class);
-            if(status == null) {
+            Status newStatus = gson.fromJson(jsonReader, Status.class);
+            if(newStatus == null) {
                 if(Application.DEBUG) System.out.println("Cannot get status!");
                 return;
             }
-            setColorsFromBindings(status);
-            setKeyColorFromStatus(status);
-            lastStatus = status;
+            setColorsFromBindings(newStatus);
+            setKeyColorFromStatus(newStatus);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void setKeyColorFromStatus(Status status) {
+    public void setKeyColorFromStatus(Status newStatus) {
         try {
             if(currentControlGroup.containsKey(Controls.PlayerHUDModeToggle)) {
-                if(isBitSet(status.Flags, Flags.HUD_DISCOVERY_MODE)) {
+                if(isBitSet(newStatus.Flags, Flags.HUD_DISCOVERY_MODE)) {
                     LedTools.setEliteKeysFromColorArray(
-                            eliteBindings.get(Controls.PlayerHUDModeToggle),
-                            ColorGroups.HUD_MODE_DISCOVERY
+                        eliteBindings.get(Controls.PlayerHUDModeToggle),
+                        ColorGroups.HUD_MODE_DISCOVERY
                     );
                 } else {
                     LedTools.setEliteKeysFromColorArray(
-                            eliteBindings.get(Controls.PlayerHUDModeToggle),
-                            ColorGroups.HUD_MODE_COMBAT
+                        eliteBindings.get(Controls.PlayerHUDModeToggle),
+                        ColorGroups.HUD_MODE_COMBAT
                     );
                 }
             }
@@ -124,7 +130,7 @@ public class KeyColorService {
                 controlName = condition.getKey();
                 if(
                     currentControlGroup.containsKey(controlName)
-                    && condition.getValue().conditionSatisfied(status.Flags, status.GuiFocus)
+                    && condition.getValue().conditionSatisfied(newStatus.Flags, newStatus.GuiFocus)
                 ) {
                     LedTools.setEliteKeysPulseFromColorArrays(
                         eliteBindings.get(controlName),
@@ -135,20 +141,6 @@ public class KeyColorService {
                     );
                 } else {
                     LedTools.stopEliteKeysEffect(eliteBindings.get(controlName));
-                }
-            }
-
-            for (Map.Entry<Integer, Integer[]> pipPreset : PipPresets.STATUS_TO_CONTROL.entrySet()) {
-                if(Arrays.equals(pipPreset.getValue(), status.Pips)) {
-                    LedTools.setKeyFromColorArray(
-                        pipPreset.getKey(),
-                        PipPresets.PIP_PRESET_COLORS.get(pipPreset.getKey())
-                    );
-                } else {
-                    LedTools.setKeyFromColorArray(
-                            pipPreset.getKey(),
-                            PipPresets.PIP_PRESET_COLORS_DISABLED.get(pipPreset.getKey())
-                    );
                 }
             }
         } catch (Exception e) {
