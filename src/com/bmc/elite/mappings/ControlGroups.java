@@ -75,7 +75,7 @@ public class ControlGroups {
 
     public static List<ControlGroup> GALAXY_MAP = new ArrayList<ControlGroup>(SYSTEM_MAP) {
         {
-            add(new ControlGroup(Colors.MOVEMENT_SPEED, new ArrayList<>(Arrays.asList(
+            add(new ControlGroup(Colors.MOVEMENT_SECONDARY, new ArrayList<>(Arrays.asList(
                 Controls.CamPitchUp, Controls.CamPitchDown, Controls.CamTranslateUp, Controls.CamTranslateDown,
                 Controls.CamYawLeft, Controls.CamYawRight
             ))));
@@ -98,8 +98,9 @@ public class ControlGroups {
         new HashMap<Integer, LinkedHashMap<String, Integer[]>>() {
             {
                 put(GuiFocus.NONE, getControlToColorMap(MAIN_CONTROLS));
-                put(GuiFocus.MAP_GALAXY, getControlToColorMap(GALAXY_MAP));
                 put(GuiFocus.MAP_SYSTEM, getControlToColorMap(SYSTEM_MAP));
+                put(GuiFocus.MAP_GALAXY, getControlToColorMap(GALAXY_MAP));
+                put(GuiFocus.MAP_ORRERY, get(GuiFocus.MAP_GALAXY));
 
                 put(GuiFocus.PANEL_SYSTEMS, getControlToColorMap(UI_PANELS));
                 put(GuiFocus.PANEL_NAV, get(GuiFocus.PANEL_SYSTEMS));
