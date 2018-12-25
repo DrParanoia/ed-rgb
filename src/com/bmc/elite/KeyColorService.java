@@ -60,19 +60,15 @@ public class KeyColorService {
 
     public void setColorsFromBindings(Status newStatus) {
 
-        ControlGroupList newControlGroups;
+        System.out.println("Status change");
+        System.out.println("Docked: " + isBitSet(newStatus.Flags, Flags.DOCKED));
+        System.out.println("Landed: " + isBitSet(newStatus.Flags, Flags.LANDED_PLANET));
+
         if(ControlGroups.UI_MODE_CONTROLS.containsKey(newStatus.GuiFocus)) {
-            newControlGroups = ControlGroups.UI_MODE_CONTROLS.get(newStatus.GuiFocus);
+            currentControlGroups = ControlGroups.UI_MODE_CONTROLS.get(newStatus.GuiFocus);
         } else {
-            newControlGroups = ControlGroups.UI_MODE_CONTROLS.get(GuiFocus.NONE);
+            currentControlGroups = ControlGroups.UI_MODE_CONTROLS.get(GuiFocus.NONE);
         }
-
-        if(newControlGroups == currentControlGroups) {
-            if(Application.DEBUG) System.out.println("Control groups match, won't re-highlight");
-            return;
-        }
-
-        currentControlGroups = newControlGroups;
 
         List<Integer> remainingLogitechKeys = new LogitechKeysList();
         List<String> keys;
