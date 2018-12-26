@@ -2,6 +2,9 @@ package com.bmc.elite;
 
 import com.bmc.elite.callbacks.JournalCallback;
 import com.bmc.elite.config.Application;
+import com.bmc.elite.config.LedKeys;
+import com.bmc.elite.lists.LogitechKeysList;
+import com.bmc.elite.mappings.Colors;
 import com.bmc.elite.models.JournalEvent;
 import com.logitech.gaming.LogiLED;
 
@@ -13,6 +16,8 @@ public class EliteLed {
     FileWatcher statusFileWatcher;
     FileWatcher bindingsFileWatcher;
     JournalWatcher journalWatcher;
+
+    int jumpState = 0;
 
     public void enable() {
         if(!enabled) {
@@ -36,6 +41,24 @@ public class EliteLed {
                         if(Application.DEBUG) LogUtils.log("Got new journal events");
                         for(JournalEvent journalEvent : newEvents) {
                             LogUtils.log(journalEvent.event);
+                            if(journalEvent.event.equals("FSDTarget")) {
+                                jumpState = 1;
+                            } else if(journalEvent.event.equals("StartJump")) {
+                                if(jumpState == 1) {
+                                    jumpState = 2;
+                                }
+                            } else if(journalEvent.event.equals("FSDJump")) {
+                                jumpState = 0;
+                            }
+                        }
+                        if(jumpState == 2) {
+                            LedTools.setKeyPulseFromColorArrays(LedKeys.NUM_NINE, Colors.SHIP_STUFF, Colors.DEFENCE, 300, true);
+                            LedTools.setKeyPulseFromColorArrays(LedKeys.NUM_SEVEN, Colors.SHIP_STUFF, Colors.DEFENCE, 300, true);
+                            LedTools.setKeyPulseFromColorArrays(LedKeys.NUM_EIGHT, Colors.SHIP_STUFF, Colors.DEFENCE, 300, true);
+                        } else {
+                            LedTools.stopKeyEffects(LedKeys.NUM_NINE);
+                            LedTools.stopKeyEffects(LedKeys.NUM_SEVEN);
+                            LedTools.stopKeyEffects(LedKeys.NUM_EIGHT);
                         }
                     }
                 });
@@ -52,10 +75,10 @@ public class EliteLed {
                 bindingsFileWatcher.stop();
                 bindingsFileWatcher = null;
             }
-//            if(journalWatcher != null) {
-//                journalWatcher.stop();
-//                journalWatcher = null;
-//            }
+            if(journalWatcher != null) {
+                journalWatcher.stop();
+                journalWatcher = null;
+            }
             LogiLED.LogiLedShutdown();
             enabled = false;
         }
