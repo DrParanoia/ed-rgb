@@ -1,5 +1,6 @@
 package com.bmc.elite;
 
+import com.bmc.elite.config.Application;
 import com.bmc.elite.mappings.Controls;
 import org.w3c.dom.*;
 
@@ -36,13 +37,13 @@ public class BindingParser {
 
         File bindingsFolder = new File(FRONTIER_BINDINGS_PATH);
         String currentFileName;
-        if(Application.DEBUG) System.out.println("Searching for preset: " + presetName);
+        if(Application.DEBUG) LogUtils.log("Searching for preset: " + presetName);
         for (final File fileEntry : bindingsFolder.listFiles()) {
             if (!fileEntry.isDirectory()) {
                 currentFileName = fileEntry.getName();
                 if(currentFileName.endsWith(".binds")) {
                     if(currentFileName.startsWith(presetName + ".")) {
-                        if(Application.DEBUG) System.out.println("Found bindings: " + currentFileName);
+                        if(Application.DEBUG) LogUtils.log("Found bindings: " + currentFileName);
                         bindingsFile = fileEntry;
                         break;
                     }

@@ -1,5 +1,6 @@
 package com.bmc.elite;
 
+import com.bmc.elite.config.Application;
 import com.bmc.elite.gui.MainWindow;
 import com.sun.jna.platform.WindowUtils;
 import com.sun.jna.platform.win32.User32;
@@ -38,7 +39,7 @@ public class EliteProcessWatcherRunnable implements Runnable {
                     activeWindowExe = exePathParts[exePathParts.length - 1];
 
                     if(!previousActiveExePath.equals(activeWindowExePath)) {
-                        if(Application.DEBUG) System.out.println("Foreground process changed: " + activeWindowExePath);
+                        if(Application.DEBUG) LogUtils.log("Foreground process changed: " + activeWindowExePath);
                         previousActiveExePath = activeWindowExePath;
 
                         if(
@@ -48,13 +49,13 @@ public class EliteProcessWatcherRunnable implements Runnable {
                             )
                             && MainWindow.IN_FOCUS
                         ) {
-                            if(Application.DEBUG) System.out.println("Highlighting app gained focus, starting highlighting");
+                            if(Application.DEBUG) LogUtils.log("Highlighting app gained focus, starting highlighting");
                             lastFocusedProcess = activeWindowExe;
                         } else if(activeWindowExe.equals(ELITE_EXECUTABLE_CHECK)) {
-                            if(Application.DEBUG) System.out.println("Elite gained focus, starting highlighting");
+                            if(Application.DEBUG) LogUtils.log("Elite gained focus, starting highlighting");
                             lastFocusedProcess = activeWindowExe;
                         } else if(!lastFocusedProcess.isEmpty()) {
-                            if(Application.DEBUG && !lastFocusedProcess.isEmpty()) System.out.println(lastFocusedProcess + " lost focus, stopping highlighting");
+                            if(Application.DEBUG && !lastFocusedProcess.isEmpty()) LogUtils.log(lastFocusedProcess + " lost focus, stopping highlighting");
                             lastFocusedProcess = "";
                             eliteLed.disable();
                         }

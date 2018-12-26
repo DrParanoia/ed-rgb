@@ -1,5 +1,6 @@
 package com.bmc.elite;
 
+import com.bmc.elite.config.Application;
 import com.bmc.elite.config.PipPresets;
 import com.bmc.elite.config.PulsatingKeys;
 import com.bmc.elite.mappings.Colors;
@@ -14,7 +15,6 @@ import com.bmc.elite.status.GuiFocus;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 
-import java.io.File;
 import java.io.FileReader;
 import java.util.*;
 
@@ -22,15 +22,6 @@ public class KeyColorService {
 
     Gson gson;
     JsonReader jsonReader;
-
-    public static int PULSE_DURATION = 200;
-    public static int DELEY_AFTER_COLOR_SET = 250;
-    public static String FRONTIER_DIRECTORY_PATH = System.getProperty("user.home")
-        + File.separator + "Saved Games"
-        + File.separator + "Frontier Developments"
-        + File.separator + "Elite Dangerous";
-    public static final String STATUS_FILE_NAME = "Status.json";
-    public static String STATUS_FILE_PATH = FRONTIER_DIRECTORY_PATH + File.separator + STATUS_FILE_NAME;
 
     public static boolean isBitSet(long bitmask, int flag) {
         return (bitmask & flag) == flag;
@@ -90,7 +81,7 @@ public class KeyColorService {
 
         try {
             // We need to give time for color scheme to set
-            Thread.sleep(DELEY_AFTER_COLOR_SET);
+            Thread.sleep(Application.DELAY_AFTER_COLOR_SET);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -98,11 +89,11 @@ public class KeyColorService {
 
     public void updateStatus() {
         try {
-            jsonReader = new JsonReader(new FileReader(STATUS_FILE_PATH));
+            jsonReader = new JsonReader(new FileReader(Application.STATUS_FILE_PATH));
 
             Status newStatus = gson.fromJson(jsonReader, Status.class);
             if(newStatus == null) {
-                if(Application.DEBUG) System.out.println("Cannot get status!");
+                if(Application.DEBUG) LogUtils.log("Cannot get status!");
                 return;
             }
             setColorsFromBindings(newStatus);
@@ -158,7 +149,7 @@ public class KeyColorService {
                         eliteBindings.get(controlName),
                         Colors.OTHER,
                         MAIN_CONTROLS.get(controlName),
-                        PULSE_DURATION,
+                        Application.PULSE_DURATION,
                         true
                     );
                 } else {

@@ -1,5 +1,7 @@
 package com.bmc.elite;
 
+import com.bmc.elite.callbacks.FileWatcherCallback;
+import com.bmc.elite.config.Application;
 import com.sun.istack.internal.Nullable;
 
 import java.io.File;
@@ -37,10 +39,18 @@ public class FileWatcher {
 
     @Nullable
     public void watchFile(final String filePath, final FileWatcherCallback callback) {
-        List<String> pathParts = new LinkedList<>(Arrays.asList(filePath.split(Pattern.quote(File.separator))));
+        File fileToWatch = new File(filePath);
 
-        String filename = pathParts.remove(pathParts.size() - 1);
-        String directory = String.join(File.separator, pathParts);
+        String filename;
+        String directory;
+        if(fileToWatch.isFile()) {
+            List<String> pathParts = new LinkedList<>(Arrays.asList(filePath.split(Pattern.quote(File.separator))));
+            filename = pathParts.remove(pathParts.size() - 1);
+            directory = String.join(File.separator, pathParts);
+        } else {
+            filename = null;
+            directory = filePath;
+        }
 
         Path statusFilePath = FileSystems.getDefault().getPath(directory);
 
@@ -54,19 +64,22 @@ public class FileWatcher {
                         watchServiceKey = watchService.take();
                         for (WatchEvent<?> event : watchServiceKey.pollEvents()) {
                             final Path changed = (Path) event.context();
-                            if (changed.startsWith(filename)) {
-                                if(Application.DEBUG) System.out.println(filename + " has changed");
-                                callback.fileChanged();
+                            if (filename != null && changed.startsWith(filename)) {
+                                if(Application.DEBUG) LogUtils.log(filename + " has changed");
+                                callback.fileChanged(changed);
+                            } else {
+                                if(Application.DEBUG) LogUtils.log(filename + " has changed");
+                                callback.fileChanged(changed);
                             }
                         }
                         boolean valid = watchServiceKey.reset();
                         if (!valid) {
-                            if(Application.DEBUG) System.out.println("Key has been unregistered");
+                            if(Application.DEBUG) LogUtils.log("Key has been unregistered");
                             break;
                         }
                     }
                 } catch (ClosedWatchServiceException closedException) {
-                    if(Application.DEBUG) System.out.println("Stopped watching " + filename);
+                    if(Application.DEBUG) LogUtils.log("Stopped watching " + filename);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
