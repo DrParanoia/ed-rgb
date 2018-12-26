@@ -6,19 +6,21 @@ import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef;
 
 import java.io.File;
-import java.io.PrintStream;
+import java.util.regex.Pattern;
 
 public class EliteProcessWatcherRunnable implements Runnable {
 
     WinDef.HWND activeWindow;
+    String activeWindowExePath = "";
+    String previousActiveExePath = "";
     String activeWindowExe = "";
-    String previousActiveExe = "";
     EliteLed eliteLed;
     String lastFocusedProcess = "";
 
     public static final int PROCESS_WATCH_TIMEOUT = 200;
     public static final String ELITE_EXECUTABLE_CHECK = "EliteDangerous64.exe";
     public static final String JAVA_EXECUTABLE_CHECK = "java.exe";
+    public static final String JAVA_EXECUTABLE_CHECK_ALT = "javaw.exe";
 
     public EliteProcessWatcherRunnable() {
         eliteLed = new EliteLed();
@@ -26,28 +28,35 @@ public class EliteProcessWatcherRunnable implements Runnable {
 
     @Override
     public void run() {
+        String[] exePathParts;
         while (true) {
             try {
                 activeWindow = User32.INSTANCE.GetForegroundWindow();
                 if(activeWindow != null) {
-                    activeWindowExe = WindowUtils.getProcessFilePath(activeWindow);
+                    activeWindowExePath = WindowUtils.getProcessFilePath(activeWindow);
+                    exePathParts = activeWindowExePath.split(Pattern.quote(File.separator));
+                    activeWindowExe = exePathParts[exePathParts.length - 1];
 
-                    if(!previousActiveExe.equals(activeWindowExe)) {
-                        if(Application.DEBUG) System.out.println("Foreground process changed: " + activeWindowExe);
-                        previousActiveExe = activeWindowExe;
+                    if(!previousActiveExePath.equals(activeWindowExePath)) {
+                        if(Application.DEBUG) System.out.println("Foreground process changed: " + activeWindowExePath);
+                        previousActiveExePath = activeWindowExePath;
 
-                        if(activeWindowExe.endsWith(JAVA_EXECUTABLE_CHECK) && MainWindow.IN_FOCUS) {
-                            lastFocusedProcess = JAVA_EXECUTABLE_CHECK;
-
+                        if(
+                            (
+                                activeWindowExe.equals(JAVA_EXECUTABLE_CHECK)
+                                || activeWindowExe.equals(JAVA_EXECUTABLE_CHECK_ALT)
+                            )
+                            && MainWindow.IN_FOCUS
+                        ) {
                             if(Application.DEBUG) System.out.println("Highlighting app gained focus, starting highlighting");
-                        } else if(activeWindowExe.endsWith(ELITE_EXECUTABLE_CHECK)) {
-                            lastFocusedProcess = ELITE_EXECUTABLE_CHECK;
-
+                            lastFocusedProcess = activeWindowExe;
+                        } else if(activeWindowExe.equals(ELITE_EXECUTABLE_CHECK)) {
                             if(Application.DEBUG) System.out.println("Elite gained focus, starting highlighting");
+                            lastFocusedProcess = activeWindowExe;
                         } else if(!lastFocusedProcess.isEmpty()) {
+                            if(Application.DEBUG && !lastFocusedProcess.isEmpty()) System.out.println(lastFocusedProcess + " lost focus, stopping highlighting");
                             lastFocusedProcess = "";
                             eliteLed.disable();
-                            if(Application.DEBUG && !lastFocusedProcess.isEmpty()) System.out.println(lastFocusedProcess + " lost focus, stopping highlighting");
                         }
 
                         if(!lastFocusedProcess.isEmpty()) {
