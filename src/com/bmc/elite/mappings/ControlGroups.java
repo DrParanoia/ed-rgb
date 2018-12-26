@@ -30,8 +30,7 @@ public class ControlGroups {
         })),
         new ControlGroup(Colors.UI, new ArrayList<>(Arrays.asList(
             Controls.FocusLeftPanel, Controls.FocusCommsPanel, Controls.QuickCommsPanel,
-            Controls.FocusRadarPanel, Controls.FocusRightPanel, Controls.OrderAggressiveBehaviour,
-            Controls.UI_Select, Controls.PlayerHUDModeToggle
+            Controls.FocusRadarPanel, Controls.FocusRightPanel, Controls.UI_Select, Controls.PlayerHUDModeToggle
         ))),
         new ControlGroup(Colors.UI, new ArrayList<>(Arrays.asList(
             Controls.UI_Left, Controls.UI_Right, Controls.UI_Up, Controls.UI_Down
@@ -42,6 +41,11 @@ public class ControlGroups {
             Controls.UI_Left, Controls.UI_Right, Controls.UI_Up, Controls.UI_Down
         )), new StatusState(new int[] {
             Flags.LANDED_PLANET
+        })),
+        new ControlGroup(Colors.UI, new ArrayList<>(Arrays.asList(
+            Controls.OrderAggressiveBehaviour
+        )), new StatusState(null, new int[] {
+                Flags.DOCKED, Flags.LANDED_PLANET
         })),
         new ControlGroup(Colors.NAVIGATION, new ArrayList<>(Arrays.asList(
             Controls.GalaxyMapOpen, Controls.SystemMapOpen, Controls.TargetNextRouteSystem
