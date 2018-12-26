@@ -1,14 +1,11 @@
 package com.bmc.elite;
 
-import com.bmc.elite.mappings.ControlGroups;
 import com.bmc.elite.mappings.Controls;
 import org.w3c.dom.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,30 +24,6 @@ public class BindingParser {
     private static HashMap<String, List<String>> bindings = null;
     private static File bindingsFile = null;
 
-    public static String readFile(String filename) {
-        String result = "";
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(filename));
-            try {
-                StringBuilder sb = new StringBuilder();
-                String line = br.readLine();
-
-                while (line != null) {
-                    sb.append(line);
-                    sb.append(System.lineSeparator());
-                    line = br.readLine();
-                }
-                result = sb.toString();
-            } finally {
-                br.close();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return result;
-    }
-
     public static File getBindingsFile() {
         return getBindingsFile(false);
     }
@@ -59,7 +32,7 @@ public class BindingParser {
             return bindingsFile;
         }
         bindingsFile = null;
-        String presetName = readFile(PRESET_FILE).trim();
+        String presetName = FileUtils.readFile(PRESET_FILE).trim();
 
         File bindingsFolder = new File(FRONTIER_BINDINGS_PATH);
         String currentFileName;
