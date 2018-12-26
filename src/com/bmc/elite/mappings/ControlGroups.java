@@ -71,12 +71,12 @@ public class ControlGroups {
             Flags.DOCKED, Flags.LANDED_PLANET
         })),
         new ControlGroup(Colors.OFFENCE, new ArrayList<>(Arrays.asList(
-            Controls.SelectHighestThreat, Controls.CycleFireGroupPrevious, Controls.CycleFireGroupNext,
-            Controls.CycleNextSubsystem, Controls.CyclePreviousSubsystem, Controls.CycleNextHostileTarget,
-            Controls.CyclePreviousHostileTarget
+            Controls.CycleFireGroupPrevious
         ))),
         new ControlGroup(Colors.OFFENCE, new ArrayList<>(Arrays.asList(
-            Controls.DeployHardpointToggle, Controls.IncreaseWeaponsPower, Controls.OrderFocusTarget
+            Controls.DeployHardpointToggle, Controls.IncreaseWeaponsPower, Controls.OrderFocusTarget,
+            Controls.CycleFireGroupNext, Controls.SelectHighestThreat, Controls.CycleNextSubsystem,
+            Controls.CyclePreviousSubsystem, Controls.CycleNextHostileTarget, Controls.CyclePreviousHostileTarget
         )), new StatusState(null, new int[] {
             Flags.DOCKED, Flags.LANDED_PLANET
         })),
