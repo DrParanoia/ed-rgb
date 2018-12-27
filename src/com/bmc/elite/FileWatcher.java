@@ -65,10 +65,10 @@ public class FileWatcher {
                         for (WatchEvent<?> event : watchServiceKey.pollEvents()) {
                             final Path changed = (Path) event.context();
                             if (filename != null && changed.startsWith(filename)) {
-                                if(Application.DEBUG) LogUtils.log(filename + " has changed");
+//                                if(Application.DEBUG) LogUtils.log(filename + " has changed");
                                 callback.fileChanged(changed);
                             } else {
-                                if(Application.DEBUG) LogUtils.log(filename + " has changed");
+//                                if(Application.DEBUG) LogUtils.log(filename + " has changed");
                                 callback.fileChanged(changed);
                             }
                         }

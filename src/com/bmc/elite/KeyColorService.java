@@ -14,6 +14,7 @@ import com.bmc.elite.status.Flags;
 import com.bmc.elite.status.GuiFocus;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
+import com.logitech.gaming.LogiLED;
 
 import java.io.FileReader;
 import java.util.*;
@@ -50,6 +51,11 @@ public class KeyColorService {
     }
 
     public void setColorsFromBindings(Status newStatus) {
+
+        if(AnimationHelper.isAnimating()) {
+            return;
+        }
+
         if(ControlGroups.UI_MODE_CONTROLS.containsKey(newStatus.GuiFocus)) {
             currentControlGroups = ControlGroups.UI_MODE_CONTROLS.get(newStatus.GuiFocus);
         } else {
@@ -79,6 +85,11 @@ public class KeyColorService {
 
         setToggleKeyColors(newStatus);
 
+        LogiLED.LogiLedSetLightingForKeyWithKeyName(10, 0, 100, 100);
+        LogiLED.LogiLedSetLightingForKeyWithQuartzCode(10, 0, 100, 100);
+        LogiLED.LogiLedSetLightingForKeyWithHidCode(10, 0, 100, 100);
+        LogiLED.LogiLedSetLightingForKeyWithScanCode(10, 0, 100, 100);
+
         try {
             // We need to give time for color scheme to set
             Thread.sleep(Application.DELAY_AFTER_COLOR_SET);
@@ -88,12 +99,13 @@ public class KeyColorService {
     }
 
     public void updateStatus() {
+        updateStatus(FileUtils.readFile(Application.STATUS_FILE_PATH));
+    }
+    public void updateStatus(String statusJson) {
         try {
-            jsonReader = new JsonReader(new FileReader(Application.STATUS_FILE_PATH));
-
-            Status newStatus = gson.fromJson(jsonReader, Status.class);
+            Status newStatus = gson.fromJson(statusJson, Status.class);
             if(newStatus == null) {
-                if(Application.DEBUG) LogUtils.log("Cannot get status!");
+                if(Application.DEBUG) LogUtils.log("Cannot get status! " + statusJson);
                 return;
             }
             setColorsFromBindings(newStatus);

@@ -1,32 +1,19 @@
 package com.bmc.elite;
 
-import com.bmc.elite.callbacks.FileLineCallback;
-
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileReader;
 
 public class FileUtils {
     public static String readFile(String filename) {
-        return readFile(filename, null);
-    }
-    public static String readFile(String filename, FileLineCallback lineCallback) {
-        String result = "";
+        StringBuilder sb = new StringBuilder();
         try {
             BufferedReader br = new BufferedReader(new FileReader(filename));
             try {
-                StringBuilder sb = new StringBuilder();
-                String line = br.readLine();
-
-                int lineNumber = 0;
-                while (line != null) {
-                    if(lineCallback != null) lineCallback.gotLine(lineNumber++, line);
-                    sb.append(line);
-                    sb.append(System.lineSeparator());
-                    line = br.readLine();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    sb.append(line).append(System.lineSeparator());
                 }
-                result = sb.toString();
             } finally {
                 br.close();
             }
@@ -34,7 +21,7 @@ public class FileUtils {
             e.printStackTrace();
         }
 
-        return result;
+        return sb.toString();
     }
 
     public static File lastFileModified(String dir) {

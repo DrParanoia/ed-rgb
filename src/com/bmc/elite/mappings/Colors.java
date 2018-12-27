@@ -4,6 +4,7 @@ public class Colors {
     public static final Integer[] HUD_MODE_COMBAT = colorsToPercentArray(255, 80, 0);
     public static final Integer[] HUD_MODE_DISCOVERY = colorsToPercentArray(0, 160, 255);
 
+    public static final Integer[] NONE = colorsToPercentArray(0, 0, 0);
     public static final Integer[] OTHER = colorsToPercentArray(60, 0, 0);
     public static final Integer[] UI = colorsToPercentArray(255, 80, 0);
     public static final Integer[] UI_ALT = colorsToPercentArray(255, 115, 70);

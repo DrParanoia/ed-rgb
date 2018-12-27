@@ -6,15 +6,12 @@ import com.bmc.elite.models.JournalEvent;
 import com.google.gson.Gson;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public class JournalWatcher {
     static Gson gson = new Gson();
 
     String currentLogFile = "";
-    FileWatcher journalFileWatcher = null;
-    int lastEventLine = -1;
+    NonStopFileReader nonStopFileReader;
 
     public JournalWatcher(JournalCallback journalCallback) {
         File lastLogFile = FileUtils.lastFileModified(Application.FRONTIER_DIRECTORY_PATH, ".log");
@@ -26,41 +23,19 @@ public class JournalWatcher {
                 stop();
                 if(currentLogFile != null) {
                     if(Application.DEBUG) LogUtils.log("Watching journal file: " + currentLogFile);
-                    lastEventLine = -1;
-                    journalCallback.journalChanged(getNewJournalEvents());
-                    journalFileWatcher = new FileWatcher(
-                            currentLogFile,
-                            changedFile -> {
-                                List<JournalEvent> newJournalEvents = getNewJournalEvents();
-                                if(!newJournalEvents.isEmpty()) {
-                                    journalCallback.journalChanged(newJournalEvents);
-                                }
-                            }
-                    );
+
+                    nonStopFileReader = new NonStopFileReader(currentLogFile, (lineNumber, lineValue) -> {
+                        journalCallback.journalChanged(gson.fromJson(lineValue, JournalEvent.class));
+                    }, NonStopFileReader.ReadMode.TAIL_END, false);
                 }
             }
         }
     }
 
-    public List<JournalEvent> getNewJournalEvents() {
-        List<JournalEvent> journalEvents = new ArrayList<>();
-
-        if(currentLogFile != null) {
-            FileUtils.readFile(currentLogFile, (lineNumber, line) -> {
-                if(lineNumber > lastEventLine) {
-                    journalEvents.add(gson.fromJson(line, JournalEvent.class));
-                    lastEventLine = lineNumber;
-                }
-            });
-        }
-
-        return journalEvents;
-    }
-
-    public void stop() {
-        if(journalFileWatcher != null) {
-            journalFileWatcher.stop();
-            journalFileWatcher = null;
+    void stop() {
+        if(nonStopFileReader != null) {
+            nonStopFileReader.stop();
+            nonStopFileReader = null;
         }
     }
 }

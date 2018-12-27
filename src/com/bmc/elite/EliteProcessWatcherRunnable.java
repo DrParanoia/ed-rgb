@@ -30,47 +30,48 @@ public class EliteProcessWatcherRunnable implements Runnable {
     @Override
     public void run() {
         String[] exePathParts;
-        while (true) {
-            try {
-                activeWindow = User32.INSTANCE.GetForegroundWindow();
-                if(activeWindow != null) {
-                    activeWindowExePath = WindowUtils.getProcessFilePath(activeWindow);
-                    exePathParts = activeWindowExePath.split(Pattern.quote(File.separator));
-                    activeWindowExe = exePathParts[exePathParts.length - 1];
-
-                    if(!previousActiveExePath.equals(activeWindowExePath)) {
-                        if(Application.DEBUG) LogUtils.log("Foreground process changed: " + activeWindowExePath);
-                        previousActiveExePath = activeWindowExePath;
-
-                        if(
-                            (
-                                activeWindowExe.equals(JAVA_EXECUTABLE_CHECK)
-                                || activeWindowExe.equals(JAVA_EXECUTABLE_CHECK_ALT)
-                            )
-                            && MainWindow.IN_FOCUS
-                        ) {
-                            if(Application.DEBUG) LogUtils.log("Highlighting app gained focus, starting highlighting");
-                            lastFocusedProcess = activeWindowExe;
-                        } else if(activeWindowExe.equals(ELITE_EXECUTABLE_CHECK)) {
-                            if(Application.DEBUG) LogUtils.log("Elite gained focus, starting highlighting");
-                            lastFocusedProcess = activeWindowExe;
-                        } else if(!lastFocusedProcess.isEmpty()) {
-                            if(Application.DEBUG && !lastFocusedProcess.isEmpty()) LogUtils.log(lastFocusedProcess + " lost focus, stopping highlighting");
-                            lastFocusedProcess = "";
-                            eliteLed.disable();
-                        }
-
-                        if(!lastFocusedProcess.isEmpty()) {
-                            // Wait for logitech app to load any existing game profile
-                            Thread.sleep(250);
-                            eliteLed.enable();
-                        }
-                    }
-                }
-                Thread.sleep(PROCESS_WATCH_TIMEOUT);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        eliteLed.enable();
+//        while (true) {
+//            try {
+//                activeWindow = User32.INSTANCE.GetForegroundWindow();
+//                if(activeWindow != null) {
+//                    activeWindowExePath = WindowUtils.getProcessFilePath(activeWindow);
+//                    exePathParts = activeWindowExePath.split(Pattern.quote(File.separator));
+//                    activeWindowExe = exePathParts[exePathParts.length - 1];
+//
+//                    if(!previousActiveExePath.equals(activeWindowExePath)) {
+//                        if(Application.DEBUG) LogUtils.log("Foreground process changed: " + activeWindowExePath);
+//                        previousActiveExePath = activeWindowExePath;
+//
+//                        if(
+//                            (
+//                                activeWindowExe.equals(JAVA_EXECUTABLE_CHECK)
+//                                || activeWindowExe.equals(JAVA_EXECUTABLE_CHECK_ALT)
+//                            )
+//                            && MainWindow.IN_FOCUS
+//                        ) {
+//                            if(Application.DEBUG) LogUtils.log("Highlighting app gained focus, starting highlighting");
+//                            lastFocusedProcess = activeWindowExe;
+//                        } else if(activeWindowExe.equals(ELITE_EXECUTABLE_CHECK)) {
+//                            if(Application.DEBUG) LogUtils.log("Elite gained focus, starting highlighting");
+//                            lastFocusedProcess = activeWindowExe;
+//                        } else if(!lastFocusedProcess.isEmpty()) {
+//                            if(Application.DEBUG && !lastFocusedProcess.isEmpty()) LogUtils.log(lastFocusedProcess + " lost focus, stopping highlighting");
+//                            lastFocusedProcess = "";
+//                            eliteLed.disable();
+//                        }
+//
+//                        if(!lastFocusedProcess.isEmpty()) {
+//                            // Wait for logitech app to load any existing game profile
+//                            Thread.sleep(250);
+//                            eliteLed.enable();
+//                        }
+//                    }
+//                }
+//                Thread.sleep(PROCESS_WATCH_TIMEOUT);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 }

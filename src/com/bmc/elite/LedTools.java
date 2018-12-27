@@ -56,6 +56,11 @@ public class LedTools {
             );
         }
     }
+    public static void setKeysPulseFromColorArrays(int[] keys, Integer[] colorArray1, Integer[] colorArray2, int msDuration, boolean isInfinite) {
+        for(int key : keys) {
+            setKeyPulseFromColorArrays(key, colorArray1, colorArray2, msDuration, isInfinite);
+        }
+    }
     public static void setEliteKeyPulseFromColorArrays(String eliteKeyName, Integer[] colorArray1, Integer[] colorArray2, int msDuration, boolean isInfinite) {
         if(EliteKeysToLogitech.KEY_MAP.containsKey(eliteKeyName)) {
             setKeyPulseFromColorArrays(EliteKeysToLogitech.KEY_MAP.get(eliteKeyName), colorArray1, colorArray2, msDuration, isInfinite);
