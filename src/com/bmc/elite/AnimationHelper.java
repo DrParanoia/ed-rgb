@@ -23,7 +23,6 @@ public class AnimationHelper {
                 break;
             case Events.SupercruiseEntry:
                 chargingFSD = false;
-                stopHyperspaceAnimation();
                 break;
             case Events.SupercruiseExit:
                 chargingFSD = false;
