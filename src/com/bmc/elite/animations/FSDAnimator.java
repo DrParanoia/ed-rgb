@@ -69,15 +69,15 @@ public class FSDAnimator {
                 try {
                     // Need this sleep so that keys have time to dim
                     Thread.sleep(50);
-                    animationHelper.pulseAnimation();
+                    animationHelper.playFromFile("scan_pulse.eft");
                     Thread.sleep(1000);
-                    animationHelper.pulseAnimation();
+                    animationHelper.playFromFile("scan_pulse.eft");
                     Thread.sleep(1000);
-                    animationHelper.pulseAnimation();
+                    animationHelper.playFromFile("scan_pulse.eft");
                     Thread.sleep(1000);
-                    animationHelper.pulseAnimation();
+                    animationHelper.playFromFile("scan_pulse.eft");
                     Thread.sleep(1000);
-                    animationHelper.pulseAnimation();
+                    animationHelper.playFromFile("scan_pulse.eft");
                     Thread.sleep(1000);
                 } catch (Exception e) {
                     e.printStackTrace();

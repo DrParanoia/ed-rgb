@@ -1,6 +1,7 @@
 package com.bmc.elite;
 
 import com.bmc.elite.animations.AnimationHelper;
+import com.bmc.elite.animations.FSDAnimator;
 import com.bmc.elite.callbacks.JournalCallback;
 import com.bmc.elite.config.Application;
 import com.bmc.elite.models.JournalEvent;
@@ -39,6 +40,8 @@ public class EliteLed {
                     }
                 });
             }
+
+            animationHelper.fsdAnimator.FSDCountdown();
         }
     }
     public void disable() {

@@ -1,30 +1,19 @@
 package com.bmc.elite.animations;
 
-import com.bmc.elite.LedTools;
-import com.bmc.elite.LogUtils;
-import com.bmc.elite.config.LedKeys;
-import com.bmc.elite.lists.LogitechKeysList;
+import com.bmc.elite.LogitechAnimationParser;
 import com.bmc.elite.mappings.Colors;
-import com.bmc.elite.mappings.Events;
 import com.bmc.elite.models.JournalEvent;
-import com.logitech.gaming.LogiLED;
-import javafx.animation.AnimationTimer;
-import javafx.animation.Interpolator;
-import javafx.animation.TranslateTransition;
-import javafx.scene.shape.CubicCurve;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class AnimationHelper {
 
-    private static final int MIN_ANIMATION_DELAY_MS = 1;
-    private static final int MAX_ANIMATION_STEPS = 100;
+    private HashMap<Integer, KeyAnimator> animatingKeys = new HashMap<>();
 
-    private HashMap<Integer, AnimationState> animatingKeys = new HashMap<>();
-
-    FSDAnimator fsdAnimator;
+    public FSDAnimator fsdAnimator;
 
     private int animationCounter = 0;
 
@@ -39,6 +28,28 @@ public class AnimationHelper {
 
     private AnimationHelper() {
         fsdAnimator = new FSDAnimator(this);
+        LogitechAnimationParser.parseFile(getClass().getResource("/eft/test_wave.eft").getPath());
+    }
+
+    public void playFromFile(String animationFileName) {
+        List<AnimationQueueItem> animationItems = LogitechAnimationParser.parseFile(getClass().getResource("/eft/" + animationFileName).getPath());
+        playPulseParamQueue(animationItems);
+    }
+    public void playPulseParamQueue(List<AnimationQueueItem> animationItems) {
+        playPulseParamQueue(animationItems, 0);
+    }
+    public void playPulseParamQueue(List<AnimationQueueItem> animationItems, int position) {
+        AnimationQueueItem animationItem = animationItems.get(position);
+        if(position < animationItems.size() - 1) {
+            pulseKeys(animationItem.animatedKeyList, animationItem.duration, false, new AnimationCallback() {
+                @Override
+                public void onFinish(boolean wasStopped) {
+                    playPulseParamQueue(animationItems, position + 1);
+                }
+            });
+        } else {
+            pulseKeys(animationItem.animatedKeyList, animationItem.duration, false);
+        }
     }
 
     public void processJournalEvent(JournalEvent journalEvent) {
@@ -57,25 +68,22 @@ public class AnimationHelper {
 
     public void stopKeyAnimation(int key) {
         if(animatingKeys.containsKey(key)) {
-            animatingKeys.remove(key).animationThread.stop();
+            animatingKeys.remove(key).removeKey(key);
         }
     }
-    public AnimationState startKeyAnimation(AnimationState animationState) {
-        if(animatingKeys.containsKey(animationState.key)) {
-            AnimationState currentAnimationState = animatingKeys.get(animationState.key);
-            if(currentAnimationState.equals(animationState)) {
-                return currentAnimationState;
-            } else {
-                stopKeyAnimation(animationState.key);
-            }
-        }
 
-        animatingKeys.put(animationState.key, animationState);
-        animationState.animationThread.start();
-        return animationState;
+    public void startKeysAnimation(List<AnimatedKey> animatedKeyList, KeyAnimator keyAnimator) {
+        for(AnimatedKey animatedKey : animatedKeyList) {
+            stopKeyAnimation(animatedKey.key);
+            animatingKeys.put(animatedKey.key, keyAnimator);
+        }
+        keyAnimator.start();
     }
 
-    public AnimationState pulseKey(final int key, Integer[] startColor, Integer[] endColor, int duration, boolean infinite) {
+    public KeyAnimator pulseKey(final int key, Integer[] startColor, Integer[] endColor, int duration, boolean infinite) {
+        return pulseKeys(new Integer[] {key}, startColor, endColor, duration, infinite, null);
+    }
+    public KeyAnimator pulseKeys(final Integer[] keys, Integer[] startColor, Integer[] endColor, int duration, boolean infinite, AnimationCallback animationCallback) {
         Color start = new Color(
             Colors.percentToColor(startColor[0]),
             Colors.percentToColor(startColor[1]),
@@ -86,105 +94,27 @@ public class AnimationHelper {
             Colors.percentToColor(endColor[1]),
             Colors.percentToColor(endColor[2])
         );
-        return pulseKey(key, start.getRGB(), end.getRGB(), duration, infinite);
-    }
-    public AnimationState pulseKey(final int key, final Integer startColor, final Integer endColor, int duration, boolean infinite) {
-        LogUtils.log("Starting pulse " + key);
-        AnimationState animationState = new AnimationState(key, startColor, endColor, duration, infinite, new AnimationThread(new AnimationRunnable() {
-            @Override
-            public void run() {
-                try {
-                    long startTime = System.currentTimeMillis();
-                    long finishTime = startTime + duration;
-                    long currentTime, deltaTime;
-                    float animationStep;
-                    boolean animationEnded = false;
-                    Integer color1 = startColor, color2 = endColor, tmpColor;
-                    Color activeColor;
-
-                    while(!stopped) {
-                        currentTime = System.currentTimeMillis();
-                        if(animationEnded) {
-                            if(infinite) {
-                                startTime = currentTime;
-                                finishTime = startTime + duration;
-                                tmpColor = color1;
-                                color1 = color2;
-                                color2 = tmpColor;
-                                animationEnded = false;
-                            } else {
-                                break;
-                            }
-                        }
-                        deltaTime = currentTime - startTime;
-                        animationStep = Math.min(1, (1F / duration) * deltaTime);
-                        activeColor = new Color(ColorInterpolator.interpolate(animationStep, color1, color2));
-
-                        LogiLED.LogiLedSetLightingForKeyWithHidCode(
-                            key,
-                            Colors.colorToPercent(activeColor.getRed()),
-                            Colors.colorToPercent(activeColor.getGreen()),
-                            Colors.colorToPercent(activeColor.getBlue())
-                        );
-
-                        if(currentTime >= finishTime) {
-                            animationEnded = true;
-                        }
-                        Thread.sleep(1);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    stopKeyAnimation(key);
-                }
-            }
-        }));
-
-        return startKeyAnimation(animationState);
+        return pulseKeys(keys, start.getRGB(), end.getRGB(), duration, infinite, animationCallback);
     }
 
-    public void pulseAnimation() {
-        new Thread(() -> {
-            try {
-                int del = 120;
-                int dim = 600;
+    public KeyAnimator pulseKey(final int key, Integer startColor, Integer endColor, int duration, boolean infinite) {
+        return pulseKeys(new Integer[] {key}, startColor, endColor, duration, infinite, null);
+    }
+    public KeyAnimator pulseKeys(final Integer[] keys, final Integer startColor, final Integer endColor, int duration, boolean infinite, AnimationCallback animationCallback) {
+        List<AnimatedKey> animatedKeyList = new ArrayList<>();
+        for(Integer key : keys) {
+            animatedKeyList.add(new AnimatedKey(key, startColor, endColor));
+        }
 
-                Integer[] color = new Integer[] {0, 100, 100};
+        return pulseKeys(animatedKeyList, duration, infinite, animationCallback);
+    }
+    public KeyAnimator pulseKeys(List<AnimatedKey> animatedKeyList, int duration, boolean infinite) {
+        return pulseKeys(animatedKeyList, duration, infinite, null);
+    }
+    public KeyAnimator pulseKeys(List<AnimatedKey> animatedKeyList, int duration, boolean infinite, AnimationCallback animationCallback) {
+        KeyAnimator keyAnimator = new KeyAnimator(animatedKeyList, duration, infinite, animationCallback);
+        startKeysAnimation(animatedKeyList, keyAnimator);
 
-                LedTools.setKeysPulseFromColorArrays(new int[] {
-                    LogiLED.H
-                }, color, Colors.NONE, dim, false);
-
-                Thread.sleep(del);
-
-                LedTools.setKeysPulseFromColorArrays(new int[] {
-                    LogiLED.Y, LogiLED.G, LogiLED.B, LogiLED.N, LogiLED.J, LogiLED.U,
-                }, color, Colors.NONE, dim, false);
-
-                Thread.sleep(del);
-
-                LedTools.setKeysPulseFromColorArrays(new int[] {
-                    LogiLED.SIX, LogiLED.T, LogiLED.F, LogiLED.V, LogiLED.SPACE, LogiLED.M, LogiLED.K, LogiLED.I,
-                    LogiLED.EIGHT, LogiLED.SEVEN,
-                }, color, Colors.NONE, dim, false);
-
-                Thread.sleep(del);
-
-                LedTools.setKeysPulseFromColorArrays(new int[] {
-                    LogiLED.F5, LogiLED.FIVE, LogiLED.R, LogiLED.D, LogiLED.C, LogiLED.F6, LogiLED.F7, LogiLED.NINE,
-                    LogiLED.O, LogiLED.L, LogiLED.COMMA
-                }, color, Colors.NONE, dim, false);
-
-                Thread.sleep(del);
-
-                LedTools.setKeysPulseFromColorArrays(new int[] {
-                    LogiLED.F4, LogiLED.FOUR, LogiLED.R, LogiLED.S, LogiLED.X, LogiLED.LEFT_ALT, LogiLED.F8, LogiLED.ZERO,
-                    LogiLED.P, LogiLED.SEMICOLON, LogiLED.PERIOD, LogiLED.RIGHT_ALT
-                }, color, Colors.NONE, dim, false);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }).start();
+        return keyAnimator;
     }
 }
