@@ -7,12 +7,14 @@ import com.bmc.elite.mappings.Colors;
 import com.bmc.elite.mappings.Events;
 import com.bmc.elite.models.JournalEvent;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class FSDAnimator {
 
     boolean chargingFSD = false;
     AnimationHelper animationHelper;
+    String starType = null;
 
     public FSDAnimator(AnimationHelper animationHelper) {
         this.animationHelper = animationHelper;
@@ -22,6 +24,11 @@ public class FSDAnimator {
         switch(journalEvent.event) {
             case Events.StartJump:
                 chargingFSD = true;
+                if(journalEvent.JumpType.equals("Hyperspace")) {
+                    starType = journalEvent.StarClass.toLowerCase();
+                } else {
+                    starType = null;
+                }
                 FSDCountdown();
                 break;
             case Events.SupercruiseEntry:
@@ -48,7 +55,13 @@ public class FSDAnimator {
     }
     public void stopHyperspaceAnimation() {
         animationHelper.stopPlayingFile("hyperspace.eft");
-        LedTools.setAllKeysFromColorArray(Colors.NONE);
+
+        String starFileName = "start_entry_" + starType + ".eft";
+        if(getClass().getResource("/eft/" + starFileName) != null) {
+            animationHelper.playFromFile(starFileName);
+        } else {
+            animationHelper.playFromFile("start_entry.eft");
+        }
     }
 
     public void FSDCountdown() {
