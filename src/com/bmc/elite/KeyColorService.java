@@ -1,5 +1,6 @@
 package com.bmc.elite;
 
+import com.bmc.elite.animations.AnimationHelper;
 import com.bmc.elite.config.Application;
 import com.bmc.elite.config.PipPresets;
 import com.bmc.elite.config.PulsatingKeys;
@@ -16,7 +17,6 @@ import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.logitech.gaming.LogiLED;
 
-import java.io.FileReader;
 import java.util.*;
 
 public class KeyColorService {
@@ -31,6 +31,8 @@ public class KeyColorService {
     public static HashMap<String, List<String>> eliteBindings;
 
     public static HashMap<String, Integer[]> MAIN_CONTROLS = ControlGroups.getControlToColorMap(ControlGroups.MAIN_CONTROLS);
+
+    AnimationHelper animationHelper = AnimationHelper.getInstance();
 
     ControlGroupList currentControlGroups;
     Status currentStatus = null;
@@ -52,7 +54,7 @@ public class KeyColorService {
 
     public void setColorsFromBindings(Status newStatus) {
 
-        if(AnimationHelper.isAnimating()) {
+        if(animationHelper.isAnimating()) {
             return;
         }
 
@@ -64,6 +66,7 @@ public class KeyColorService {
 
         List<Integer> remainingLogitechKeys = new LogitechKeysList();
         List<String> keys;
+        List<Integer> setLogitechKeys;
         for(ControlGroup controlGroup : currentControlGroups) {
             if(controlGroup.neededStatus != null && !controlGroup.neededStatus.conditionSatisfied(newStatus)) {
                 continue;
@@ -74,7 +77,30 @@ public class KeyColorService {
                     if(Arrays.equals(controlGroup.color, Colors.OTHER)) {
                         continue;
                     }
-                    remainingLogitechKeys.removeAll(LedTools.setEliteKeysFromColorArray(keys, controlGroup.color));
+
+                    if(pulsatingKeys.containsKey(control)) {
+                        StatusState statusState = pulsatingKeys.get(control);
+                        if(
+                            currentControlGroups.allControls.contains(control)
+                            && statusState.conditionSatisfied(newStatus)
+                        ) {
+                            setLogitechKeys = LedTools.setEliteKeysPulseFromColorArrays(
+                                eliteBindings.get(control),
+                                Colors.OTHER,
+                                MAIN_CONTROLS.get(control),
+                                Application.PULSE_DURATION,
+                                true
+                            );
+                        } else {
+                            setLogitechKeys = LedTools.setEliteKeysFromColorArray(
+                                eliteBindings.get(control),
+                                MAIN_CONTROLS.get(control)
+                            );
+                        }
+                    } else {
+                        setLogitechKeys = LedTools.setEliteKeysFromColorArray(keys, controlGroup.color);
+                    }
+                    remainingLogitechKeys.removeAll(setLogitechKeys);
                 }
             }
         }
@@ -84,11 +110,6 @@ public class KeyColorService {
         }
 
         setToggleKeyColors(newStatus);
-
-        LogiLED.LogiLedSetLightingForKeyWithKeyName(10, 0, 100, 100);
-        LogiLED.LogiLedSetLightingForKeyWithQuartzCode(10, 0, 100, 100);
-        LogiLED.LogiLedSetLightingForKeyWithHidCode(10, 0, 100, 100);
-        LogiLED.LogiLedSetLightingForKeyWithScanCode(10, 0, 100, 100);
 
         try {
             // We need to give time for color scheme to set
@@ -109,7 +130,6 @@ public class KeyColorService {
                 return;
             }
             setColorsFromBindings(newStatus);
-            setKeyColorFromStatus(newStatus);
             currentStatus = newStatus;
         } catch (Exception e) {
             e.printStackTrace();
@@ -145,31 +165,6 @@ public class KeyColorService {
                     Colors.HUD_MODE_COMBAT
                 );
             }
-        }
-    }
-
-    public void setKeyColorFromStatus(Status newStatus) {
-        try {
-            String controlName;
-            for(Map.Entry<String, StatusState> condition : pulsatingKeys.entrySet()) {
-                controlName = condition.getKey();
-                if(
-                    currentControlGroups.allControls.contains(controlName)
-                    && condition.getValue().conditionSatisfied(newStatus)
-                ) {
-                    LedTools.setEliteKeysPulseFromColorArrays(
-                        eliteBindings.get(controlName),
-                        Colors.OTHER,
-                        MAIN_CONTROLS.get(controlName),
-                        Application.PULSE_DURATION,
-                        true
-                    );
-                } else {
-                    LedTools.stopEliteKeysEffect(eliteBindings.get(controlName));
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

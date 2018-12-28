@@ -1,5 +1,6 @@
 package com.bmc.elite;
 
+import com.bmc.elite.animations.AnimationHelper;
 import com.bmc.elite.callbacks.JournalCallback;
 import com.bmc.elite.config.Application;
 import com.bmc.elite.models.JournalEvent;
@@ -11,7 +12,7 @@ public class EliteLed {
     NonStopFileReader statusFileReader;
     FileWatcher bindingsFileWatcher;
     JournalWatcher journalWatcher;
-    AnimationHelper animationHelper = new AnimationHelper();
+    AnimationHelper animationHelper = AnimationHelper.getInstance();
 
     public void enable() {
         if(!enabled) {

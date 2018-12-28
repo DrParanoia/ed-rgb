@@ -26,7 +26,10 @@ public class Colors {
     public static final Integer[] MODE_DISABLE = colorsToPercentArray(61, 88, 156);
 
 
-    private static Integer colorToPercent(int colorValue) {
+    public static Integer percentToColor(int percent) {
+        return Math.round(255F/100*percent);
+    }
+    public static Integer colorToPercent(int colorValue) {
         return Math.round((float)100/255*colorValue);
     }
     private static Integer[] colorsToPercentArray(int red, int green, int blue) {
