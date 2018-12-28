@@ -1,7 +1,7 @@
 package com.bmc.elite;
 
 import com.bmc.elite.animations.AnimationHelper;
-import com.bmc.elite.mappings.EliteKeysToLogitech;
+import com.bmc.elite.mappings.EliteKeyMaps;
 import com.logitech.gaming.LogiLED;
 import com.sun.istack.internal.Nullable;
 
@@ -19,10 +19,19 @@ public class LedTools {
 
     @Nullable
     public static Integer setKeyFromColorArray(int key, Integer[] colorArray) {
+        return setKeyFromColorArray(key, colorArray, false);
+    }
+
+    @Nullable
+    public static Integer setKeyFromColorArray(int key, Integer[] colorArray, boolean logitech) {
         Integer logitechKey = null;
         if(colorArray != null) {
             animationHelper.stopKeyAnimation(key);
-            LogiLED.LogiLedSetLightingForKeyWithKeyName(key, colorArray[0], colorArray[1], colorArray[2]);
+            if(logitech) {
+                LogiLED.LogiLedSetLightingForKeyWithKeyName(key, colorArray[0], colorArray[1], colorArray[2]);
+            } else {
+                LogiLED.LogiLedSetLightingForKeyWithHidCode(key, colorArray[0], colorArray[1], colorArray[2]);
+            }
             logitechKey = key;
         }
 
@@ -31,8 +40,8 @@ public class LedTools {
     @Nullable
     public static Integer setEliteKeyFromColorArray(String eliteKeyName, Integer[] colorArray) {
         Integer logitechKey = null;
-        if(EliteKeysToLogitech.KEY_MAP.containsKey(eliteKeyName)) {
-            logitechKey = setKeyFromColorArray(EliteKeysToLogitech.KEY_MAP.get(eliteKeyName), colorArray);
+        if(EliteKeyMaps.TO_HID.containsKey(eliteKeyName)) {
+            logitechKey = setKeyFromColorArray(EliteKeyMaps.TO_HID.get(eliteKeyName), colorArray);
         }
 
         return logitechKey;
@@ -70,8 +79,8 @@ public class LedTools {
         return logitechKeys;
     }
     public static Integer setEliteKeyPulseFromColorArrays(String eliteKeyName, Integer[] colorArray1, Integer[] colorArray2, int msDuration, boolean isInfinite) {
-        if(EliteKeysToLogitech.KEY_MAP.containsKey(eliteKeyName)) {
-            return setKeyPulseFromColorArrays(EliteKeysToLogitech.KEY_MAP.get(eliteKeyName), colorArray1, colorArray2, msDuration, isInfinite);
+        if(EliteKeyMaps.TO_HID.containsKey(eliteKeyName)) {
+            return setKeyPulseFromColorArrays(EliteKeyMaps.TO_HID.get(eliteKeyName), colorArray1, colorArray2, msDuration, isInfinite);
         }
 
         return null;
@@ -93,8 +102,8 @@ public class LedTools {
         animationHelper.stopKeyAnimation(key);
     }
     public static void stopEliteKeyEffect(String eliteKeyName) {
-        if(EliteKeysToLogitech.KEY_MAP.containsKey(eliteKeyName)) {
-            stopKeyEffects(EliteKeysToLogitech.KEY_MAP.get(eliteKeyName));
+        if(EliteKeyMaps.TO_HID.containsKey(eliteKeyName)) {
+            stopKeyEffects(EliteKeyMaps.TO_HID.get(eliteKeyName));
         }
     }
     public static void stopEliteKeysEffect(List<String> eliteKeyNames) {

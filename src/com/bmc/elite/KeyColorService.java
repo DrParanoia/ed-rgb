@@ -4,6 +4,7 @@ import com.bmc.elite.animations.AnimationHelper;
 import com.bmc.elite.config.Application;
 import com.bmc.elite.config.PipPresets;
 import com.bmc.elite.config.PulsatingKeys;
+import com.bmc.elite.lists.HidKeysList;
 import com.bmc.elite.mappings.Colors;
 import com.bmc.elite.mappings.ControlGroups;
 import com.bmc.elite.mappings.Controls;
@@ -65,8 +66,10 @@ public class KeyColorService {
         }
 
         List<Integer> remainingLogitechKeys = new LogitechKeysList();
+        List<Integer> remainingHidKeys = new HidKeysList();
+
         List<String> keys;
-        List<Integer> setLogitechKeys;
+        List<Integer> setHidKeys;
         for(ControlGroup controlGroup : currentControlGroups) {
             if(controlGroup.neededStatus != null && !controlGroup.neededStatus.conditionSatisfied(newStatus)) {
                 continue;
@@ -84,7 +87,7 @@ public class KeyColorService {
                             currentControlGroups.allControls.contains(control)
                             && statusState.conditionSatisfied(newStatus)
                         ) {
-                            setLogitechKeys = LedTools.setEliteKeysPulseFromColorArrays(
+                            setHidKeys = LedTools.setEliteKeysPulseFromColorArrays(
                                 eliteBindings.get(control),
                                 Colors.OTHER,
                                 MAIN_CONTROLS.get(control),
@@ -92,21 +95,24 @@ public class KeyColorService {
                                 true
                             );
                         } else {
-                            setLogitechKeys = LedTools.setEliteKeysFromColorArray(
+                            setHidKeys = LedTools.setEliteKeysFromColorArray(
                                 eliteBindings.get(control),
                                 MAIN_CONTROLS.get(control)
                             );
                         }
                     } else {
-                        setLogitechKeys = LedTools.setEliteKeysFromColorArray(keys, controlGroup.color);
+                        setHidKeys = LedTools.setEliteKeysFromColorArray(keys, controlGroup.color);
                     }
-                    remainingLogitechKeys.removeAll(setLogitechKeys);
+                    remainingHidKeys.removeAll(setHidKeys);
                 }
             }
         }
 
+        for(Integer hidKey : remainingHidKeys) {
+            LedTools.setKeyFromColorArray(hidKey, Colors.OTHER);
+        }
         for(Integer logitechKey : remainingLogitechKeys) {
-            LedTools.setKeyFromColorArray(logitechKey, Colors.OTHER);
+            LedTools.setKeyFromColorArray(logitechKey, Colors.OTHER, true);
         }
 
         setToggleKeyColors(newStatus);
@@ -142,12 +148,14 @@ public class KeyColorService {
             if(Arrays.equals(pipPreset.getValue(), newStatus.Pips)) {
                 LedTools.setKeyFromColorArray(
                     pipPreset.getKey(),
-                    PipPresets.PIP_PRESET_COLORS.get(pipPreset.getKey())
+                    PipPresets.PIP_PRESET_COLORS.get(pipPreset.getKey()),
+                    true
                 );
             } else {
                 LedTools.setKeyFromColorArray(
                     pipPreset.getKey(),
-                    PipPresets.PIP_PRESET_COLORS_DISABLED.get(pipPreset.getKey())
+                    PipPresets.PIP_PRESET_COLORS_DISABLED.get(pipPreset.getKey()),
+                    true
                 );
             }
         }

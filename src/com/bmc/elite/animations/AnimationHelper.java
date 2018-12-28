@@ -120,7 +120,7 @@ public class AnimationHelper {
                         animationStep = Math.min(1, (1F / duration) * deltaTime);
                         activeColor = new Color(ColorInterpolator.interpolate(animationStep, color1, color2));
 
-                        LogiLED.LogiLedSetLightingForKeyWithKeyName(
+                        LogiLED.LogiLedSetLightingForKeyWithHidCode(
                             key,
                             Colors.colorToPercent(activeColor.getRed()),
                             Colors.colorToPercent(activeColor.getGreen()),
