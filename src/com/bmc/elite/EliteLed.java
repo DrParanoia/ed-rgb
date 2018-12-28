@@ -4,6 +4,7 @@ import com.bmc.elite.animations.AnimationHelper;
 import com.bmc.elite.animations.FSDAnimator;
 import com.bmc.elite.callbacks.JournalCallback;
 import com.bmc.elite.config.Application;
+import com.bmc.elite.mappings.Colors;
 import com.bmc.elite.models.JournalEvent;
 import com.logitech.gaming.LogiLED;
 
@@ -26,7 +27,6 @@ public class EliteLed {
                 Application.STATUS_FILE_PATH,
                 (lineNumber, lineValue) -> keyColorService.updateStatus(lineValue), NonStopFileReader.ReadMode.FULL
             );
-
             bindingsFileWatcher = new FileWatcher(
                 BindingParser.getBindingsFile().getAbsolutePath(),
                 changedFile -> keyColorService.initColors(true)
@@ -40,8 +40,6 @@ public class EliteLed {
                     }
                 });
             }
-
-            animationHelper.fsdAnimator.FSDCountdown();
         }
     }
     public void disable() {

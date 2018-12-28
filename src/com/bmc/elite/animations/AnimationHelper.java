@@ -12,6 +12,7 @@ import java.util.List;
 public class AnimationHelper {
 
     private HashMap<Integer, KeyAnimator> animatingKeys = new HashMap<>();
+    private HashMap<String, KeyAnimator> animationsInProgress = new HashMap<>();
 
     public FSDAnimator fsdAnimator;
 
@@ -28,27 +29,49 @@ public class AnimationHelper {
 
     private AnimationHelper() {
         fsdAnimator = new FSDAnimator(this);
-        LogitechAnimationParser.parseFile(getClass().getResource("/eft/test_wave.eft").getPath());
     }
 
+    public void stopPlayingFile(String animationFileName) {
+        String filename = "/eft/" + animationFileName;
+        if(animationsInProgress.containsKey(filename)) {
+            animationsInProgress.remove(filename).stop();
+            decreaseAnimationCount();
+        }
+    }
     public void playFromFile(String animationFileName) {
-        List<AnimationQueueItem> animationItems = LogitechAnimationParser.parseFile(getClass().getResource("/eft/" + animationFileName).getPath());
-        playPulseParamQueue(animationItems);
+        playFromFile(animationFileName, false);
     }
-    public void playPulseParamQueue(List<AnimationQueueItem> animationItems) {
-        playPulseParamQueue(animationItems, 0);
+    public void playFromFile(String animationFileName, boolean infinite) {
+        increaseAnimationCount();
+        String filename = "/eft/" + animationFileName;
+        List<AnimationQueueItem> animationItems = LogitechAnimationParser.parseFile(getClass().getResource(filename).getPath());
+        playPulseParamQueue(filename, animationItems, infinite);
     }
-    public void playPulseParamQueue(List<AnimationQueueItem> animationItems, int position) {
+    public void playPulseParamQueue(String id, List<AnimationQueueItem> animationItems, boolean infinite) {
+        playPulseParamQueue(id, animationItems, 0, infinite);
+    }
+    public void playPulseParamQueue(String id, List<AnimationQueueItem> animationItems, int position, boolean infinite) {
         AnimationQueueItem animationItem = animationItems.get(position);
-        if(position < animationItems.size() - 1) {
-            pulseKeys(animationItem.animatedKeyList, animationItem.duration, false, new AnimationCallback() {
+
+        boolean finalPulse = position == animationItems.size() - 1;
+        if(!finalPulse || infinite) {
+            animationsInProgress.put(id, pulseKeys(animationItem.animatedKeyList, animationItem.duration, false, new AnimationCallback() {
                 @Override
                 public void onFinish(boolean wasStopped) {
-                    playPulseParamQueue(animationItems, position + 1);
+                    if(!wasStopped) {
+                        playPulseParamQueue(id, animationItems, finalPulse ? 0 : position + 1, infinite);
+                    } else {
+                        stopPlayingFile(id);
+                    }
                 }
-            });
+            }));
         } else {
-            pulseKeys(animationItem.animatedKeyList, animationItem.duration, false);
+            animationsInProgress.put(id, pulseKeys(animationItem.animatedKeyList, animationItem.duration, false, new AnimationCallback() {
+                @Override
+                public void onFinish(boolean wasStopped) {
+                    stopPlayingFile(id);
+                }
+            }));
         }
     }
 

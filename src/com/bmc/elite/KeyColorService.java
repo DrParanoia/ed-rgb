@@ -116,13 +116,13 @@ public class KeyColorService {
         }
 
         setToggleKeyColors(newStatus);
-
-        try {
-            // We need to give time for color scheme to set
-            Thread.sleep(Application.DELAY_AFTER_COLOR_SET);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//
+//        try {
+//            // We need to give time for color scheme to set
+//            Thread.sleep(Application.DELAY_AFTER_COLOR_SET);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void updateStatus() {

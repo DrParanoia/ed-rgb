@@ -58,7 +58,10 @@ public class LogitechAnimationParser {
 
                     currentColor = Color.decode(keyEntry.getValue()).getRGB();
 
-                    if(previousKeyStates.containsKey(currentKey) && !currentColor.equals(previousKeyStates.get(currentKey))) {
+                    if(
+                        previousKeyStates.containsKey(currentKey)
+//                        && !currentColor.equals(previousKeyStates.get(currentKey))
+                    ) {
                         currentAnimatedKeys.add(new AnimatedKey(
                             currentKey, previousKeyStates.get(currentKey), currentColor, currentKeyMapType != 1
                         ));

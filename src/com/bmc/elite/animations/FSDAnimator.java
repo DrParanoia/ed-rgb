@@ -44,16 +44,11 @@ public class FSDAnimator {
     }
 
     public void playHyperspaceAnimation() {
-        animationHelper.increaseAnimationCount();
-        LedTools.setKeyPulseFromColorArrays(LedKeys.NUM_NINE, Colors.SHIP_STUFF, Colors.DEFENCE, 300, true);
-        LedTools.setKeyPulseFromColorArrays(LedKeys.NUM_SEVEN, Colors.SHIP_STUFF, Colors.DEFENCE, 300, true);
-        LedTools.setKeyPulseFromColorArrays(LedKeys.NUM_EIGHT, Colors.SHIP_STUFF, Colors.DEFENCE, 300, true);
+        animationHelper.playFromFile("hyperspace.eft", true);
     }
     public void stopHyperspaceAnimation() {
-        animationHelper.decreaseAnimationCount();
-        LedTools.stopKeyEffects(LedKeys.NUM_NINE);
-        LedTools.stopKeyEffects(LedKeys.NUM_SEVEN);
-        LedTools.stopKeyEffects(LedKeys.NUM_EIGHT);
+        animationHelper.stopPlayingFile("hyperspace.eft");
+        LedTools.setAllKeysFromColorArray(Colors.NONE);
     }
 
     public void FSDCountdown() {
