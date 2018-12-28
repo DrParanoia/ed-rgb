@@ -12,21 +12,27 @@ public class ControlGroups {
 
     public static ControlGroupList MAIN_CONTROLS = new ControlGroupList(Arrays.asList(
         new ControlGroup(Colors.MOVEMENT_SPEED, new ArrayList<>(Arrays.asList(
-            Controls.IncreaseEnginesPower, Controls.ForwardKey, Controls.BackwardKey,
-            Controls.UseBoostJuice, Controls.SetSpeedMinus100, Controls.SetSpeedMinus75,
-            Controls.SetSpeedMinus50, Controls.SetSpeedMinus25, Controls.SetSpeedZero, Controls.SetSpeed25,
-            Controls.SetSpeed50, Controls.SetSpeed75, Controls.SetSpeed100,
-            Controls.OrderHoldPosition, Controls.AutoBreakBuggyButton
+            Controls.ForwardKey, Controls.BackwardKey, Controls.IncreaseEnginesPower, Controls.SetSpeedZero,
+            Controls.SetSpeed25, Controls.SetSpeed50, Controls.SetSpeed75, Controls.SetSpeed100
+        )), new StatusState(null, new int[] {
+            Flags.DOCKED, Flags.LANDED_PLANET
+        })),
+        new ControlGroup(Colors.MOVEMENT_SPEED, new ArrayList<>(Arrays.asList(
+            Controls.UseBoostJuice, Controls.SetSpeedMinus100, Controls.SetSpeedMinus75, Controls.SetSpeedMinus50,
+            Controls.SetSpeedMinus25, Controls.OrderHoldPosition, Controls.AutoBreakBuggyButton
+        )), new StatusState(null, new int[] {
+            Flags.DOCKED, Flags.LANDED_PLANET, Flags.SUPERCRUISE
+        })),
+        new ControlGroup(Colors.MOVEMENT_SECONDARY, new ArrayList<>(Arrays.asList(
+            Controls.RollLeftButton, Controls.RollRightButton, Controls.PitchUpButton, Controls.PitchDownButton
         )), new StatusState(null, new int[] {
             Flags.DOCKED, Flags.LANDED_PLANET
         })),
         new ControlGroup(Colors.MOVEMENT_SECONDARY, new ArrayList<>(Arrays.asList(
-            Controls.RollLeftButton, Controls.RollRightButton, Controls.PitchUpButton,
-            Controls.PitchDownButton, Controls.LeftThrustButton,  Controls.RightThrustButton,
-            Controls.UpThrustButton, Controls.DownThrustButton, Controls.ForwardThrustButton,
-            Controls.BackwardThrustButton, Controls.OrderFollow
+            Controls.LeftThrustButton,  Controls.RightThrustButton, Controls.UpThrustButton, Controls.DownThrustButton,
+            Controls.ForwardThrustButton, Controls.BackwardThrustButton, Controls.OrderFollow
         )), new StatusState(null, new int[] {
-            Flags.DOCKED, Flags.LANDED_PLANET
+            Flags.DOCKED, Flags.LANDED_PLANET, Flags.SUPERCRUISE
         })),
         new ControlGroup(Colors.UI, new ArrayList<>(Arrays.asList(
             Controls.FocusLeftPanel, Controls.FocusCommsPanel, Controls.QuickCommsPanel,
@@ -45,15 +51,20 @@ public class ControlGroups {
         new ControlGroup(Colors.UI, new ArrayList<>(Arrays.asList(
             Controls.OrderAggressiveBehaviour
         )), new StatusState(null, new int[] {
-                Flags.DOCKED, Flags.LANDED_PLANET
+                Flags.DOCKED, Flags.LANDED_PLANET, Flags.SUPERCRUISE
         })),
         new ControlGroup(Colors.NAVIGATION, new ArrayList<>(Arrays.asList(
             Controls.GalaxyMapOpen, Controls.SystemMapOpen, Controls.TargetNextRouteSystem
         ))),
         new ControlGroup(Colors.NAVIGATION, new ArrayList<>(Arrays.asList(
-            Controls.HyperSuperCombination, Controls.Supercruise, Controls.Hyperspace, Controls.OrderRequestDock
+            Controls.HyperSuperCombination, Controls.Supercruise, Controls.Hyperspace
         )), new StatusState(null, new int[] {
             Flags.DOCKED, Flags.LANDED_PLANET
+        })),
+        new ControlGroup(Colors.NAVIGATION, new ArrayList<>(Arrays.asList(
+            Controls.OrderRequestDock
+        )), new StatusState(null, new int[] {
+            Flags.DOCKED, Flags.LANDED_PLANET, Flags.SUPERCRUISE
         })),
         new ControlGroup(Colors.SHIP_STUFF, new ArrayList<>(Arrays.asList(
             Controls.ShipSpotLightToggle, Controls.HeadlightsBuggyButton, Controls.MODIFIER, Controls.NightVisionToggle
@@ -62,23 +73,32 @@ public class ControlGroups {
             Controls.ToggleFlightAssist, Controls.ToggleCargoScoop, Controls.ToggleCargoScoop_Buggy,
             Controls.LandingGearToggle
         )), new StatusState(null, new int[] {
-             Flags.DOCKED, Flags.LANDED_PLANET
+             Flags.DOCKED, Flags.LANDED_PLANET, Flags.SUPERCRUISE
         })),
         new ControlGroup(Colors.DEFENCE, new ArrayList<>(Arrays.asList(
-            Controls.IncreaseSystemsPower, Controls.OrderDefensiveBehaviour, Controls.FireChaffLauncher,
-            Controls.UseShieldCell, Controls.DeployHeatSink, Controls.ChargeECM
+            Controls.IncreaseSystemsPower, Controls.UseShieldCell, Controls.DeployHeatSink, Controls.ChargeECM
         )), new StatusState(null, new int[] {
             Flags.DOCKED, Flags.LANDED_PLANET
+        })),
+        new ControlGroup(Colors.DEFENCE, new ArrayList<>(Arrays.asList(
+            Controls.OrderDefensiveBehaviour, Controls.FireChaffLauncher
+        )), new StatusState(null, new int[] {
+            Flags.DOCKED, Flags.LANDED_PLANET, Flags.SUPERCRUISE
         })),
         new ControlGroup(Colors.OFFENCE, new ArrayList<>(Arrays.asList(
             Controls.CycleFireGroupPrevious
         ))),
         new ControlGroup(Colors.OFFENCE, new ArrayList<>(Arrays.asList(
-            Controls.DeployHardpointToggle, Controls.IncreaseWeaponsPower, Controls.OrderFocusTarget,
-            Controls.CycleFireGroupNext, Controls.SelectHighestThreat, Controls.CycleNextSubsystem,
-            Controls.CyclePreviousSubsystem, Controls.CycleNextHostileTarget, Controls.CyclePreviousHostileTarget
+            Controls.IncreaseWeaponsPower, Controls.CycleFireGroupNext, Controls.SelectHighestThreat,
+            Controls.CycleNextSubsystem, Controls.CyclePreviousSubsystem, Controls.CycleNextHostileTarget,
+            Controls.CyclePreviousHostileTarget
         )), new StatusState(null, new int[] {
             Flags.DOCKED, Flags.LANDED_PLANET
+        })),
+        new ControlGroup(Colors.OFFENCE, new ArrayList<>(Arrays.asList(
+            Controls.DeployHardpointToggle, Controls.OrderFocusTarget
+        )), new StatusState(null, new int[] {
+            Flags.DOCKED, Flags.LANDED_PLANET, Flags.SUPERCRUISE
         })),
         new ControlGroup(Colors.WING, new ArrayList<>(Arrays.asList(
             Controls.TargetWingman0, Controls.TargetWingman1,
@@ -87,7 +107,7 @@ public class ControlGroups {
         new ControlGroup(Colors.WING, new ArrayList<>(Arrays.asList(
             Controls.OrderHoldFire
         )), new StatusState(null, new int[] {
-            Flags.DOCKED, Flags.LANDED_PLANET
+            Flags.DOCKED, Flags.LANDED_PLANET, Flags.SUPERCRUISE
         })),
         new ControlGroup(Colors.MODE_ENABLE, new ArrayList<>(Arrays.asList(
             Controls.ExplorationFSSEnter

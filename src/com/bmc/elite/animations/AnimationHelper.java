@@ -1,5 +1,6 @@
 package com.bmc.elite.animations;
 
+import com.bmc.elite.LogUtils;
 import com.bmc.elite.LogitechAnimationParser;
 import com.bmc.elite.mappings.Colors;
 import com.bmc.elite.models.JournalEvent;
@@ -35,14 +36,12 @@ public class AnimationHelper {
         String filename = "/eft/" + animationFileName;
         if(animationsInProgress.containsKey(filename)) {
             animationsInProgress.remove(filename).stop();
-            decreaseAnimationCount();
         }
     }
     public void playFromFile(String animationFileName) {
         playFromFile(animationFileName, false);
     }
     public void playFromFile(String animationFileName, boolean infinite) {
-        increaseAnimationCount();
         String filename = "/eft/" + animationFileName;
         List<AnimationQueueItem> animationItems = LogitechAnimationParser.parseFile(getClass().getResource(filename).getPath());
         playPulseParamQueue(filename, animationItems, infinite);
@@ -54,6 +53,7 @@ public class AnimationHelper {
         AnimationQueueItem animationItem = animationItems.get(position);
 
         boolean finalPulse = position == animationItems.size() - 1;
+        increaseAnimationCount();
         if(!finalPulse || infinite) {
             animationsInProgress.put(id, pulseKeys(animationItem.animatedKeyList, animationItem.duration, false, new AnimationCallback() {
                 @Override
@@ -63,6 +63,7 @@ public class AnimationHelper {
                     } else {
                         stopPlayingFile(id);
                     }
+                    decreaseAnimationCount();
                 }
             }));
         } else {
@@ -70,6 +71,7 @@ public class AnimationHelper {
                 @Override
                 public void onFinish(boolean wasStopped) {
                     stopPlayingFile(id);
+                    decreaseAnimationCount();
                 }
             }));
         }
@@ -86,7 +88,7 @@ public class AnimationHelper {
         animationCounter++;
     }
     public void decreaseAnimationCount() {
-        animationCounter = Math.min(0, animationCounter - 1);
+        animationCounter = Math.max(0, animationCounter - 1);
     }
 
     public void stopKeyAnimation(int key) {

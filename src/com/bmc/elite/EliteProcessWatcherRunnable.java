@@ -62,7 +62,7 @@ public class EliteProcessWatcherRunnable implements Runnable {
 
                         if(!lastFocusedProcess.isEmpty()) {
                             // Wait for logitech app to load any existing game profile
-                            Thread.sleep(250);
+                            Thread.sleep(350);
                             eliteLed.enable();
                         }
                     }
