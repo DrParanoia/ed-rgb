@@ -13,8 +13,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
+import java.util.Arrays;
+import java.util.Comparator;
 
 public class JournalWatcher {
     static Gson journalGson;
@@ -46,7 +49,26 @@ public class JournalWatcher {
     public JournalWatcher(JournalCallback journalCallback) {
         this.journalCallback = journalCallback;
         initGson();
+        readAllLogs();
         start();
+    }
+
+    private void readAllLogs() {
+        File journalDirectory = new File(Application.FRONTIER_DIRECTORY_PATH);
+        File[] journalFiles = journalDirectory.listFiles(pathname -> pathname.getName().endsWith(".log"));
+        if(journalFiles != null) {
+            Arrays.sort(journalFiles, Comparator.comparingLong(File::lastModified));
+            for(File journalFile : journalFiles) {
+                FileUtils.readFile(journalFile.getAbsolutePath(), (lineNumber, lineValue) -> {
+                    try {
+                        JournalEvent newEvent = journalGson.fromJson(lineValue, JournalEvent.class);
+                        if(newEvent.event != null) {
+                            journalStatus.processEvent(newEvent, false);
+                        }
+                    } catch (JsonParseException ignored) {}
+                });
+            }
+        }
     }
 
     void start() {
@@ -57,16 +79,6 @@ public class JournalWatcher {
             if(!currentLogFile.equals(lastLogFilePath)) {
                 stop(false);
                 currentLogFile = lastLogFilePath;
-
-                FileUtils.readFile(currentLogFile, (lineNumber, lineValue) -> {
-                    try {
-                        JournalEvent newEvent = journalGson.fromJson(lineValue, JournalEvent.class);
-                        if(newEvent.event != null) {
-                            journalStatus.processEvent(newEvent);
-                        }
-                    } catch (JsonParseException ignored) {}
-                });
-
                 nonStopFileReader = new NonStopFileReader(currentLogFile, (lineNumber, lineValue) -> {
                     try {
                         JournalEvent newEvent = journalGson.fromJson(lineValue, JournalEvent.class);
