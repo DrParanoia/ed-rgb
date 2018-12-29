@@ -1,25 +1,38 @@
 package com.bmc.elite;
 
+import com.bmc.elite.callbacks.StatusConditionCallback;
 import com.bmc.elite.models.Status;
 
 public class StatusState {
     int[] flagsSet;
     int guiFocus = -1;
     int[] flagsNotSet;
+    StatusConditionCallback conditionCallback;
 
+    public StatusState(StatusConditionCallback conditionCallback) {
+        this(null, null, conditionCallback);
+    }
     public StatusState(int[] flagsSet, int guiFocus, int[] flagsNotSet) {
+        this(flagsSet, -1, flagsNotSet, null);
+    }
+    public StatusState(int[] flagsSet, int guiFocus, int[] flagsNotSet, StatusConditionCallback conditionCallback) {
         this.flagsSet = flagsSet;
         this.guiFocus = guiFocus;
         this.flagsNotSet = flagsNotSet;
+        this.conditionCallback = conditionCallback;
     }
+
     public StatusState(int[] flagsSet, int[] flagsNotSet) {
-        this(flagsSet, -1, flagsNotSet);
+        this(flagsSet, flagsNotSet, null);
+    }
+    public StatusState(int[] flagsSet, int[] flagsNotSet, StatusConditionCallback conditionCallback) {
+        this(flagsSet, -1, flagsNotSet, conditionCallback);
     }
     public StatusState(int[] flagsSet, int guiFocus) {
-        this(flagsSet, guiFocus, new int[]{});
+        this(flagsSet, guiFocus, new int[]{}, null);
     }
     public StatusState(int[] flagsSet) {
-        this(flagsSet, -1, new int[]{});
+        this(flagsSet, -1, new int[]{}, null);
     }
 
     public boolean conditionSatisfied(Status status) {
@@ -42,6 +55,10 @@ public class StatusState {
                     return false;
                 }
             }
+        }
+
+        if(conditionCallback != null) {
+            return conditionCallback.checkCondition();
         }
 
         return true;

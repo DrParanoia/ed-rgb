@@ -25,6 +25,20 @@ public class KeyColorService {
     Gson gson;
     JsonReader jsonReader;
 
+    private static volatile KeyColorService instance = null;
+
+    public static synchronized KeyColorService getInstance() {
+        if(instance == null) {
+            instance = new KeyColorService();
+        }
+        return instance;
+    }
+
+    private KeyColorService() {
+        gson = new Gson();
+        initColors();
+    }
+
     public static boolean isBitSet(long bitmask, int flag) {
         return (bitmask & flag) == flag;
     }
@@ -39,11 +53,6 @@ public class KeyColorService {
     Status currentStatus = null;
 
     public PulsatingKeys pulsatingKeys = new PulsatingKeys();
-
-    public KeyColorService() {
-        gson = new Gson();
-        initColors();
-    }
 
     public void initColors() {
         initColors(false);

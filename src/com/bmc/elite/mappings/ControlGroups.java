@@ -1,6 +1,9 @@
 package com.bmc.elite.mappings;
 
 import com.bmc.elite.StatusState;
+import com.bmc.elite.callbacks.StatusConditionCallback;
+import com.bmc.elite.journal.JournalStatus;
+import com.bmc.elite.journal.enums.FighterStatus;
 import com.bmc.elite.models.ControlGroup;
 import com.bmc.elite.models.ControlGroupList;
 import com.bmc.elite.status.Flags;
@@ -10,6 +13,8 @@ import java.util.*;
 
 public class ControlGroups {
 
+    static JournalStatus journalStatus = JournalStatus.getInstance();
+
     public static ControlGroupList MAIN_CONTROLS = new ControlGroupList(Arrays.asList(
         new ControlGroup(Colors.MOVEMENT_SPEED, new ArrayList<>(Arrays.asList(
             Controls.ForwardKey, Controls.BackwardKey, Controls.IncreaseEnginesPower, Controls.SetSpeedZero,
@@ -18,10 +23,19 @@ public class ControlGroups {
             Flags.DOCKED, Flags.LANDED_PLANET
         })),
         new ControlGroup(Colors.MOVEMENT_SPEED, new ArrayList<>(Arrays.asList(
-            Controls.UseBoostJuice, Controls.SetSpeedMinus100, Controls.SetSpeedMinus75, Controls.SetSpeedMinus50,
-            Controls.SetSpeedMinus25, Controls.OrderHoldPosition, Controls.AutoBreakBuggyButton
+            Controls.SetSpeedMinus100, Controls.SetSpeedMinus75, Controls.SetSpeedMinus50,
+            Controls.SetSpeedMinus25, Controls.AutoBreakBuggyButton
         )), new StatusState(null, new int[] {
             Flags.DOCKED, Flags.LANDED_PLANET, Flags.SUPERCRUISE
+        })),
+        new ControlGroup(Colors.MOVEMENT_SPEED, new ArrayList<>(Arrays.asList(
+            Controls.OrderHoldPosition
+        )), new StatusState(() -> journalStatus.getFighterStatus() != FighterStatus.None)),
+
+        new ControlGroup(Colors.MOVEMENT_SPEED, new ArrayList<>(Arrays.asList(
+            Controls.UseBoostJuice
+        )), new StatusState(null, new int[] {
+            Flags.DOCKED, Flags.LANDED_PLANET, Flags.SUPERCRUISE, Flags.LANDING_GEAR, Flags.CARGO_SCOOP
         })),
         new ControlGroup(Colors.MOVEMENT_SECONDARY, new ArrayList<>(Arrays.asList(
             Controls.RollLeftButton, Controls.RollRightButton, Controls.PitchUpButton, Controls.PitchDownButton
@@ -30,10 +44,13 @@ public class ControlGroups {
         })),
         new ControlGroup(Colors.MOVEMENT_SECONDARY, new ArrayList<>(Arrays.asList(
             Controls.LeftThrustButton,  Controls.RightThrustButton, Controls.UpThrustButton, Controls.DownThrustButton,
-            Controls.ForwardThrustButton, Controls.BackwardThrustButton, Controls.OrderFollow
+            Controls.ForwardThrustButton, Controls.BackwardThrustButton
         )), new StatusState(null, new int[] {
             Flags.DOCKED, Flags.LANDED_PLANET, Flags.SUPERCRUISE
         })),
+        new ControlGroup(Colors.MOVEMENT_SECONDARY, new ArrayList<>(Arrays.asList(
+            Controls.OrderFollow
+        )), new StatusState(() -> journalStatus.getFighterStatus() != FighterStatus.None)),
         new ControlGroup(Colors.UI, new ArrayList<>(Arrays.asList(
             Controls.FocusLeftPanel, Controls.FocusCommsPanel, Controls.QuickCommsPanel,
             Controls.FocusRadarPanel, Controls.FocusRightPanel, Controls.UI_Select, Controls.PlayerHUDModeToggle
@@ -50,22 +67,19 @@ public class ControlGroups {
         })),
         new ControlGroup(Colors.UI, new ArrayList<>(Arrays.asList(
             Controls.OrderAggressiveBehaviour
-        )), new StatusState(null, new int[] {
-                Flags.DOCKED, Flags.LANDED_PLANET, Flags.SUPERCRUISE
-        })),
+        )), new StatusState(() -> journalStatus.getFighterStatus() != FighterStatus.None)),
+
         new ControlGroup(Colors.NAVIGATION, new ArrayList<>(Arrays.asList(
             Controls.GalaxyMapOpen, Controls.SystemMapOpen, Controls.TargetNextRouteSystem
         ))),
         new ControlGroup(Colors.NAVIGATION, new ArrayList<>(Arrays.asList(
             Controls.HyperSuperCombination, Controls.Supercruise, Controls.Hyperspace
         )), new StatusState(null, new int[] {
-            Flags.DOCKED, Flags.LANDED_PLANET
+            Flags.DOCKED, Flags.LANDED_PLANET, Flags.LANDING_GEAR, Flags.HARDPOINTS, Flags.CARGO_SCOOP
         })),
         new ControlGroup(Colors.NAVIGATION, new ArrayList<>(Arrays.asList(
             Controls.OrderRequestDock
-        )), new StatusState(null, new int[] {
-            Flags.DOCKED, Flags.LANDED_PLANET, Flags.SUPERCRUISE
-        })),
+        )), new StatusState(() -> journalStatus.getFighterStatus() != FighterStatus.None)),
         new ControlGroup(Colors.SHIP_STUFF, new ArrayList<>(Arrays.asList(
             Controls.ShipSpotLightToggle, Controls.HeadlightsBuggyButton, Controls.MODIFIER, Controls.NightVisionToggle
         ))),
@@ -81,10 +95,14 @@ public class ControlGroups {
             Flags.DOCKED, Flags.LANDED_PLANET
         })),
         new ControlGroup(Colors.DEFENCE, new ArrayList<>(Arrays.asList(
-            Controls.OrderDefensiveBehaviour, Controls.FireChaffLauncher
+            Controls.FireChaffLauncher
         )), new StatusState(null, new int[] {
             Flags.DOCKED, Flags.LANDED_PLANET, Flags.SUPERCRUISE
         })),
+        new ControlGroup(Colors.DEFENCE, new ArrayList<>(Arrays.asList(
+            Controls.OrderDefensiveBehaviour
+        )), new StatusState(() -> journalStatus.getFighterStatus() != FighterStatus.None)),
+
         new ControlGroup(Colors.OFFENCE, new ArrayList<>(Arrays.asList(
             Controls.CycleFireGroupPrevious
         ))),
@@ -96,10 +114,14 @@ public class ControlGroups {
             Flags.DOCKED, Flags.LANDED_PLANET
         })),
         new ControlGroup(Colors.OFFENCE, new ArrayList<>(Arrays.asList(
-            Controls.DeployHardpointToggle, Controls.OrderFocusTarget
+            Controls.DeployHardpointToggle
         )), new StatusState(null, new int[] {
             Flags.DOCKED, Flags.LANDED_PLANET, Flags.SUPERCRUISE
         })),
+        new ControlGroup(Colors.OFFENCE, new ArrayList<>(Arrays.asList(
+            Controls.OrderFocusTarget
+        )), new StatusState(() -> journalStatus.getFighterStatus() != FighterStatus.None)),
+
         new ControlGroup(Colors.WING, new ArrayList<>(Arrays.asList(
             Controls.TargetWingman0, Controls.TargetWingman1,
             Controls.TargetWingman2, Controls.SelectTargetsTarget, Controls.WingNavLock
@@ -108,9 +130,8 @@ public class ControlGroups {
         })),
         new ControlGroup(Colors.WING, new ArrayList<>(Arrays.asList(
             Controls.OrderHoldFire
-        )), new StatusState(null, new int[] {
-            Flags.DOCKED, Flags.LANDED_PLANET, Flags.SUPERCRUISE
-        })),
+        )), new StatusState(() -> journalStatus.getFighterStatus() != FighterStatus.None)),
+
         new ControlGroup(Colors.MODE_ENABLE, new ArrayList<>(Arrays.asList(
             Controls.ExplorationFSSEnter
         )), new StatusState(

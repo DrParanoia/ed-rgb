@@ -1,17 +1,25 @@
 package com.bmc.elite;
 
+import com.bmc.elite.callbacks.FileReadCallback;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 
 public class FileUtils {
     public static String readFile(String filename) {
+        return readFile(filename, null);
+    }
+    public static String readFile(String filename, FileReadCallback fileReadCallback) {
         StringBuilder sb = new StringBuilder();
         try {
             BufferedReader br = new BufferedReader(new FileReader(filename));
             try {
                 String line;
                 while ((line = br.readLine()) != null) {
+                    if(fileReadCallback != null) {
+                        fileReadCallback.onRead(0, line);
+                    }
                     sb.append(line).append(System.lineSeparator());
                 }
             } finally {

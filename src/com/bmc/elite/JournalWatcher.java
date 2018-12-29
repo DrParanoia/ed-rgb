@@ -1,8 +1,10 @@
 package com.bmc.elite;
 
+import com.bmc.elite.callbacks.FileReadCallback;
 import com.bmc.elite.callbacks.FileWatcherCallback;
 import com.bmc.elite.callbacks.JournalCallback;
 import com.bmc.elite.config.Application;
+import com.bmc.elite.journal.JournalStatus;
 import com.bmc.elite.journal.UnknownEvent;
 import com.bmc.elite.journal.JournalEvent;
 import com.bmc.elite.journal.events.*;
@@ -21,6 +23,7 @@ public class JournalWatcher {
     NonStopFileReader nonStopFileReader;
     JournalCallback journalCallback;
     FileWatcher journalDirectoryWatcher;
+    JournalStatus journalStatus = JournalStatus.getInstance();
 
     private void initGson() {
         RuntimeTypeAdapterFactory<JournalEvent> journalAdapterFactory = RuntimeTypeAdapterFactory.of(JournalEvent.class, "event", true)
@@ -54,6 +57,16 @@ public class JournalWatcher {
             if(!currentLogFile.equals(lastLogFilePath)) {
                 stop(false);
                 currentLogFile = lastLogFilePath;
+
+                FileUtils.readFile(currentLogFile, (lineNumber, lineValue) -> {
+                    try {
+                        JournalEvent newEvent = journalGson.fromJson(lineValue, JournalEvent.class);
+                        if(newEvent.event != null) {
+                            journalStatus.processEvent(newEvent);
+                        }
+                    } catch (JsonParseException ignored) {}
+                });
+
                 nonStopFileReader = new NonStopFileReader(currentLogFile, (lineNumber, lineValue) -> {
                     try {
                         JournalEvent newEvent = journalGson.fromJson(lineValue, JournalEvent.class);
@@ -61,6 +74,7 @@ public class JournalWatcher {
                             if(Application.DEBUG) LogUtils.log("Enum missing for: " + newEvent.getClass().getSimpleName());
                         } else {
                             journalCallback.journalChanged(newEvent);
+                            journalStatus.processEvent(newEvent);
                         }
                     } catch (JsonParseException e) {
                         UnknownEvent unknownEvent = journalGson.fromJson(lineValue, UnknownEvent.class);
@@ -71,12 +85,9 @@ public class JournalWatcher {
                 if(journalDirectoryWatcher == null) {
                     journalDirectoryWatcher = new FileWatcher(
                         Application.FRONTIER_DIRECTORY_PATH,
-                        new FileWatcherCallback() {
-                            @Override
-                            public void fileChanged(Path changedFile) {
-                                if(Application.DEBUG) LogUtils.log("New file created: " + changedFile);
-                                start();
-                            }
+                        changedFile -> {
+                            if(Application.DEBUG) LogUtils.log("New file created: " + changedFile);
+                            start();
                         },
                         StandardWatchEventKinds.ENTRY_CREATE
                     );

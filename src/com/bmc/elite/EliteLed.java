@@ -13,13 +13,13 @@ public class EliteLed {
     FileWatcher bindingsFileWatcher;
     JournalWatcher journalWatcher;
     AnimationHelper animationHelper = AnimationHelper.getInstance();
+    KeyColorService keyColorService = KeyColorService.getInstance();
 
     public void enable() {
         if(!enabled) {
             enabled = true;
             LogiLED.LogiLedInit();
             LogiLED.LogiLedSetTargetDevice(LogiLED.LOGI_DEVICETYPE_PERKEY_RGB);
-            KeyColorService keyColorService = new KeyColorService();
 
             statusFileReader = new NonStopFileReader(
                 Application.STATUS_FILE_PATH,
