@@ -103,7 +103,9 @@ public class ControlGroups {
         new ControlGroup(Colors.WING, new ArrayList<>(Arrays.asList(
             Controls.TargetWingman0, Controls.TargetWingman1,
             Controls.TargetWingman2, Controls.SelectTargetsTarget, Controls.WingNavLock
-        ))),
+        )), new StatusState(new int[] {
+            Flags.IN_WING
+        })),
         new ControlGroup(Colors.WING, new ArrayList<>(Arrays.asList(
             Controls.OrderHoldFire
         )), new StatusState(null, new int[] {
