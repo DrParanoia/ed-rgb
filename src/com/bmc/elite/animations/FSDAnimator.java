@@ -1,13 +1,13 @@
 package com.bmc.elite.animations;
 
 import com.bmc.elite.LedTools;
-import com.bmc.elite.config.LedKeys;
+import com.bmc.elite.journal.enums.JumpType;
+import com.bmc.elite.journal.events.StartJump;
 import com.bmc.elite.lists.LogitechKeysList;
 import com.bmc.elite.mappings.Colors;
-import com.bmc.elite.mappings.Events;
-import com.bmc.elite.models.JournalEvent;
+import com.bmc.elite.journal.enums.EventType;
+import com.bmc.elite.journal.JournalEvent;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class FSDAnimator {
@@ -22,26 +22,27 @@ public class FSDAnimator {
 
     public void processJournalEvent(JournalEvent journalEvent) {
         switch(journalEvent.event) {
-            case Events.StartJump:
+            case StartJump:
+                StartJump startJump = (StartJump) journalEvent;
                 chargingFSD = true;
-                if(journalEvent.JumpType.equals("Hyperspace")) {
-                    starType = journalEvent.StarClass.toLowerCase();
+                if(startJump.JumpType == JumpType.Hyperspace) {
+                    starType = startJump.StarClass.toLowerCase();
                 } else {
                     starType = null;
                 }
                 FSDCountdown();
                 break;
-            case Events.SupercruiseEntry:
+            case SupercruiseEntry:
                 chargingFSD = false;
                 break;
-            case Events.SupercruiseExit:
+            case SupercruiseExit:
                 chargingFSD = false;
                 break;
-            case Events.FSDJump:
+            case FSDJump:
                 chargingFSD = false;
                 stopHyperspaceAnimation();
                 break;
-            case Events.Music:
+            case Music:
                 if(chargingFSD) {
                     chargingFSD = false;
                     playHyperspaceAnimation();

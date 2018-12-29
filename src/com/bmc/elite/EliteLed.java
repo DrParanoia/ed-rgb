@@ -1,11 +1,9 @@
 package com.bmc.elite;
 
 import com.bmc.elite.animations.AnimationHelper;
-import com.bmc.elite.animations.FSDAnimator;
 import com.bmc.elite.callbacks.JournalCallback;
 import com.bmc.elite.config.Application;
-import com.bmc.elite.mappings.Colors;
-import com.bmc.elite.models.JournalEvent;
+import com.bmc.elite.journal.JournalEvent;
 import com.logitech.gaming.LogiLED;
 
 public class EliteLed {

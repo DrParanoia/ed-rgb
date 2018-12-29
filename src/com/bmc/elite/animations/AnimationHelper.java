@@ -1,9 +1,8 @@
 package com.bmc.elite.animations;
 
-import com.bmc.elite.LogUtils;
 import com.bmc.elite.LogitechAnimationParser;
 import com.bmc.elite.mappings.Colors;
-import com.bmc.elite.models.JournalEvent;
+import com.bmc.elite.journal.JournalEvent;
 
 import java.awt.*;
 import java.util.ArrayList;

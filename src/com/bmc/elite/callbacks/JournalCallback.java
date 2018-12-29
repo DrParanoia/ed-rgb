@@ -1,8 +1,6 @@
 package com.bmc.elite.callbacks;
 
-import com.bmc.elite.models.JournalEvent;
-
-import java.util.List;
+import com.bmc.elite.journal.JournalEvent;
 
 public interface JournalCallback {
     void journalChanged(JournalEvent journalEvent);
