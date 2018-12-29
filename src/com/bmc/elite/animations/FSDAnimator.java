@@ -60,7 +60,7 @@ public class FSDAnimator {
         if(getClass().getResource("/eft/" + starFileName) != null) {
             animationHelper.playFromFile(starFileName);
         } else {
-            animationHelper.playFromFile("start_entry.eft");
+            animationHelper.playFromFile("star_entry.eft");
         }
     }
 
