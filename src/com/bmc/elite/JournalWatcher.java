@@ -30,7 +30,9 @@ public class JournalWatcher {
             .registerSubtype(StartJump.class)
             .registerSubtype(SupercruiseEntry.class)
             .registerSubtype(SupercruiseExit.class);
-        journalGson = new GsonBuilder().registerTypeAdapterFactory(journalAdapterFactory).create();
+        journalGson = new GsonBuilder()
+            .registerTypeAdapterFactory(journalAdapterFactory)
+            .create();
     }
 
     public JournalWatcher(JournalCallback journalCallback) {
@@ -58,7 +60,7 @@ public class JournalWatcher {
                             GenericEvent genericEvent = journalGson.fromJson(lineValue, GenericEvent.class);
                             if(Application.DEBUG) LogUtils.log("Unknown event: " + genericEvent.event);
                         }
-                    }, NonStopFileReader.ReadMode.TAIL_END, false);
+                    }, NonStopFileReader.ReadMode.TAIL, false);
                 }
             }
         }
