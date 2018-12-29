@@ -37,6 +37,7 @@ public class JournalWatcher {
             .registerSubtype(FSDJump.class)
             .registerSubtype(FSDTarget.class)
             .registerSubtype(LaunchFighter.class)
+            .registerSubtype(Loadout.class)
             .registerSubtype(Music.class)
             .registerSubtype(StartJump.class)
             .registerSubtype(SupercruiseEntry.class)

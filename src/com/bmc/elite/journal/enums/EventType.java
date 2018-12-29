@@ -7,6 +7,7 @@ public enum EventType {
     SupercruiseExit,
     Fileheader,
     FSDJump,
+    Loadout,
     Music,
     LaunchFighter,
     DockFighter,

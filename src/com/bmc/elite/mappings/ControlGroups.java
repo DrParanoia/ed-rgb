@@ -84,21 +84,35 @@ public class ControlGroups {
             Controls.ShipSpotLightToggle, Controls.HeadlightsBuggyButton, Controls.MODIFIER, Controls.NightVisionToggle
         ))),
         new ControlGroup(Colors.SHIP_STUFF, new ArrayList<>(Arrays.asList(
-            Controls.ToggleFlightAssist, Controls.ToggleCargoScoop, Controls.ToggleCargoScoop_Buggy,
-            Controls.LandingGearToggle
+            Controls.ToggleFlightAssist
         )), new StatusState(null, new int[] {
              Flags.DOCKED, Flags.LANDED_PLANET, Flags.SUPERCRUISE
         })),
+        new ControlGroup(Colors.SHIP_STUFF, new ArrayList<>(Arrays.asList(
+            Controls.ToggleCargoScoop, Controls.ToggleCargoScoop_Buggy, Controls.LandingGearToggle
+        )), new StatusState(null, new int[] {
+             Flags.DOCKED, Flags.LANDED_PLANET, Flags.SUPERCRUISE, Flags.IN_FIGHTER
+        })),
         new ControlGroup(Colors.DEFENCE, new ArrayList<>(Arrays.asList(
-            Controls.IncreaseSystemsPower, Controls.UseShieldCell, Controls.DeployHeatSink, Controls.ChargeECM
+            Controls.IncreaseSystemsPower, Controls.ChargeECM
         )), new StatusState(null, new int[] {
             Flags.DOCKED, Flags.LANDED_PLANET
         })),
         new ControlGroup(Colors.DEFENCE, new ArrayList<>(Arrays.asList(
             Controls.FireChaffLauncher
-        )), new StatusState(null, new int[] {
+        )), new StatusState(null, new int[]{
             Flags.DOCKED, Flags.LANDED_PLANET, Flags.SUPERCRUISE
-        })),
+        }, () -> journalStatus.hasChaff())),
+        new ControlGroup(Colors.DEFENCE, new ArrayList<>(Arrays.asList(
+            Controls.DeployHeatSink
+        )), new StatusState(null, new int[]{
+            Flags.DOCKED, Flags.LANDED_PLANET
+        }, () -> journalStatus.hasHeatSink())),
+        new ControlGroup(Colors.DEFENCE, new ArrayList<>(Arrays.asList(
+            Controls.UseShieldCell
+        )), new StatusState(null, new int[] {
+            Flags.DOCKED, Flags.LANDED_PLANET
+        }, () -> journalStatus.hasShieldCellBank())),
         new ControlGroup(Colors.DEFENCE, new ArrayList<>(Arrays.asList(
             Controls.OrderDefensiveBehaviour
         )), new StatusState(() -> journalStatus.getFighterStatus() != FighterStatus.None)),
