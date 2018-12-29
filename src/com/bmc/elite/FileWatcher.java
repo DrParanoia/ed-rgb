@@ -16,8 +16,13 @@ public class FileWatcher {
     WatchService watchService;
     WatchKey directoryWatchKey;
     WatchKey watchServiceKey;
+    WatchEvent.Kind<Path> eventType;
 
     public FileWatcher(final String filePath, final FileWatcherCallback callback) {
+        this(filePath, callback, StandardWatchEventKinds.ENTRY_MODIFY);
+    }
+    public FileWatcher(final String filePath, final FileWatcherCallback callback, WatchEvent.Kind<Path> eventType) {
+        this.eventType = eventType;
         watchFile(filePath, callback);
     }
 
@@ -56,7 +61,7 @@ public class FileWatcher {
 
         try {
             watchService = FileSystems.getDefault().newWatchService();
-            directoryWatchKey = statusFilePath.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
+            directoryWatchKey = statusFilePath.register(watchService, eventType);
 
             new Thread(() -> {
                 try {

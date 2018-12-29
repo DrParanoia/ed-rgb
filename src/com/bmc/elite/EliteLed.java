@@ -50,10 +50,10 @@ public class EliteLed {
                 bindingsFileWatcher.stop();
                 bindingsFileWatcher = null;
             }
-            if(journalWatcher != null) {
-                journalWatcher.stop();
-                journalWatcher = null;
-            }
+//            if(journalWatcher != null) {
+//                journalWatcher.stop();
+//                journalWatcher = null;
+//            }
             LogiLED.LogiLedShutdown();
             enabled = false;
         }

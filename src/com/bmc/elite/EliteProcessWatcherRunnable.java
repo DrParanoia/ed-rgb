@@ -30,6 +30,10 @@ public class EliteProcessWatcherRunnable implements Runnable {
     @Override
     public void run() {
         String[] exePathParts;
+        eliteLed.enable();
+        if(1==1) {
+            return;
+        }
         while (true) {
             try {
                 activeWindow = User32.INSTANCE.GetForegroundWindow();
