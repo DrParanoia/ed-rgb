@@ -119,7 +119,7 @@ public class JournalWatcher {
             nonStopFileReader.stop();
             nonStopFileReader = null;
         }
-        if(journalDirectoryWatcher != null) {
+        if(stopDirectoryWatcher && journalDirectoryWatcher != null) {
             journalDirectoryWatcher.stop();
             journalDirectoryWatcher = null;
         }
