@@ -75,7 +75,7 @@ public class ControlGroups {
         new ControlGroup(Colors.NAVIGATION, new ArrayList<>(Arrays.asList(
             Controls.HyperSuperCombination, Controls.Supercruise, Controls.Hyperspace
         )), new StatusState(null, new int[] {
-            Flags.DOCKED, Flags.LANDED_PLANET, Flags.LANDING_GEAR, Flags.HARDPOINTS, Flags.CARGO_SCOOP
+            Flags.DOCKED, Flags.LANDED_PLANET, Flags.MASS_LOCK, Flags.LANDING_GEAR, Flags.HARDPOINTS, Flags.CARGO_SCOOP
         })),
         new ControlGroup(Colors.NAVIGATION, new ArrayList<>(Arrays.asList(
             Controls.OrderRequestDock
