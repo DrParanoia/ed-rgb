@@ -6,10 +6,54 @@ import com.logitech.gaming.LogiLED;
 import com.sun.istack.internal.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class LedTools {
+public class KeyTools {
     static AnimationHelper animationHelper = AnimationHelper.getInstance();
+
+    private static Map<Integer, Integer[]> currentKeyNameColors = new HashMap<>();
+    private static Map<Integer, Integer[]> currentKeyHidColors = new HashMap<>();
+
+    @Nullable
+    public static Integer[] getCurrentKeyNameColor(int keyName) {
+        return currentKeyNameColors.get(keyName);
+    }
+    @Nullable
+    public static Integer[] getCurrentKeyHidColor(int hidCode) {
+        return currentKeyHidColors.get(hidCode);
+    }
+    public static void clearColorCache() {
+        currentKeyNameColors.clear();
+        currentKeyHidColors.clear();
+    }
+    public static boolean isColorCacheEmpty() {
+        return currentKeyNameColors.isEmpty() && currentKeyHidColors.isEmpty();
+    }
+
+    public static List<Integer> getHidsFromEliteKeys(List<String> eliteKeyNames) {
+        List<Integer> hidKeys = new ArrayList<>();
+
+        for(String eliteKeyName : eliteKeyNames) {
+            if(EliteKeyMaps.TO_HID.containsKey(eliteKeyName)) {
+                hidKeys.add(EliteKeyMaps.TO_HID.get(eliteKeyName));
+            }
+        }
+
+        return hidKeys;
+    }
+
+    public static int setLightingForKeyWithKeyName(int keyName, int redPercentage, int greenPercentage, int bluePercentage) {
+        LogiLED.LogiLedSetLightingForKeyWithKeyName(keyName, redPercentage, greenPercentage, bluePercentage);
+        currentKeyNameColors.put(keyName, new Integer[] {redPercentage, greenPercentage, bluePercentage});
+        return keyName;
+    }
+    public static int setLightingForKeyWithHidCode(int hidCode, int redPercentage, int greenPercentage, int bluePercentage) {
+        LogiLED.LogiLedSetLightingForKeyWithHidCode(hidCode, redPercentage, greenPercentage, bluePercentage);
+        currentKeyHidColors.put(hidCode, new Integer[] {redPercentage, greenPercentage, bluePercentage});
+        return hidCode;
+    }
 
     public static void setAllKeysFromColorArray(Integer[] colorArray) {
         if(colorArray != null) {
@@ -28,9 +72,9 @@ public class LedTools {
         if(colorArray != null) {
             animationHelper.stopKeyAnimation(key);
             if(logitech) {
-                LogiLED.LogiLedSetLightingForKeyWithKeyName(key, colorArray[0], colorArray[1], colorArray[2]);
+                setLightingForKeyWithKeyName(key, colorArray[0], colorArray[1], colorArray[2]);
             } else {
-                LogiLED.LogiLedSetLightingForKeyWithHidCode(key, colorArray[0], colorArray[1], colorArray[2]);
+                setLightingForKeyWithHidCode(key, colorArray[0], colorArray[1], colorArray[2]);
             }
             logitechKey = key;
         }
@@ -50,7 +94,7 @@ public class LedTools {
         List<Integer> logitechKeys = new ArrayList<>();
         if(eliteKeyNames != null) {
             for(String key : eliteKeyNames) {
-                Integer logitechKey = setEliteKeyFromColorArray(key,colorArray);
+                Integer logitechKey = setEliteKeyFromColorArray(key, colorArray);
                 if(logitechKey != null) {
                     logitechKeys.add(logitechKey);
                 }

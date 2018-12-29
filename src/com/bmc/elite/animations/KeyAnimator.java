@@ -1,10 +1,9 @@
 package com.bmc.elite.animations;
 
+import com.bmc.elite.KeyTools;
 import com.bmc.elite.mappings.Colors;
-import com.logitech.gaming.LogiLED;
 
 import java.awt.*;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -100,14 +99,14 @@ public class KeyAnimator {
                                 activeColor = new Color(ColorInterpolator.interpolate(animationStep, currentKey.startColor, currentKey.endColor));
                             }
                             if(currentKey.logitechKey) {
-                                LogiLED.LogiLedSetLightingForKeyWithKeyName(
+                                KeyTools.setLightingForKeyWithKeyName(
                                     currentKey.key,
                                     Colors.colorToPercent(activeColor.getRed()),
                                     Colors.colorToPercent(activeColor.getGreen()),
                                     Colors.colorToPercent(activeColor.getBlue())
                                 );
                             } else {
-                                LogiLED.LogiLedSetLightingForKeyWithHidCode(
+                                KeyTools.setLightingForKeyWithHidCode(
                                     currentKey.key,
                                     Colors.colorToPercent(activeColor.getRed()),
                                     Colors.colorToPercent(activeColor.getGreen()),

@@ -96,6 +96,13 @@ public class AnimationHelper {
         }
     }
 
+    public void startKeysAnimation(HashMap<Integer, AnimatedKey> animatedKeyList, KeyAnimator keyAnimator) {
+        for(AnimatedKey animatedKey : animatedKeyList.values()) {
+            stopKeyAnimation(animatedKey.key);
+            animatingKeys.put(animatedKey.key, keyAnimator);
+        }
+        keyAnimator.start();
+    }
     public void startKeysAnimation(List<AnimatedKey> animatedKeyList, KeyAnimator keyAnimator) {
         for(AnimatedKey animatedKey : animatedKeyList) {
             stopKeyAnimation(animatedKey.key);
@@ -138,6 +145,16 @@ public class AnimationHelper {
     public KeyAnimator pulseKeys(List<AnimatedKey> animatedKeyList, int duration, boolean infinite, AnimationCallback animationCallback) {
         KeyAnimator keyAnimator = new KeyAnimator(animatedKeyList, duration, infinite, animationCallback);
         startKeysAnimation(animatedKeyList, keyAnimator);
+
+        return keyAnimator;
+    }
+
+    public KeyAnimator pulseKeys(HashMap<Integer, AnimatedKey> animatedKeyMap, int duration, boolean infinite) {
+        return pulseKeys(animatedKeyMap, duration, infinite, null);
+    }
+    public KeyAnimator pulseKeys(HashMap<Integer, AnimatedKey> animatedKeyMap, int duration, boolean infinite, AnimationCallback animationCallback) {
+        KeyAnimator keyAnimator = new KeyAnimator(animatedKeyMap, duration, infinite, animationCallback);
+        startKeysAnimation(animatedKeyMap, keyAnimator);
 
         return keyAnimator;
     }

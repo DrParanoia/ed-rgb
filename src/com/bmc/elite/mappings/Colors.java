@@ -1,5 +1,7 @@
 package com.bmc.elite.mappings;
 
+import java.awt.*;
+
 public class Colors {
     public static final Integer[] HUD_MODE_COMBAT = colorsToPercentArray(255, 80, 0);
     public static final Integer[] HUD_MODE_DISCOVERY = colorsToPercentArray(0, 160, 255);
@@ -32,11 +34,25 @@ public class Colors {
     public static Integer colorToPercent(int colorValue) {
         return Math.round((float)100/255*colorValue);
     }
-    private static Integer[] colorsToPercentArray(int red, int green, int blue) {
+    public static Integer[] colorsToPercentArray(int red, int green, int blue) {
         return new Integer[] {
                 colorToPercent(red),
                 colorToPercent(green),
                 colorToPercent(blue)
         };
+    }
+    public static Integer percentageArrayToInteger(Integer[] colorPercentages) {
+        return new Color(
+            percentToColor(colorPercentages[0]),
+            percentToColor(colorPercentages[1]),
+            percentToColor(colorPercentages[2])
+        ).getRGB();
+    }
+    public static Integer colorArrayToInteger(Integer[] colorArray) {
+        return new Color(
+            colorArray[0],
+            colorArray[1],
+            colorArray[2]
+        ).getRGB();
     }
 }

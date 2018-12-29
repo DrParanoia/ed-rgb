@@ -1,5 +1,6 @@
 package com.bmc.elite;
 
+import com.bmc.elite.animations.AnimatedKey;
 import com.bmc.elite.animations.AnimationHelper;
 import com.bmc.elite.config.Application;
 import com.bmc.elite.config.PipPresets;
@@ -16,7 +17,6 @@ import com.bmc.elite.status.Flags;
 import com.bmc.elite.status.GuiFocus;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
-import com.logitech.gaming.LogiLED;
 
 import java.util.*;
 
@@ -70,6 +70,7 @@ public class KeyColorService {
 
         List<String> keys;
         List<Integer> setHidKeys;
+        HashMap<Integer, AnimatedKey> animatedKeys = new HashMap<>();
         for(ControlGroup controlGroup : currentControlGroups) {
             if(controlGroup.neededStatus != null && !controlGroup.neededStatus.conditionSatisfied(newStatus)) {
                 continue;
@@ -87,7 +88,7 @@ public class KeyColorService {
                             currentControlGroups.allControls.contains(control)
                             && statusState.conditionSatisfied(newStatus)
                         ) {
-                            setHidKeys = LedTools.setEliteKeysPulseFromColorArrays(
+                            setHidKeys = KeyTools.setEliteKeysPulseFromColorArrays(
                                 eliteBindings.get(control),
                                 Colors.OTHER,
                                 MAIN_CONTROLS.get(control),
@@ -95,13 +96,45 @@ public class KeyColorService {
                                 true
                             );
                         } else {
-                            setHidKeys = LedTools.setEliteKeysFromColorArray(
-                                eliteBindings.get(control),
-                                MAIN_CONTROLS.get(control)
-                            );
+                            if(KeyTools.isColorCacheEmpty()) {
+                                setHidKeys = KeyTools.setEliteKeysFromColorArray(
+                                    eliteBindings.get(control),
+                                    MAIN_CONTROLS.get(control)
+                                );
+                            } else {
+                                setHidKeys = KeyTools.getHidsFromEliteKeys(eliteBindings.get(control));
+                                for(Integer hidKey : setHidKeys) {
+                                    Integer[] currentColor = KeyTools.getCurrentKeyHidColor(hidKey);
+                                    if(currentColor != null) {
+                                        animatedKeys.put(hidKey, new AnimatedKey(
+                                            hidKey,
+                                            Colors.percentageArrayToInteger(currentColor),
+                                            Colors.percentageArrayToInteger(MAIN_CONTROLS.get(control))
+                                        ));
+                                    } else {
+                                        KeyTools.setKeyFromColorArray(hidKey, MAIN_CONTROLS.get(control));
+                                    }
+                                }
+                            }
                         }
                     } else {
-                        setHidKeys = LedTools.setEliteKeysFromColorArray(keys, controlGroup.color);
+                        if(KeyTools.isColorCacheEmpty()) {
+                            setHidKeys = KeyTools.setEliteKeysFromColorArray(keys, controlGroup.color);
+                        } else {
+                            setHidKeys = KeyTools.getHidsFromEliteKeys(eliteBindings.get(control));
+                            for(Integer hidKey : setHidKeys) {
+                                Integer[] currentColor = KeyTools.getCurrentKeyHidColor(hidKey);
+                                if(currentColor != null) {
+                                    animatedKeys.put(hidKey, new AnimatedKey(
+                                        hidKey,
+                                        Colors.percentageArrayToInteger(currentColor),
+                                        Colors.percentageArrayToInteger(controlGroup.color)
+                                    ));
+                                } else {
+                                    KeyTools.setKeyFromColorArray(hidKey, controlGroup.color);
+                                }
+                            }
+                        }
                     }
                     remainingHidKeys.removeAll(setHidKeys);
                 }
@@ -109,20 +142,26 @@ public class KeyColorService {
         }
 
         for(Integer hidKey : remainingHidKeys) {
-            LedTools.setKeyFromColorArray(hidKey, Colors.OTHER);
+            Integer[] currentColor = KeyTools.getCurrentKeyHidColor(hidKey);
+            if(currentColor != null) {
+                animatedKeys.put(hidKey, new AnimatedKey(
+                    hidKey,
+                    Colors.percentageArrayToInteger(currentColor),
+                    Colors.percentageArrayToInteger(Colors.OTHER)
+                ));
+            } else {
+                KeyTools.setKeyFromColorArray(hidKey, Colors.OTHER);
+            }
         }
         for(Integer logitechKey : remainingLogitechKeys) {
-            LedTools.setKeyFromColorArray(logitechKey, Colors.OTHER, true);
+            KeyTools.setKeyFromColorArray(logitechKey, Colors.OTHER, true);
+        }
+
+        if(!animatedKeys.isEmpty()) {
+            animationHelper.pulseKeys(animatedKeys, 300, false);
         }
 
         setToggleKeyColors(newStatus);
-//
-//        try {
-//            // We need to give time for color scheme to set
-//            Thread.sleep(Application.DELAY_AFTER_COLOR_SET);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
     }
 
     public void updateStatus() {
@@ -146,13 +185,13 @@ public class KeyColorService {
         // Custom PIP presets for G keys
         for (Map.Entry<Integer, Integer[]> pipPreset : PipPresets.STATUS_TO_CONTROL.entrySet()) {
             if(Arrays.equals(pipPreset.getValue(), newStatus.Pips)) {
-                LedTools.setKeyFromColorArray(
+                KeyTools.setKeyFromColorArray(
                     pipPreset.getKey(),
                     PipPresets.PIP_PRESET_COLORS.get(pipPreset.getKey()),
                     true
                 );
             } else {
-                LedTools.setKeyFromColorArray(
+                KeyTools.setKeyFromColorArray(
                     pipPreset.getKey(),
                     PipPresets.PIP_PRESET_COLORS_DISABLED.get(pipPreset.getKey()),
                     true
@@ -163,12 +202,12 @@ public class KeyColorService {
         // Change HUD Mode key color based on current HUD mode (Discovery/Combat)
         if(currentControlGroups.allControls.contains(Controls.PlayerHUDModeToggle)) {
             if(isBitSet(newStatus.Flags, Flags.HUD_DISCOVERY_MODE)) {
-                LedTools.setEliteKeysFromColorArray(
+                KeyTools.setEliteKeysFromColorArray(
                     eliteBindings.get(Controls.PlayerHUDModeToggle),
                     Colors.HUD_MODE_DISCOVERY
                 );
             } else {
-                LedTools.setEliteKeysFromColorArray(
+                KeyTools.setEliteKeysFromColorArray(
                     eliteBindings.get(Controls.PlayerHUDModeToggle),
                     Colors.HUD_MODE_COMBAT
                 );
