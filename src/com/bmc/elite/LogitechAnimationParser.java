@@ -9,6 +9,8 @@ import com.bmc.elite.models.LogitechAnimationTransition;
 import com.google.gson.Gson;
 
 import java.awt.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,15 +24,25 @@ public class LogitechAnimationParser {
 
     static HashMap<String, List<AnimationQueueItem>> cache = new HashMap<>();
 
-    public static List<AnimationQueueItem> parseFile(String filename) {
-        return parseFile(filename, true);
+    public static List<AnimationQueueItem> parseFile(String animationResourceFilename) {
+        return parseFile(animationResourceFilename, true);
     }
-    public static List<AnimationQueueItem> parseFile(String filename, boolean fromCache) {
-        if(fromCache && cache.containsKey(filename)) {
-            return cache.get(filename);
+    public static List<AnimationQueueItem> parseFile(String animationResourceFilename, boolean fromCache) {
+        if(fromCache && cache.containsKey(animationResourceFilename)) {
+            return cache.get(animationResourceFilename);
         }
 
-        String animationJson = FileUtils.readFile(filename);
+        InputStreamReader animationInputStreamReader = new InputStreamReader(
+            LogitechAnimationParser.class.getResourceAsStream(animationResourceFilename)
+        );
+        String animationJson = FileUtils.readFile(animationInputStreamReader);
+
+        List<AnimationQueueItem> pulseParamSteps = processFileData(animationJson, fromCache);
+        cache.put(animationResourceFilename, pulseParamSteps);
+        return pulseParamSteps;
+    }
+
+    private static List<AnimationQueueItem> processFileData(String animationJson, boolean fromCache) {
         LogitechAnimation logitechAnimation = gson.fromJson(animationJson, LogitechAnimation.class);
 
         List<AnimationQueueItem> pulseParamSteps = new ArrayList<>();
@@ -78,7 +90,6 @@ public class LogitechAnimationParser {
             }
         }
 
-        cache.put(filename, pulseParamSteps);
         return pulseParamSteps;
     }
 }

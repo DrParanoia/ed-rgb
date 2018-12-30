@@ -5,15 +5,27 @@ import com.bmc.elite.callbacks.FileReadCallback;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.InputStreamReader;
 
 public class FileUtils {
     public static String readFile(String filename) {
         return readFile(filename, null);
     }
     public static String readFile(String filename, FileReadCallback fileReadCallback) {
+        try {
+            return readFile(new FileReader(filename), fileReadCallback);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public static String readFile(InputStreamReader inputStreamReader) {
+        return readFile(inputStreamReader, null);
+    }
+    public static String readFile(InputStreamReader inputStreamReader, FileReadCallback fileReadCallback) {
         StringBuilder sb = new StringBuilder();
         try {
-            BufferedReader br = new BufferedReader(new FileReader(filename));
+            BufferedReader br = new BufferedReader(inputStreamReader);
             try {
                 String line;
                 while ((line = br.readLine()) != null) {

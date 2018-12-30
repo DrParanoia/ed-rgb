@@ -42,7 +42,8 @@ public class AnimationHelper {
     }
     public void playFromFile(String animationFileName, boolean infinite) {
         String filename = "/eft/" + animationFileName;
-        List<AnimationQueueItem> animationItems = LogitechAnimationParser.parseFile(getClass().getResource(filename).getPath());
+
+        List<AnimationQueueItem> animationItems = LogitechAnimationParser.parseFile(filename);
         playPulseParamQueue(filename, animationItems, infinite);
     }
     public void playPulseParamQueue(String id, List<AnimationQueueItem> animationItems, boolean infinite) {
