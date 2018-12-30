@@ -51,7 +51,7 @@ public class FSDAnimator {
     }
 
     public void playHyperspaceAnimation() {
-        animationHelper.playFromFile("hyperspace.eft", true);
+        animationHelper.playFromFile("hyperspace_2.eft", 6, true);
     }
     public void stopHyperspaceAnimation() {
         animationHelper.stopPlayingFile("hyperspace.eft");

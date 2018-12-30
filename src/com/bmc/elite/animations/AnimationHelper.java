@@ -38,12 +38,18 @@ public class AnimationHelper {
         }
     }
     public void playFromFile(String animationFileName) {
-        playFromFile(animationFileName, false);
+        playFromFile(animationFileName,false);
     }
     public void playFromFile(String animationFileName, boolean infinite) {
+        playFromFile(animationFileName, LogitechAnimationParser.LOGITECH_TIME_SCALE, infinite);
+    }
+    public void playFromFile(String animationFileName, int timeScale) {
+        playFromFile(animationFileName, timeScale, false);
+    }
+    public void playFromFile(String animationFileName, int timeScale, boolean infinite) {
         String filename = "/eft/" + animationFileName;
 
-        List<AnimationQueueItem> animationItems = LogitechAnimationParser.parseFile(filename);
+        List<AnimationQueueItem> animationItems = LogitechAnimationParser.parseFile(filename, timeScale);
         playPulseParamQueue(filename, animationItems, infinite);
     }
     public void playPulseParamQueue(String id, List<AnimationQueueItem> animationItems, boolean infinite) {

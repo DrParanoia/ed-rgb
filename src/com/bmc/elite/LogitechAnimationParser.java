@@ -2,14 +2,12 @@ package com.bmc.elite;
 
 import com.bmc.elite.animations.AnimatedKey;
 import com.bmc.elite.animations.AnimationQueueItem;
-import com.bmc.elite.animations.PulseParams;
 import com.bmc.elite.mappings.LogitechAnimationKeys;
 import com.bmc.elite.models.LogitechAnimation;
 import com.bmc.elite.models.LogitechAnimationTransition;
 import com.google.gson.Gson;
 
 import java.awt.*;
-import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,15 +18,22 @@ public class LogitechAnimationParser {
 
     static Gson gson = new Gson();
 
-    final static int LOGITECH_ANIMATION_MULTIPLIER = 5;
+    public final static int LOGITECH_TIME_SCALE = 5;
 
     static HashMap<String, List<AnimationQueueItem>> cache = new HashMap<>();
 
     public static List<AnimationQueueItem> parseFile(String animationResourceFilename) {
-        return parseFile(animationResourceFilename, true);
+        return parseFile(animationResourceFilename, LOGITECH_TIME_SCALE, true);
     }
     public static List<AnimationQueueItem> parseFile(String animationResourceFilename, boolean fromCache) {
-        if(fromCache && cache.containsKey(animationResourceFilename)) {
+        return parseFile(animationResourceFilename, LOGITECH_TIME_SCALE, fromCache);
+    }
+    public static List<AnimationQueueItem> parseFile(String animationResourceFilename, int timeScale) {
+        return parseFile(animationResourceFilename, timeScale, true);
+    }
+    public static List<AnimationQueueItem> parseFile(String animationResourceFilename, int timeScale, boolean fromCache) {
+        String cacheKey = animationResourceFilename + "_" + timeScale;
+        if(fromCache && cache.containsKey(cacheKey)) {
             return cache.get(animationResourceFilename);
         }
 
@@ -37,12 +42,12 @@ public class LogitechAnimationParser {
         );
         String animationJson = FileUtils.readFile(animationInputStreamReader);
 
-        List<AnimationQueueItem> pulseParamSteps = processFileData(animationJson, fromCache);
-        cache.put(animationResourceFilename, pulseParamSteps);
+        List<AnimationQueueItem> pulseParamSteps = processFileData(animationJson, timeScale, fromCache);
+        cache.put(cacheKey, pulseParamSteps);
         return pulseParamSteps;
     }
 
-    private static List<AnimationQueueItem> processFileData(String animationJson, boolean fromCache) {
+    private static List<AnimationQueueItem> processFileData(String animationJson, int timeScale, boolean fromCache) {
         LogitechAnimation logitechAnimation = gson.fromJson(animationJson, LogitechAnimation.class);
 
         List<AnimationQueueItem> pulseParamSteps = new ArrayList<>();
@@ -55,7 +60,7 @@ public class LogitechAnimationParser {
         Integer currentKey, currentColor, currentKeyMapType;
         for(int i = 0, length = logitechAnimation.transition_list.size(); i < length; i++) {
             currentTransition = logitechAnimation.transition_list.get(i);
-            int duration = currentTransition.length * LOGITECH_ANIMATION_MULTIPLIER;
+            int duration = currentTransition.length * timeScale;
 
             List<AnimatedKey> currentAnimatedKeys = new ArrayList<>();
             for(Map.Entry<String, Map<String, String>> stateEntry : currentTransition.state.entrySet()) {

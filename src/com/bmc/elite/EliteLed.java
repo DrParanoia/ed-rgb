@@ -39,7 +39,6 @@ public class EliteLed {
                 });
             }
         }
-        animationHelper.playFromFile("star_entry.eft");
     }
     public void disable() {
         if(enabled) {
