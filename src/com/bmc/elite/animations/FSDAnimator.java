@@ -56,7 +56,7 @@ public class FSDAnimator {
     public void stopHyperspaceAnimation() {
         animationHelper.stopPlayingFile("hyperspace.eft");
 
-        String starFileName = "start_entry_" + starType + ".eft";
+        String starFileName = "star_entry_" + starType + ".eft";
         if(getClass().getResource("/eft/" + starFileName) != null) {
             animationHelper.playFromFile(starFileName);
         } else {
