@@ -34,7 +34,7 @@ public class LogitechAnimationParser {
     public static List<AnimationQueueItem> parseFile(String animationResourceFilename, int timeScale, boolean fromCache) {
         String cacheKey = animationResourceFilename + "_" + timeScale;
         if(fromCache && cache.containsKey(cacheKey)) {
-            return cache.get(animationResourceFilename);
+            return cache.get(cacheKey);
         }
 
         InputStreamReader animationInputStreamReader = new InputStreamReader(
