@@ -54,7 +54,9 @@ public class KeyAnimator {
     }
 
     public void removeKey(Integer keyToRemove) {
-        keysToAnimate.remove(keyToRemove);
+        synchronized (KeyAnimator.class) {
+            keysToAnimate.remove(keyToRemove);
+        }
         if(keysToAnimate.isEmpty()) {
             stop();
         }
@@ -90,7 +92,10 @@ public class KeyAnimator {
                         deltaTime = currentTime - startTime;
                         animationStep = Math.min(1, (1F / msDuration) * deltaTime);
 
-                        HashMap<Integer, AnimatedKey> currentlyAnimatedKeys = new HashMap<>(keysToAnimate);
+                        HashMap<Integer, AnimatedKey> currentlyAnimatedKeys;
+                        synchronized (KeyAnimator.class) {
+                            currentlyAnimatedKeys = new HashMap<>(keysToAnimate);
+                        }
                         for(Map.Entry<Integer, AnimatedKey> keyEntry : currentlyAnimatedKeys.entrySet()) {
                             currentKey = keyEntry.getValue();
                             if(reversed) {
@@ -133,7 +138,9 @@ public class KeyAnimator {
     }
 
     public void stop() {
-        keysToAnimate.clear();
+        synchronized (KeyAnimator.class) {
+            keysToAnimate.clear();
+        }
         stopped = true;
     }
 }
