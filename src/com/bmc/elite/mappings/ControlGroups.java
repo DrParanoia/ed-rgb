@@ -16,6 +16,11 @@ public class ControlGroups {
     static JournalStatus journalStatus = JournalStatus.getInstance();
 
     public static ControlGroupList MAIN_CONTROLS = new ControlGroupList(Arrays.asList(
+        new ControlGroup(Colors.CAMERA, new ArrayList<>(Arrays.asList(
+            Controls.PhotoCameraToggle, Controls.PhotoCameraToggle_Buggy, Controls.VanityCameraScrollLeft,
+            Controls.VanityCameraScrollRight, Controls.ToggleFreeCam, Controls.FreeCamToggleHUD,
+            Controls.FixCameraRelativeToggle, Controls.FixCameraWorldToggle
+        ))),
         new ControlGroup(Colors.MOVEMENT_SPEED, new ArrayList<>(Arrays.asList(
             Controls.ForwardKey, Controls.BackwardKey, Controls.IncreaseEnginesPower, Controls.SetSpeedZero,
             Controls.SetSpeed25, Controls.SetSpeed50, Controls.SetSpeed75, Controls.SetSpeed100
