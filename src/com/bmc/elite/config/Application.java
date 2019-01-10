@@ -4,6 +4,8 @@ import java.io.File;
 
 public class Application {
     public static final boolean DEBUG = true;
+    public static final String VERSION = "0.0.1";
+
     public static int PULSE_DURATION = 200;
     public static int DELAY_AFTER_COLOR_SET = 250;
     public static String FRONTIER_DIRECTORY_PATH = System.getProperty("user.home")
