@@ -22,7 +22,10 @@ public class ControlGroups {
             Controls.FixCameraRelativeToggle, Controls.FixCameraWorldToggle
         ))),
         new ControlGroup(Colors.MOVEMENT_SPEED, new ArrayList<>(Arrays.asList(
-            Controls.ForwardKey, Controls.BackwardKey, Controls.IncreaseEnginesPower, Controls.SetSpeedZero,
+            Controls.IncreaseEnginesPower
+        ))),
+        new ControlGroup(Colors.MOVEMENT_SPEED, new ArrayList<>(Arrays.asList(
+            Controls.ForwardKey, Controls.BackwardKey, Controls.SetSpeedZero,
             Controls.SetSpeed25, Controls.SetSpeed50, Controls.SetSpeed75, Controls.SetSpeed100
         )), new StatusState(null, new int[] {
             Flags.DOCKED, Flags.LANDED_PLANET
@@ -61,16 +64,6 @@ public class ControlGroups {
             Controls.FocusRadarPanel, Controls.FocusRightPanel, Controls.UI_Select, Controls.PlayerHUDModeToggle
         ))),
         new ControlGroup(Colors.UI, new ArrayList<>(Arrays.asList(
-            Controls.UI_Left, Controls.UI_Right, Controls.UI_Up, Controls.UI_Down
-        )), new StatusState(new int[] {
-            Flags.DOCKED
-        })),
-        new ControlGroup(Colors.UI, new ArrayList<>(Arrays.asList(
-            Controls.UI_Left, Controls.UI_Right, Controls.UI_Up, Controls.UI_Down
-        )), new StatusState(new int[] {
-            Flags.LANDED_PLANET
-        })),
-        new ControlGroup(Colors.UI, new ArrayList<>(Arrays.asList(
             Controls.OrderAggressiveBehaviour
         )), new StatusState(() -> journalStatus.getFighterStatus() != FighterStatus.None)),
 
@@ -99,7 +92,10 @@ public class ControlGroups {
              Flags.DOCKED, Flags.LANDED_PLANET, Flags.SUPERCRUISE, Flags.IN_FIGHTER
         })),
         new ControlGroup(Colors.DEFENCE, new ArrayList<>(Arrays.asList(
-            Controls.IncreaseSystemsPower, Controls.ChargeECM
+            Controls.IncreaseSystemsPower
+        ))),
+        new ControlGroup(Colors.DEFENCE, new ArrayList<>(Arrays.asList(
+            Controls.ChargeECM
         )), new StatusState(null, new int[] {
             Flags.DOCKED, Flags.LANDED_PLANET
         })),
@@ -123,10 +119,10 @@ public class ControlGroups {
         )), new StatusState(() -> journalStatus.getFighterStatus() != FighterStatus.None)),
 
         new ControlGroup(Colors.OFFENCE, new ArrayList<>(Arrays.asList(
-            Controls.CycleFireGroupPrevious
+            Controls.IncreaseWeaponsPower, Controls.CycleFireGroupPrevious
         ))),
         new ControlGroup(Colors.OFFENCE, new ArrayList<>(Arrays.asList(
-            Controls.IncreaseWeaponsPower, Controls.CycleFireGroupNext, Controls.SelectHighestThreat,
+            Controls.CycleFireGroupNext, Controls.SelectHighestThreat,
             Controls.CycleNextSubsystem, Controls.CyclePreviousSubsystem, Controls.CycleNextHostileTarget,
             Controls.CyclePreviousHostileTarget
         )), new StatusState(null, new int[] {
@@ -160,7 +156,18 @@ public class ControlGroups {
             new int[] {
                 Flags.DOCKED, Flags.LANDED_PLANET
             })
-        )
+        ),
+
+        new ControlGroup(Colors.UI, new ArrayList<>(Arrays.asList(
+            Controls.UI_Left, Controls.UI_Right, Controls.UI_Up, Controls.UI_Down
+        )), new StatusState(new int[] {
+            Flags.DOCKED
+        })),
+        new ControlGroup(Colors.UI, new ArrayList<>(Arrays.asList(
+            Controls.UI_Left, Controls.UI_Right, Controls.UI_Up, Controls.UI_Down
+        )), new StatusState(new int[] {
+            Flags.LANDED_PLANET
+        }))
     ));
 
     public static ControlGroupList SYSTEM_MAP = new ControlGroupList(Arrays.asList(
