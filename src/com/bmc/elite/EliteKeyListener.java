@@ -1,6 +1,7 @@
 package com.bmc.elite;
 
 import com.bmc.elite.mappings.KeyMaps;
+import com.bmc.elite.models.EliteBind;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 
@@ -10,10 +11,14 @@ public class EliteKeyListener implements NativeKeyListener {
 
     private static final int KEY_DETECT_DELAY_MS = 0;
     private HashMap<Integer, Timer> keyEventTimers = new HashMap<>();
-    private List<Integer> pressedKeys = new ArrayList<>();
+    private static List<Integer> pressedKeys = new ArrayList<>();
     private static List<String> pressedEliteKeys = new ArrayList<>();
 
-    KeyColorService keyColorService = KeyColorService.getInstance();
+    private static List<String> pressedEliteModifiers = new ArrayList<>();
+
+    public static List<String> allowedModifierBinds = new ArrayList<>();
+
+    private KeyColorService keyColorService = KeyColorService.getInstance();
 
     private boolean stopKeyTimer(int keyId) {
         if(keyEventTimers.containsKey(keyId)) {
@@ -28,6 +33,9 @@ public class EliteKeyListener implements NativeKeyListener {
         return false;
     }
 
+    public static boolean isVirtualKeyPressed(Integer virtualKey) {
+        return pressedKeys.contains(virtualKey);
+    }
     public static boolean isEliteKeyPressed(String eliteKey) {
         return pressedEliteKeys.contains(eliteKey);
     }
@@ -38,7 +46,12 @@ public class EliteKeyListener implements NativeKeyListener {
             pressedEliteKeys.add(eliteKey);
         }
 
-        LogUtils.log("Key pressed: " + nativeKeyEvent.paramString() + " " + eliteKey);
+        if(BindingParser.allModifiers.contains(eliteKey)) {
+            pressedEliteModifiers.add(eliteKey);
+            Collections.sort(pressedEliteModifiers);
+            generateAllowedModifierBinds();
+        }
+
         keyColorService.updateStatus();
     }
     private void keyReleased(NativeKeyEvent nativeKeyEvent) {
@@ -47,8 +60,49 @@ public class EliteKeyListener implements NativeKeyListener {
             pressedEliteKeys.remove(eliteKey);
         }
 
-        LogUtils.log("Key released: " + nativeKeyEvent.paramString() + " " + eliteKey);
+        if(pressedEliteModifiers.remove(eliteKey)) {
+            Collections.sort(pressedEliteModifiers);
+            generateAllowedModifierBinds();
+        }
+
         keyColorService.updateStatus();
+    }
+
+    private void generateAllowedModifierBinds() {
+        HashMap<String, List<EliteBind>> keyToBindMap = new HashMap<>();
+        allowedModifierBinds.clear();
+        for(EliteBind bindWithModifier : BindingParser.bindsWithModifiers) {
+            if(!keyToBindMap.containsKey(bindWithModifier.eliteKey)) {
+                keyToBindMap.put(bindWithModifier.eliteKey, new ArrayList<>());
+            }
+
+            if(bindWithModifier.allModifiersPressed()) {
+                keyToBindMap.get(bindWithModifier.eliteKey).add(bindWithModifier);
+            }
+        }
+
+        for(Map.Entry<String, List<EliteBind>> keyBindsEntry : keyToBindMap.entrySet()) {
+            List<EliteBind> binds = keyBindsEntry.getValue();
+
+            for(EliteBind bindWithModifier : binds) {
+                String currentModifierString = bindWithModifier.getModifierString();
+
+                boolean disabled = false;
+                for(EliteBind bindWithModifierToCheck : binds) {
+                    if(
+                        bindWithModifier != bindWithModifierToCheck
+                        && bindWithModifierToCheck.getModifierString().contains(currentModifierString)
+                    ) {
+                        disabled = true;
+                        break;
+                    }
+                }
+
+                if(!disabled) {
+                    allowedModifierBinds.add(bindWithModifier.toString());
+                }
+            }
+        }
     }
 
     @Override

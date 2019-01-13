@@ -1,12 +1,15 @@
 package com.bmc.elite.models;
 
 import com.bmc.elite.EliteKeyListener;
+import com.bmc.elite.VirtualKeyCodes;
+import com.sun.istack.internal.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class EliteBind {
-    public List<String> modifiers = new ArrayList<>();
+    private List<String> modifiers = new ArrayList<>();
     public String eliteKey;
 
     public EliteBind() {}
@@ -17,17 +20,25 @@ public class EliteBind {
     public EliteBind(List<String> modifiers, String eliteKey) {
         this.modifiers = modifiers;
         this.eliteKey = eliteKey;
+        Collections.sort(this.modifiers);
     }
 
+    public List<String> getModifiers() {
+        return this.modifiers;
+    }
     public void addModifier(String modifier) {
-        modifiers.add(modifier);
+        this.modifiers.add(modifier);
+        Collections.sort(this.modifiers);
     }
 
     public void setKey(String eliteKey) {
         this.eliteKey = eliteKey;
     }
 
-    public boolean isActive() {
+    public boolean hasModifiers() {
+        return !this.modifiers.isEmpty();
+    }
+    public boolean allModifiersPressed() {
         if(!modifiers.isEmpty()) {
             for(String modifier : modifiers) {
                 if(!EliteKeyListener.isEliteKeyPressed(modifier)) {
@@ -37,6 +48,17 @@ public class EliteBind {
         }
 
         return true;
+    }
+    public boolean isActive() {
+        if(hasModifiers()) {
+            return EliteKeyListener.allowedModifierBinds.contains(toString());
+        }
+
+        return true;
+    }
+
+    public String getModifierString() {
+        return String.join("+", modifiers);
     }
 
     @Override

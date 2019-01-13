@@ -23,4 +23,13 @@ public class EliteBindList extends ArrayList<EliteBind> {
 
         return keys;
     }
+
+    public List<String> getModifiers() {
+        List<String> modifiers = new ArrayList<>();
+        for(EliteBind bind : this) {
+            modifiers.addAll(bind.getModifiers());
+        }
+
+        return modifiers;
+    }
 }

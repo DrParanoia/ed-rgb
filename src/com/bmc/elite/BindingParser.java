@@ -25,6 +25,9 @@ public class BindingParser {
 
     public static String PRESET_FILE = FRONTIER_BINDINGS_PATH + File.separator + "StartPreset.start";
 
+    public static List<String> allModifiers = new ArrayList<>();
+    public static List<List<String>> modifierCombinations = new ArrayList<>();
+    public static List<EliteBind> bindsWithModifiers = new ArrayList<>();
     private static HashMap<String, EliteBindList> bindings = null;
     private static File bindingsFile = null;
 
@@ -112,6 +115,9 @@ public class BindingParser {
     private static HashMap<String, EliteBindList> parseBindings(File bindingsFile) {
         HashMap<String, EliteBindList> result = new HashMap<>();
         try {
+            allModifiers.clear();
+            modifierCombinations.clear();
+            bindsWithModifiers.clear();
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             Document document = documentBuilder.parse(bindingsFile);
@@ -150,9 +156,19 @@ public class BindingParser {
 
                 if(primaryEliteBind != null) {
                     eliteBindList.add(primaryEliteBind);
+                    if(primaryEliteBind.hasModifiers()) {
+                        modifierCombinations.add(primaryEliteBind.getModifiers());
+                        allModifiers.addAll(primaryEliteBind.getModifiers());
+                        bindsWithModifiers.add(primaryEliteBind);
+                    }
                 }
                 if(secondaryEliteBind != null) {
                     eliteBindList.add(secondaryEliteBind);
+                    if(secondaryEliteBind.hasModifiers()) {
+                        modifierCombinations.add(secondaryEliteBind.getModifiers());
+                        allModifiers.addAll(secondaryEliteBind.getModifiers());
+                        bindsWithModifiers.add(secondaryEliteBind);
+                    }
                 }
                 if(!eliteBindList.isEmpty()) {
                     result.put(controlName, eliteBindList);
