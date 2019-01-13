@@ -1,5 +1,7 @@
-package com.bmc.elite;
+package com.bmc.elite.listeners;
 
+import com.bmc.elite.BindingParser;
+import com.bmc.elite.KeyColorService;
 import com.bmc.elite.mappings.KeyMaps;
 import com.bmc.elite.models.EliteBind;
 import org.jnativehook.keyboard.NativeKeyEvent;

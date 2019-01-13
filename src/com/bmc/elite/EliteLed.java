@@ -4,7 +4,8 @@ import com.bmc.elite.animations.AnimationHelper;
 import com.bmc.elite.callbacks.JournalCallback;
 import com.bmc.elite.config.Application;
 import com.bmc.elite.journal.JournalEvent;
-import com.bmc.elite.mappings.KeyMaps;
+import com.bmc.elite.listeners.EliteKeyListener;
+import com.bmc.elite.listeners.EliteMouseListener;
 import com.logitech.gaming.LogiLED;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
@@ -22,6 +23,7 @@ public class EliteLed {
     KeyColorService keyColorService = KeyColorService.getInstance();
 
     EliteKeyListener eliteKeyListener = new EliteKeyListener();
+    EliteMouseListener eliteMouseListener = new EliteMouseListener();
 
     public void enable() {
         if(!enabled) {
@@ -54,6 +56,7 @@ public class EliteLed {
 
                 GlobalScreen.registerNativeHook();
                 GlobalScreen.addNativeKeyListener(eliteKeyListener);
+                GlobalScreen.addNativeMouseListener(eliteMouseListener);
             } catch (NativeHookException e) {
                 LogUtils.log("There was a problem registering the native hook.");
                 LogUtils.log(e.getMessage());
@@ -63,6 +66,7 @@ public class EliteLed {
     public void disable() {
         if(enabled) {
             try {
+                GlobalScreen.removeNativeMouseListener(eliteMouseListener);
                 GlobalScreen.removeNativeKeyListener(eliteKeyListener);
                 GlobalScreen.unregisterNativeHook();
             } catch (NativeHookException e) {

@@ -1,8 +1,6 @@
 package com.bmc.elite.models;
 
-import com.bmc.elite.EliteKeyListener;
-import com.bmc.elite.VirtualKeyCodes;
-import com.sun.istack.internal.Nullable;
+import com.bmc.elite.listeners.EliteKeyListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
