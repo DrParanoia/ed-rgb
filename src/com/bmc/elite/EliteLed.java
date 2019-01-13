@@ -5,15 +5,22 @@ import com.bmc.elite.callbacks.JournalCallback;
 import com.bmc.elite.config.Application;
 import com.bmc.elite.journal.JournalEvent;
 import com.logitech.gaming.LogiLED;
+import org.jnativehook.GlobalScreen;
+import org.jnativehook.NativeHookException;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class EliteLed {
 
-    boolean enabled = false;
+    public boolean enabled = false;
     NonStopFileReader statusFileReader;
     FileWatcher bindingsFileWatcher;
     JournalWatcher journalWatcher;
     AnimationHelper animationHelper = AnimationHelper.getInstance();
     KeyColorService keyColorService = KeyColorService.getInstance();
+
+    EliteKeyListener eliteKeyListener = new EliteKeyListener();
 
     public void enable() {
         if(!enabled) {
@@ -38,10 +45,30 @@ public class EliteLed {
                     }
                 });
             }
+
+            try {
+                Logger logger = Logger.getLogger(GlobalScreen.class.getPackage().getName());
+                logger.setLevel(Level.WARNING);
+                logger.setUseParentHandlers(false);
+
+                GlobalScreen.registerNativeHook();
+                GlobalScreen.addNativeKeyListener(eliteKeyListener);
+            } catch (NativeHookException e) {
+                LogUtils.log("There was a problem registering the native hook.");
+                LogUtils.log(e.getMessage());
+            }
         }
     }
     public void disable() {
         if(enabled) {
+            try {
+                GlobalScreen.removeNativeKeyListener(eliteKeyListener);
+                GlobalScreen.unregisterNativeHook();
+            } catch (NativeHookException e) {
+                LogUtils.log("There was a problem unregistering the native hook.");
+                LogUtils.log(e.getMessage());
+            }
+
             if(statusFileReader != null) {
                 statusFileReader.stop();
                 statusFileReader = null;
