@@ -11,6 +11,9 @@ public class EliteKeyListener implements NativeKeyListener {
     private static final int KEY_DETECT_DELAY_MS = 0;
     private HashMap<Integer, Timer> keyEventTimers = new HashMap<>();
     private List<Integer> pressedKeys = new ArrayList<>();
+    private static List<String> pressedEliteKeys = new ArrayList<>();
+
+    KeyColorService keyColorService = KeyColorService.getInstance();
 
     private boolean stopKeyTimer(int keyId) {
         if(keyEventTimers.containsKey(keyId)) {
@@ -25,11 +28,27 @@ public class EliteKeyListener implements NativeKeyListener {
         return false;
     }
 
+    public static boolean isEliteKeyPressed(String eliteKey) {
+        return pressedEliteKeys.contains(eliteKey);
+    }
+
     private void keyPressed(NativeKeyEvent nativeKeyEvent) {
-        LogUtils.log("Key pressed: " + nativeKeyEvent.paramString() + " " + KeyMaps.getEliteKeyFromVirtual(nativeKeyEvent.getRawCode()));
+        String eliteKey = KeyMaps.getEliteKeyFromVirtual(nativeKeyEvent.getRawCode());
+        if(eliteKey != null && eliteKey != "") {
+            pressedEliteKeys.add(eliteKey);
+        }
+
+        LogUtils.log("Key pressed: " + nativeKeyEvent.paramString() + " " + eliteKey);
+        keyColorService.updateStatus();
     }
     private void keyReleased(NativeKeyEvent nativeKeyEvent) {
-        LogUtils.log("Key released: " + nativeKeyEvent.paramString() + " " + KeyMaps.getEliteKeyFromVirtual(nativeKeyEvent.getRawCode()));
+        String eliteKey = KeyMaps.getEliteKeyFromVirtual(nativeKeyEvent.getRawCode());
+        if(eliteKey != null && eliteKey != "") {
+            pressedEliteKeys.remove(eliteKey);
+        }
+
+        LogUtils.log("Key released: " + nativeKeyEvent.paramString() + " " + eliteKey);
+        keyColorService.updateStatus();
     }
 
     @Override

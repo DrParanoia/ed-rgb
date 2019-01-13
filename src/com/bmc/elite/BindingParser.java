@@ -2,6 +2,9 @@ package com.bmc.elite;
 
 import com.bmc.elite.config.Application;
 import com.bmc.elite.mappings.Controls;
+import com.bmc.elite.models.EliteBind;
+import com.bmc.elite.models.EliteBindList;
+import com.sun.istack.internal.Nullable;
 import org.w3c.dom.*;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -22,7 +25,7 @@ public class BindingParser {
 
     public static String PRESET_FILE = FRONTIER_BINDINGS_PATH + File.separator + "StartPreset.start";
 
-    private static HashMap<String, List<String>> bindings = null;
+    private static HashMap<String, EliteBindList> bindings = null;
     private static File bindingsFile = null;
 
     public static File getBindingsFile() {
@@ -54,7 +57,7 @@ public class BindingParser {
         return bindingsFile;
     }
 
-    public static HashMap<String, List<String>> getBindings(boolean resetBindings) {
+    public static HashMap<String, EliteBindList> getBindings(boolean resetBindings) {
         if(!resetBindings && bindings != null) {
             return bindings;
         }
@@ -68,7 +71,10 @@ public class BindingParser {
         return bindings;
     }
 
-    private static void processKeyBind(Node bind, List<String> keyList, List<String> modifierKeys) {
+    @Nullable
+    private static EliteBind processKeyBind(Node bind, List<EliteBind> modifierKeys) {
+        EliteBind eliteBind = new EliteBind();
+
         NamedNodeMap bindAttributes, modifierAttributes;
         String keyName = "";
         if(bind != null) {
@@ -84,8 +90,12 @@ public class BindingParser {
                         modifierAttributes = bindChild.getAttributes();
                         if(modifierAttributes.getNamedItem("Device").getTextContent().equals("Keyboard")) {
                             String modifierKey = modifierAttributes.getNamedItem("Key").getTextContent();
-                            if(!modifierKey.equals("") && !modifierKeys.contains(modifierKey)) {
-                                modifierKeys.add(modifierKey);
+
+                            // TODO: Current modifier highlighting logic is a hack. Needs to be redone.
+                            EliteBind modifierBind = new EliteBind(modifierKey);
+                            if(!modifierKey.equals("") && !modifierKeys.contains(modifierBind)) {
+                                eliteBind.addModifier(modifierKey);
+                                modifierKeys.add(modifierBind);
                             }
                         }
                     }
@@ -93,11 +103,14 @@ public class BindingParser {
             }
         }
         if(!keyName.equals("")) {
-            keyList.add(keyName);
+            eliteBind.setKey(keyName);
+            return eliteBind;
         }
+
+        return null;
     }
-    private static HashMap<String, List<String>> parseBindings(File bindingsFile) {
-        HashMap<String, List<String>> result = new HashMap<>();
+    private static HashMap<String, EliteBindList> parseBindings(File bindingsFile) {
+        HashMap<String, EliteBindList> result = new HashMap<>();
         try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -111,7 +124,7 @@ public class BindingParser {
 
             NodeList controlChildNodes;
             Node controlChild, primaryBind, secondaryBind;
-            List<String> modifierKeyList = new ArrayList<>();
+            EliteBindList modifierBindList = new EliteBindList();
             for(int i = 0, length = bindings.getLength(); i < length; i++) {
                 // Iterating through all binding elements
                 binding = bindings.item(i);
@@ -131,16 +144,23 @@ public class BindingParser {
                     }
                 }
 
-                List<String> keyList = new ArrayList<>();
-                processKeyBind(primaryBind, keyList, modifierKeyList);
-                processKeyBind(secondaryBind, keyList, modifierKeyList);
-                if(!keyList.isEmpty()) {
-                    result.put(controlName, keyList);
+                EliteBindList eliteBindList = new EliteBindList();
+                EliteBind primaryEliteBind = processKeyBind(primaryBind, modifierBindList);
+                EliteBind secondaryEliteBind = processKeyBind(secondaryBind, modifierBindList);
+
+                if(primaryEliteBind != null) {
+                    eliteBindList.add(primaryEliteBind);
+                }
+                if(secondaryEliteBind != null) {
+                    eliteBindList.add(secondaryEliteBind);
+                }
+                if(!eliteBindList.isEmpty()) {
+                    result.put(controlName, eliteBindList);
                 }
             }
 
-            if(!modifierKeyList.isEmpty()) {
-                result.put(Controls.MODIFIER, modifierKeyList);
+            if(!modifierBindList.isEmpty()) {
+                result.put(Controls.MODIFIER, modifierBindList);
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -10,9 +10,7 @@ import com.bmc.elite.mappings.Colors;
 import com.bmc.elite.mappings.ControlGroups;
 import com.bmc.elite.mappings.Controls;
 import com.bmc.elite.lists.LogitechKeysList;
-import com.bmc.elite.models.ControlGroup;
-import com.bmc.elite.models.ControlGroupList;
-import com.bmc.elite.models.Status;
+import com.bmc.elite.models.*;
 import com.bmc.elite.status.Flags;
 import com.bmc.elite.status.GuiFocus;
 import com.google.gson.Gson;
@@ -43,7 +41,7 @@ public class KeyColorService {
         return (bitmask & flag) == flag;
     }
 
-    public static HashMap<String, List<String>> eliteBindings;
+    public static HashMap<String, EliteBindList> eliteBindings;
 
     public static HashMap<String, Integer[]> MAIN_CONTROLS = ControlGroups.getControlToColorMap(ControlGroups.MAIN_CONTROLS);
 
@@ -77,7 +75,7 @@ public class KeyColorService {
         List<Integer> remainingLogitechKeys = new LogitechKeysList();
         List<Integer> remainingHidKeys = new HidKeysList();
 
-        List<String> keys;
+        EliteBindList eliteBindList;
         List<Integer> setHidKeys;
         HashMap<Integer, AnimatedKey> animatedKeys = new HashMap<>();
         for(ControlGroup controlGroup : currentControlGroups) {
@@ -85,8 +83,8 @@ public class KeyColorService {
                 continue;
             }
             for(String control : controlGroup.controls) {
-                keys = eliteBindings.get(control);
-                if(keys != null) {
+                eliteBindList = eliteBindings.get(control);
+                if(eliteBindList != null) {
                     if(Arrays.equals(controlGroup.color, Colors.OTHER)) {
                         continue;
                     }
@@ -98,7 +96,7 @@ public class KeyColorService {
                             && statusState.conditionSatisfied(newStatus)
                         ) {
                             setHidKeys = KeyTools.setEliteKeysPulseFromColorArrays(
-                                eliteBindings.get(control),
+                                eliteBindList.getActiveKeys(),
                                 Colors.OTHER,
                                 MAIN_CONTROLS.get(control),
                                 Application.PULSE_DURATION,
@@ -107,11 +105,11 @@ public class KeyColorService {
                         } else {
                             if(KeyTools.isColorCacheEmpty()) {
                                 setHidKeys = KeyTools.setEliteKeysFromColorArray(
-                                    eliteBindings.get(control),
+                                    eliteBindList.getActiveKeys(),
                                     MAIN_CONTROLS.get(control)
                                 );
                             } else {
-                                setHidKeys = KeyTools.getHidsFromEliteKeys(eliteBindings.get(control));
+                                setHidKeys = KeyTools.getHidsFromEliteKeys(eliteBindList.getActiveKeys());
                                 for(Integer hidKey : setHidKeys) {
                                     Integer[] currentColor = KeyTools.getCurrentKeyHidColor(hidKey);
                                     if(currentColor != null) {
@@ -128,9 +126,9 @@ public class KeyColorService {
                         }
                     } else {
                         if(KeyTools.isColorCacheEmpty()) {
-                            setHidKeys = KeyTools.setEliteKeysFromColorArray(keys, controlGroup.color);
+                            setHidKeys = KeyTools.setEliteKeysFromColorArray(eliteBindList.getActiveKeys(), controlGroup.color);
                         } else {
-                            setHidKeys = KeyTools.getHidsFromEliteKeys(eliteBindings.get(control));
+                            setHidKeys = KeyTools.getHidsFromEliteKeys(eliteBindList.getActiveKeys());
                             for(Integer hidKey : setHidKeys) {
                                 Integer[] currentColor = KeyTools.getCurrentKeyHidColor(hidKey);
                                 if(currentColor != null) {
@@ -212,12 +210,12 @@ public class KeyColorService {
         if(currentControlGroups.allControls.contains(Controls.PlayerHUDModeToggle)) {
             if(isBitSet(newStatus.Flags, Flags.HUD_DISCOVERY_MODE)) {
                 KeyTools.setEliteKeysFromColorArray(
-                    eliteBindings.get(Controls.PlayerHUDModeToggle),
+                    eliteBindings.get(Controls.PlayerHUDModeToggle).getActiveKeys(),
                     Colors.HUD_MODE_DISCOVERY
                 );
             } else {
                 KeyTools.setEliteKeysFromColorArray(
-                    eliteBindings.get(Controls.PlayerHUDModeToggle),
+                    eliteBindings.get(Controls.PlayerHUDModeToggle).getActiveKeys(),
                     Colors.HUD_MODE_COMBAT
                 );
             }
