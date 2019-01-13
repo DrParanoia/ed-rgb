@@ -19,7 +19,8 @@ public class ControlGroups {
         new ControlGroup(Colors.CAMERA, new ArrayList<>(Arrays.asList(
             Controls.PhotoCameraToggle, Controls.PhotoCameraToggle_Buggy, Controls.VanityCameraScrollLeft,
             Controls.VanityCameraScrollRight, Controls.ToggleFreeCam, Controls.FreeCamToggleHUD,
-            Controls.FixCameraRelativeToggle, Controls.FixCameraWorldToggle, Controls.ToggleRotationLock
+            Controls.FixCameraRelativeToggle, Controls.FixCameraWorldToggle, Controls.ToggleRotationLock,
+            Controls.FreeCamSpeedInc, Controls.FreeCamSpeedDec
         ))),
         new ControlGroup(Colors.MOVEMENT_SPEED, new ArrayList<>(Arrays.asList(
             Controls.IncreaseEnginesPower
