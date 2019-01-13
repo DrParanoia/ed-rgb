@@ -1,5 +1,6 @@
 package com.bmc.elite;
 
+import com.bmc.elite.mappings.KeyMaps;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 
@@ -25,10 +26,10 @@ public class EliteKeyListener implements NativeKeyListener {
     }
 
     private void keyPressed(NativeKeyEvent nativeKeyEvent) {
-        LogUtils.log("Key pressed: " + nativeKeyEvent.paramString());
+        LogUtils.log("Key pressed: " + nativeKeyEvent.paramString() + " " + KeyMaps.getEliteKeyFromVirtual(nativeKeyEvent.getRawCode()));
     }
     private void keyReleased(NativeKeyEvent nativeKeyEvent) {
-        LogUtils.log("Key released: " + nativeKeyEvent.paramString());
+        LogUtils.log("Key released: " + nativeKeyEvent.paramString() + " " + KeyMaps.getEliteKeyFromVirtual(nativeKeyEvent.getRawCode()));
     }
 
     @Override

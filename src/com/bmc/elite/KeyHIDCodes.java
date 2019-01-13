@@ -2,7 +2,7 @@ package com.bmc.elite;
 
 public class KeyHIDCodes {
     /**
-     * Modifier masks - used for the first byte in the HID report.
+     * Modifier masks - used for the first byte in the ELITE_HID report.
      * NOTE: The second byte in the report is reserved, 0x00
      */
     public static final int KEY_MOD_LCTRL =  0x01;
@@ -15,10 +15,10 @@ public class KeyHIDCodes {
     public static final int KEY_MOD_RMETA =  0x80;
 
     /**
-     * Scan codes - last N slots in the HID report (usually 6).
+     * Scan codes - last N slots in the ELITE_HID report (usually 6).
      * 0x00 if no key pressed.
      *
-     * If more than N keys are pressed, the HID reports
+     * If more than N keys are pressed, the ELITE_HID reports
      * KEY_ERR_OVF in all slots to indicate this condition.
      */
 

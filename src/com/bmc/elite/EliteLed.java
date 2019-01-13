@@ -4,6 +4,7 @@ import com.bmc.elite.animations.AnimationHelper;
 import com.bmc.elite.callbacks.JournalCallback;
 import com.bmc.elite.config.Application;
 import com.bmc.elite.journal.JournalEvent;
+import com.bmc.elite.mappings.KeyMaps;
 import com.logitech.gaming.LogiLED;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;

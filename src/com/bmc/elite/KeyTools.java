@@ -1,7 +1,7 @@
 package com.bmc.elite;
 
 import com.bmc.elite.animations.AnimationHelper;
-import com.bmc.elite.mappings.EliteKeyMaps;
+import com.bmc.elite.mappings.KeyMaps;
 import com.logitech.gaming.LogiLED;
 import com.sun.istack.internal.Nullable;
 
@@ -36,8 +36,8 @@ public class KeyTools {
         List<Integer> hidKeys = new ArrayList<>();
 
         for(String eliteKeyName : eliteKeyNames) {
-            if(EliteKeyMaps.TO_HID.containsKey(eliteKeyName)) {
-                hidKeys.add(EliteKeyMaps.TO_HID.get(eliteKeyName));
+            if(KeyMaps.ELITE_HID.containsKey(eliteKeyName)) {
+                hidKeys.add(KeyMaps.ELITE_HID.get(eliteKeyName));
             }
         }
 
@@ -84,8 +84,8 @@ public class KeyTools {
     @Nullable
     public static Integer setEliteKeyFromColorArray(String eliteKeyName, Integer[] colorArray) {
         Integer logitechKey = null;
-        if(EliteKeyMaps.TO_HID.containsKey(eliteKeyName)) {
-            logitechKey = setKeyFromColorArray(EliteKeyMaps.TO_HID.get(eliteKeyName), colorArray);
+        if(KeyMaps.ELITE_HID.containsKey(eliteKeyName)) {
+            logitechKey = setKeyFromColorArray(KeyMaps.ELITE_HID.get(eliteKeyName), colorArray);
         }
 
         return logitechKey;
@@ -123,8 +123,8 @@ public class KeyTools {
         return logitechKeys;
     }
     public static Integer setEliteKeyPulseFromColorArrays(String eliteKeyName, Integer[] colorArray1, Integer[] colorArray2, int msDuration, boolean isInfinite) {
-        if(EliteKeyMaps.TO_HID.containsKey(eliteKeyName)) {
-            return setKeyPulseFromColorArrays(EliteKeyMaps.TO_HID.get(eliteKeyName), colorArray1, colorArray2, msDuration, isInfinite);
+        if(KeyMaps.ELITE_HID.containsKey(eliteKeyName)) {
+            return setKeyPulseFromColorArrays(KeyMaps.ELITE_HID.get(eliteKeyName), colorArray1, colorArray2, msDuration, isInfinite);
         }
 
         return null;
@@ -146,8 +146,8 @@ public class KeyTools {
         animationHelper.stopKeyAnimation(key);
     }
     public static void stopEliteKeyEffect(String eliteKeyName) {
-        if(EliteKeyMaps.TO_HID.containsKey(eliteKeyName)) {
-            stopKeyEffects(EliteKeyMaps.TO_HID.get(eliteKeyName));
+        if(KeyMaps.ELITE_HID.containsKey(eliteKeyName)) {
+            stopKeyEffects(KeyMaps.ELITE_HID.get(eliteKeyName));
         }
     }
     public static void stopEliteKeysEffect(List<String> eliteKeyNames) {
