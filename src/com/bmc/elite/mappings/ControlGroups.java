@@ -33,18 +33,22 @@ public class ControlGroups {
         })),
         new ControlGroup(Colors.MOVEMENT_SPEED, new ArrayList<>(Arrays.asList(
             Controls.SetSpeedMinus100, Controls.SetSpeedMinus75, Controls.SetSpeedMinus50,
-            Controls.SetSpeedMinus25, Controls.AutoBreakBuggyButton
+            Controls.SetSpeedMinus25
         )), new StatusState(null, new int[] {
             Flags.DOCKED, Flags.LANDED_PLANET, Flags.SUPERCRUISE
         })),
         new ControlGroup(Colors.MOVEMENT_SPEED, new ArrayList<>(Arrays.asList(
             Controls.OrderHoldPosition
         )), new StatusState(() -> journalStatus.getFighterStatus() != FighterStatus.None)),
-
         new ControlGroup(Colors.MOVEMENT_SPEED, new ArrayList<>(Arrays.asList(
             Controls.UseBoostJuice
         )), new StatusState(null, new int[] {
             Flags.DOCKED, Flags.LANDED_PLANET, Flags.SUPERCRUISE, Flags.LANDING_GEAR, Flags.CARGO_SCOOP
+        })),
+        new ControlGroup(Colors.MOVEMENT_SPEED, new ArrayList<>(Arrays.asList(
+            Controls.IncreaseSpeedButtonMax, Controls.DecreaseSpeedButtonMax, Controls.AutoBreakBuggyButton
+        )), new StatusState(new int[] {
+            Flags.IN_SRV
         })),
         new ControlGroup(Colors.MOVEMENT_SECONDARY, new ArrayList<>(Arrays.asList(
             Controls.RollLeftButton, Controls.RollRightButton, Controls.PitchUpButton, Controls.PitchDownButton
@@ -74,7 +78,8 @@ public class ControlGroups {
         new ControlGroup(Colors.NAVIGATION, new ArrayList<>(Arrays.asList(
             Controls.HyperSuperCombination, Controls.Supercruise, Controls.Hyperspace
         )), new StatusState(null, new int[] {
-            Flags.DOCKED, Flags.LANDED_PLANET, Flags.MASS_LOCK, Flags.LANDING_GEAR, Flags.HARDPOINTS, Flags.CARGO_SCOOP
+            Flags.DOCKED, Flags.LANDED_PLANET, Flags.MASS_LOCK, Flags.LANDING_GEAR, Flags.HARDPOINTS, Flags.CARGO_SCOOP,
+            Flags.IN_FIGHTER, Flags.IN_SRV
         })),
         new ControlGroup(Colors.NAVIGATION, new ArrayList<>(Arrays.asList(
             Controls.OrderRequestDock
@@ -88,9 +93,14 @@ public class ControlGroups {
              Flags.DOCKED, Flags.LANDED_PLANET, Flags.SUPERCRUISE
         })),
         new ControlGroup(Colors.SHIP_STUFF, new ArrayList<>(Arrays.asList(
-            Controls.ToggleCargoScoop, Controls.ToggleCargoScoop_Buggy, Controls.LandingGearToggle
+            Controls.ToggleCargoScoop_Buggy
+        )), new StatusState(new int[] {
+            Flags.IN_SRV
+        }, null)),
+        new ControlGroup(Colors.SHIP_STUFF, new ArrayList<>(Arrays.asList(
+            Controls.ToggleCargoScoop, Controls.LandingGearToggle
         )), new StatusState(null, new int[] {
-             Flags.DOCKED, Flags.LANDED_PLANET, Flags.SUPERCRUISE, Flags.IN_FIGHTER
+             Flags.IN_SRV
         })),
         new ControlGroup(Colors.DEFENCE, new ArrayList<>(Arrays.asList(
             Controls.IncreaseSystemsPower
@@ -98,22 +108,22 @@ public class ControlGroups {
         new ControlGroup(Colors.DEFENCE, new ArrayList<>(Arrays.asList(
             Controls.ChargeECM
         )), new StatusState(null, new int[] {
-            Flags.DOCKED, Flags.LANDED_PLANET
+            Flags.DOCKED, Flags.LANDED_PLANET, Flags.IN_SRV
         })),
         new ControlGroup(Colors.DEFENCE, new ArrayList<>(Arrays.asList(
             Controls.FireChaffLauncher
         )), new StatusState(null, new int[]{
-            Flags.DOCKED, Flags.LANDED_PLANET, Flags.SUPERCRUISE
+            Flags.DOCKED, Flags.LANDED_PLANET, Flags.SUPERCRUISE, Flags.IN_SRV
         }, () -> journalStatus.hasChaff())),
         new ControlGroup(Colors.DEFENCE, new ArrayList<>(Arrays.asList(
             Controls.DeployHeatSink
         )), new StatusState(null, new int[]{
-            Flags.DOCKED, Flags.LANDED_PLANET
+            Flags.DOCKED, Flags.LANDED_PLANET, Flags.IN_SRV
         }, () -> journalStatus.hasHeatSink())),
         new ControlGroup(Colors.DEFENCE, new ArrayList<>(Arrays.asList(
             Controls.UseShieldCell
         )), new StatusState(null, new int[] {
-            Flags.DOCKED, Flags.LANDED_PLANET
+            Flags.DOCKED, Flags.LANDED_PLANET, Flags.IN_SRV
         }, () -> journalStatus.hasShieldCellBank())),
         new ControlGroup(Colors.DEFENCE, new ArrayList<>(Arrays.asList(
             Controls.OrderDefensiveBehaviour
