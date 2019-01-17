@@ -7,6 +7,6 @@ public class Status {
     public Integer[] Pips;
     public int FireGroup;
     public int GuiFocus;
-    public double Fuel;
+    public StatusFuel Fuel;
     public double Cargo;
 }
