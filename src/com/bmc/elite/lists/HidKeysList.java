@@ -60,6 +60,7 @@ public class HidKeysList extends ArrayList<Integer> {
             KeyHIDCodes.KEY_LEFTBRACE,
             KeyHIDCodes.KEY_RIGHTBRACE,
             KeyHIDCodes.KEY_HASHTILDE,
+            KeyHIDCodes.KEY_BACKSLASH,
             KeyHIDCodes.KEY_DELETE,
             KeyHIDCodes.KEY_END,
             KeyHIDCodes.KEY_PAGEDOWN,
