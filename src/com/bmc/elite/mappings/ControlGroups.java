@@ -16,16 +16,19 @@ public class ControlGroups {
     static JournalStatus journalStatus = JournalStatus.getInstance();
 
     public static ControlGroupList MAIN_CONTROLS = new ControlGroupList(Arrays.asList(
-        new ControlGroup(Colors.CAMERA, new ArrayList<>(Arrays.asList(
+		/*---------------CAMERA---------------*/
+		/*new ControlGroup(Colors.CAMERA, new ArrayList<>(Arrays.asList(
             Controls.PhotoCameraToggle, Controls.PhotoCameraToggle_Buggy, Controls.VanityCameraScrollLeft,
             Controls.VanityCameraScrollRight, Controls.ToggleFreeCam, Controls.FreeCamToggleHUD,
             Controls.FixCameraRelativeToggle, Controls.FixCameraWorldToggle, Controls.ToggleRotationLock,
             Controls.FreeCamSpeedInc, Controls.FreeCamSpeedDec
-        ))),
-        new ControlGroup(Colors.MOVEMENT_SPEED, new ArrayList<>(Arrays.asList(
-            Controls.IncreaseEnginesPower
-        ))),
-        new ControlGroup(Colors.MOVEMENT_SPEED, new ArrayList<>(Arrays.asList(
+        ))),*/
+
+		/*---------------MOVEMENT_SPEED---------------*/
+		new ControlGroup(Colors.MOVEMENT_SPEED, new ArrayList<>(Arrays.asList(
+			Controls.IncreaseEnginesPower
+		))),
+		new ControlGroup(Colors.MOVEMENT_SPEED, new ArrayList<>(Arrays.asList(
             Controls.ForwardKey, Controls.BackwardKey, Controls.SetSpeedZero,
             Controls.SetSpeed25, Controls.SetSpeed50, Controls.SetSpeed75, Controls.SetSpeed100
         )), new StatusState(null, new int[] {
@@ -50,7 +53,9 @@ public class ControlGroups {
         )), new StatusState(new int[] {
             Flags.IN_SRV
         })),
-        new ControlGroup(Colors.MOVEMENT_SECONDARY, new ArrayList<>(Arrays.asList(
+
+		/*---------------MOVEMENT_SECONDARY---------------*/
+		new ControlGroup(Colors.MOVEMENT_SECONDARY, new ArrayList<>(Arrays.asList(
             Controls.RollLeftButton, Controls.RollRightButton, Controls.PitchUpButton, Controls.PitchDownButton
         )), new StatusState(null, new int[] {
             Flags.DOCKED, Flags.LANDED_PLANET
@@ -64,28 +69,46 @@ public class ControlGroups {
         new ControlGroup(Colors.MOVEMENT_SECONDARY, new ArrayList<>(Arrays.asList(
             Controls.OrderFollow
         )), new StatusState(() -> journalStatus.getFighterStatus() != FighterStatus.None)),
-        new ControlGroup(Colors.UI, new ArrayList<>(Arrays.asList(
+
+		/*---------------UI---------------*/
+		new ControlGroup(Colors.UI, new ArrayList<>(Arrays.asList(
             Controls.FocusLeftPanel, Controls.FocusCommsPanel, Controls.QuickCommsPanel,
-            Controls.FocusRadarPanel, Controls.FocusRightPanel, Controls.UI_Select, Controls.PlayerHUDModeToggle
+            Controls.FocusRadarPanel, Controls.FocusRightPanel, Controls.UI_Select
         ))),
+        new ControlGroup(Colors.UI, new ArrayList<>(Arrays.asList(
+            Controls.UI_Left, Controls.UI_Right, Controls.UI_Up, Controls.UI_Down, Controls.UI_Select
+        )), new StatusState(new int[] {
+            Flags.DOCKED
+        })),
+        new ControlGroup(Colors.UI, new ArrayList<>(Arrays.asList(
+            Controls.UI_Left, Controls.UI_Right, Controls.UI_Up, Controls.UI_Down
+        )), new StatusState(new int[] {
+            Flags.LANDED_PLANET
+        })),
         new ControlGroup(Colors.UI, new ArrayList<>(Arrays.asList(
             Controls.OrderAggressiveBehaviour
         )), new StatusState(() -> journalStatus.getFighterStatus() != FighterStatus.None)),
 
-        new ControlGroup(Colors.NAVIGATION, new ArrayList<>(Arrays.asList(
+		/*---------------NAVIGATION---------------*/
+		new ControlGroup(Colors.NAVIGATION, new ArrayList<>(Arrays.asList(
             Controls.GalaxyMapOpen, Controls.SystemMapOpen, Controls.TargetNextRouteSystem
         ))),
         new ControlGroup(Colors.NAVIGATION, new ArrayList<>(Arrays.asList(
             Controls.HyperSuperCombination, Controls.Supercruise, Controls.Hyperspace
         )), new StatusState(null, new int[] {
             Flags.DOCKED, Flags.LANDED_PLANET, Flags.MASS_LOCK, Flags.LANDING_GEAR, Flags.HARDPOINTS, Flags.CARGO_SCOOP,
-            Flags.IN_FIGHTER, Flags.IN_SRV
+            Flags.IN_FIGHTER, Flags.IN_SRV, Flags.FSD_COOLDOWN
         })),
         new ControlGroup(Colors.NAVIGATION, new ArrayList<>(Arrays.asList(
             Controls.OrderRequestDock
         )), new StatusState(() -> journalStatus.getFighterStatus() != FighterStatus.None)),
+
+		/*---------------SHIP_STUFF---------------*/
+		new ControlGroup(Colors.SHIP_STUFF, new ArrayList<>(Arrays.asList(
+			Controls.ResetPowerDistribution
+		))),
         new ControlGroup(Colors.SHIP_STUFF, new ArrayList<>(Arrays.asList(
-            Controls.ShipSpotLightToggle, Controls.HeadlightsBuggyButton, Controls.MODIFIER, Controls.NightVisionToggle
+            Controls.ShipSpotLightToggle, Controls.HeadlightsBuggyButton, Controls.NightVisionToggle
         ))),
         new ControlGroup(Colors.SHIP_STUFF, new ArrayList<>(Arrays.asList(
             Controls.ToggleFlightAssist
@@ -98,13 +121,15 @@ public class ControlGroups {
             Flags.IN_SRV
         }, null)),
         new ControlGroup(Colors.SHIP_STUFF, new ArrayList<>(Arrays.asList(
-            Controls.ToggleCargoScoop, Controls.LandingGearToggle
+            Controls.ToggleCargoScoop, Controls.LandingGearToggle, Controls.ToggleButtonUpInput
         )), new StatusState(null, new int[] {
-             Flags.IN_SRV
+             Flags.IN_SRV, Flags.SUPERCRUISE, Flags.IN_FIGHTER, Flags.DOCKED, Flags.LANDED_PLANET
         })),
-        new ControlGroup(Colors.DEFENCE, new ArrayList<>(Arrays.asList(
-            Controls.IncreaseSystemsPower
-        ))),
+
+		/*---------------DEFENCE---------------*/
+		new ControlGroup(Colors.DEFENCE, new ArrayList<>(Arrays.asList(
+			Controls.IncreaseSystemsPower
+		))),
         new ControlGroup(Colors.DEFENCE, new ArrayList<>(Arrays.asList(
             Controls.ChargeECM
         )), new StatusState(null, new int[] {
@@ -129,13 +154,14 @@ public class ControlGroups {
             Controls.OrderDefensiveBehaviour
         )), new StatusState(() -> journalStatus.getFighterStatus() != FighterStatus.None)),
 
-        new ControlGroup(Colors.OFFENCE, new ArrayList<>(Arrays.asList(
-            Controls.IncreaseWeaponsPower, Controls.CycleFireGroupPrevious
+		/*---------------OFFENCE---------------*/
+		new ControlGroup(Colors.OFFENCE, new ArrayList<>(Arrays.asList(
+            Controls.IncreaseWeaponsPower
         ))),
         new ControlGroup(Colors.OFFENCE, new ArrayList<>(Arrays.asList(
-            Controls.CycleFireGroupNext, Controls.SelectHighestThreat,
-            Controls.CycleNextSubsystem, Controls.CyclePreviousSubsystem, Controls.CycleNextHostileTarget,
-            Controls.CyclePreviousHostileTarget
+            Controls.CycleFireGroupPrevious, Controls.CycleFireGroupNext,
+            Controls.SelectHighestThreat, Controls.CycleNextSubsystem, Controls.CyclePreviousSubsystem,
+            Controls.CycleNextHostileTarget, Controls.CyclePreviousHostileTarget
         )), new StatusState(null, new int[] {
             Flags.DOCKED, Flags.LANDED_PLANET
         })),
@@ -148,7 +174,8 @@ public class ControlGroups {
             Controls.OrderFocusTarget
         )), new StatusState(() -> journalStatus.getFighterStatus() != FighterStatus.None)),
 
-        new ControlGroup(Colors.WING, new ArrayList<>(Arrays.asList(
+		/*---------------WING---------------*/
+		new ControlGroup(Colors.WING, new ArrayList<>(Arrays.asList(
             Controls.TargetWingman0, Controls.TargetWingman1,
             Controls.TargetWingman2, Controls.SelectTargetsTarget, Controls.WingNavLock
         )), new StatusState(new int[] {
@@ -158,7 +185,11 @@ public class ControlGroups {
             Controls.OrderHoldFire
         )), new StatusState(() -> journalStatus.getFighterStatus() != FighterStatus.None)),
 
+		/*---------------MODE_ENABLE---------------*/
         new ControlGroup(Colors.MODE_ENABLE, new ArrayList<>(Arrays.asList(
+            Controls.PlayerHUDModeToggle
+        ))),
+		new ControlGroup(Colors.MODE_ENABLE, new ArrayList<>(Arrays.asList(
             Controls.ExplorationFSSEnter
         )), new StatusState(
             new int[] {
@@ -167,18 +198,7 @@ public class ControlGroups {
             new int[] {
                 Flags.DOCKED, Flags.LANDED_PLANET
             })
-        ),
-
-        new ControlGroup(Colors.UI, new ArrayList<>(Arrays.asList(
-            Controls.UI_Left, Controls.UI_Right, Controls.UI_Up, Controls.UI_Down
-        )), new StatusState(new int[] {
-            Flags.DOCKED
-        })),
-        new ControlGroup(Colors.UI, new ArrayList<>(Arrays.asList(
-            Controls.UI_Left, Controls.UI_Right, Controls.UI_Up, Controls.UI_Down
-        )), new StatusState(new int[] {
-            Flags.LANDED_PLANET
-        }))
+        )
     ));
 
     public static ControlGroupList SYSTEM_MAP = new ControlGroupList(Arrays.asList(
@@ -218,6 +238,35 @@ public class ControlGroups {
         }
     };
 
+    public static ControlGroupList FSS = new ControlGroupList(Arrays.asList(
+        new ControlGroup(Colors.OFFENCE, new ArrayList<>(Arrays.asList(
+            Controls.ExplorationFSSTarget
+        ))),
+        new ControlGroup(Colors.MODE_ENABLE, new ArrayList<>(Arrays.asList(
+            Controls.ExplorationFSSQuit
+        ))),
+        new ControlGroup(Colors.MOVEMENT_SPEED, new ArrayList<>(Arrays.asList(
+            Controls.ExplorationFSSCameraPitchDecreaseButton,
+            Controls.ExplorationFSSCameraPitchIncreaseButton,
+            Controls.ExplorationFSSCameraYawDecreaseButton,
+            Controls.ExplorationFSSCameraYawIncreaseButton
+        ))),
+        new ControlGroup(Colors.MOVEMENT_SECONDARY, new ArrayList<>(Arrays.asList(
+            Controls.ExplorationFSSMiniZoomIn,
+            Controls.ExplorationFSSMiniZoomOut,
+            Controls.ExplorationFSSZoomIn,
+            Controls.ExplorationFSSZoomOut
+        ))),
+        new ControlGroup(Colors.NAVIGATION, new ArrayList<>(Arrays.asList(
+            Controls.ExplorationFSSRadioTuningX_Increase,
+            Controls.ExplorationFSSRadioTuningX_Decrease
+        ))),
+        new ControlGroup(Colors.SHIP_STUFF, new ArrayList<>(Arrays.asList(
+            Controls.ExplorationFSSDiscoveryScan
+        )))
+    ));
+    public static ControlGroupList ADS = new ControlGroupList(Arrays.asList());
+
     public static final HashMap<Integer, ControlGroupList> UI_MODE_CONTROLS =
         new HashMap<Integer, ControlGroupList>() {
             {
@@ -225,6 +274,9 @@ public class ControlGroups {
                 put(GuiFocus.MAP_SYSTEM, SYSTEM_MAP);
                 put(GuiFocus.MAP_GALAXY, GALAXY_MAP);
                 put(GuiFocus.MAP_ORRERY, get(GuiFocus.MAP_GALAXY));
+
+                put(GuiFocus.MODE_FSS, FSS);
+                put(GuiFocus.MODE_ADS, ADS);
 
                 put(GuiFocus.PANEL_SYSTEMS, UI_PANELS);
                 put(GuiFocus.PANEL_NAV, get(GuiFocus.PANEL_SYSTEMS));
