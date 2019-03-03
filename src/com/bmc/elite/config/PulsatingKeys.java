@@ -39,6 +39,9 @@ public class PulsatingKeys extends HashMap<String, StatusState> {
         put(Controls.AutoBreakBuggyButton, new StatusState(
             new int[] {Flags.IN_SRV, Flags.SRV_HANDBRAKE}
         ));
+        put(Controls.HyperSuperCombination, new StatusState(
+            new int[] {Flags.FSD_CHARGING}
+        ));
         put(Controls.ToggleButtonUpInput, new StatusState( //this is silent running
                 new int[] {Flags.SILENT_RUNNING}
         ));
