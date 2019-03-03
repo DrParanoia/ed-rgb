@@ -1,6 +1,7 @@
 package com.bmc.elite.gui;
 
 import com.bmc.elite.EliteProcessWatcherRunnable;
+import com.bmc.elite.config.Application;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -22,10 +23,13 @@ public class MainWindow extends JFrame {
         setSize(500, 300);
         add(contentPanel);
 
-        PrintStream systemOutputStream = new PrintStream(new TextAreaOutputStream(consoleOutputTextArea));
+        if (Application.USE_WINDOW)
+        {
+            PrintStream systemOutputStream = new PrintStream(new TextAreaOutputStream(consoleOutputTextArea));
 
-        System.setOut(systemOutputStream);
-        System.setErr(systemOutputStream);
+            System.setOut(systemOutputStream);
+            System.setErr(systemOutputStream);
+        }
 
         addWindowFocusListener(new WindowFocusListener() {
             @Override
@@ -45,7 +49,7 @@ public class MainWindow extends JFrame {
             e.printStackTrace();
         }
 
-        setVisible(true);
+        setVisible(Application.USE_WINDOW);
         new Thread(new EliteProcessWatcherRunnable()).start();
     }
 }
