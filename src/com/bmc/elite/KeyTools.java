@@ -157,4 +157,11 @@ public class KeyTools {
             }
         }
     }
+    public static Integer dimEliteKeyFromColorArray(String eliteKeyName, Integer[] colorArray, double percent) {
+        Integer[] newColor = {(int)(colorArray[0]*percent), (int)(colorArray[1]*percent), (int)(colorArray[2]*percent)};
+        /*colorArray[0] = colorArray[0]*(percent/100);
+        colorArray[1] = colorArray[1]*(percent/100);
+        colorArray[2] = colorArray[2]*(percent/100);*/
+        return setEliteKeyFromColorArray(eliteKeyName, newColor);
+    }
 }
