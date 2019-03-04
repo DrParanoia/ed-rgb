@@ -67,7 +67,7 @@ public class Controls {
     public static final String CycleFireGroupNext = "CycleFireGroupNext";
     public static final String CycleFireGroupPrevious = "CycleFireGroupPrevious";
     public static final String DeployHardpointToggle = "DeployHardpointToggle";
-    public static final String ToggleButtonUpInput = "ToggleButtonUpInput";
+    public static final String ToggleButtonUpInput = "ToggleButtonUpInput"; //this is silent running, no idea y
     public static final String DeployHeatSink = "DeployHeatSink";
     public static final String ShipSpotLightToggle = "ShipSpotLightToggle";
     public static final String RadarIncreaseRange = "RadarIncreaseRange";

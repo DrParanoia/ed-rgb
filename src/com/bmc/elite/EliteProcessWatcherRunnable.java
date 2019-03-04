@@ -22,6 +22,7 @@ public class EliteProcessWatcherRunnable implements Runnable {
     public static final String ELITE_EXECUTABLE_CHECK = "EliteDangerous64.exe";
     public static final String JAVA_EXECUTABLE_CHECK = "java.exe";
     public static final String JAVA_EXECUTABLE_CHECK_ALT = "javaw.exe";
+    public static final String INTELLIJ_EXECUTABLE_CHECK = "idea64.exe";
 
     public EliteProcessWatcherRunnable() {
         eliteLed = new EliteLed();
@@ -46,6 +47,7 @@ public class EliteProcessWatcherRunnable implements Runnable {
                             (
                                 activeWindowExe.equals(JAVA_EXECUTABLE_CHECK)
                                 || activeWindowExe.equals(JAVA_EXECUTABLE_CHECK_ALT)
+                                || activeWindowExe.equals(INTELLIJ_EXECUTABLE_CHECK)
                             )
                             && MainWindow.IN_FOCUS
                         ) {
