@@ -28,5 +28,6 @@
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.6" level="project" />
     <orderEntry type="library" name="Maven: com.logitech:gaming:1.0" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains:annotations:16.0.2" level="project" />
+    <orderEntry type="library" name="annotations-16.0.2" level="project" />
   </component>
 </module>
