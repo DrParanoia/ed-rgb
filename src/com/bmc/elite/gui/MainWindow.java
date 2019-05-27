@@ -16,17 +16,18 @@ public class MainWindow extends JFrame {
 	private JTextArea consoleOutputTextArea;
 	private JScrollPane mainScrollPane;
 
-    public static boolean IN_FOCUS = false;
+	public static boolean IN_FOCUS = false;
+	public static boolean USE_WINDOW;
 
-    public MainWindow() {
-        super("Logitech RGB for Elite: Dangerous");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(500, 300);
-        add(contentPanel);
+	public MainWindow(boolean useWindow) {
+		super("Logitech RGB for Elite: Dangerous");
+		USE_WINDOW = useWindow;
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setSize(500, 300);
+		add(contentPanel);
 
-        if (Application.USE_WINDOW)
-        {
-            PrintStream systemOutputStream = new PrintStream(new TextAreaOutputStream(consoleOutputTextArea));
+		if (USE_WINDOW) {
+			PrintStream systemOutputStream = new PrintStream(new TextAreaOutputStream(consoleOutputTextArea));
 
 			System.setOut(systemOutputStream);
 			System.setErr(systemOutputStream);
@@ -50,10 +51,9 @@ public class MainWindow extends JFrame {
 			e.printStackTrace();
 		}
 
-        setVisible(Application.USE_WINDOW);
-        new Thread(new EliteProcessWatcherRunnable()).start();
-    }
-}
+		setVisible(USE_WINDOW);
+		new Thread(new EliteProcessWatcherRunnable()).start();
+	}
 
 	//this is for if the binds file cant be found. it will ask the user to manually select it.
 	public static File MissingBinds() {

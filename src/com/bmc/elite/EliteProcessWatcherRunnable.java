@@ -49,7 +49,7 @@ public class EliteProcessWatcherRunnable implements Runnable {
                                 || activeWindowExe.equals(JAVA_EXECUTABLE_CHECK_ALT)
                                 || activeWindowExe.equals(INTELLIJ_EXECUTABLE_CHECK)
                             )
-                            && MainWindow.IN_FOCUS
+                            && (MainWindow.IN_FOCUS || !MainWindow.USE_WINDOW)
                         ) {
                             if(Application.DEBUG) LogUtils.log("Highlighting app gained focus, starting highlighting");
                             lastFocusedProcess = activeWindowExe;

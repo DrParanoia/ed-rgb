@@ -4,6 +4,12 @@ import com.bmc.elite.gui.MainWindow;
 
 public class Main {
     public static void main(String[] args) {
-        new MainWindow();
+        boolean useWindow = true;
+        for (String s: args) {
+            if (s.equalsIgnoreCase("-nowindow")) {
+                useWindow = false;
+            }
+        }
+        new MainWindow(useWindow);
     }
 }
