@@ -22,6 +22,7 @@ public class BindingParser {
             + File.separator + "Elite Dangerous"
             + File.separator + "Options"
             + File.separator + "Bindings";
+    public static String DEFAULT_BINDINGS_PATH = "src/defaultBinds";
 
     public static String PRESET_FILE = FRONTIER_BINDINGS_PATH + File.separator + "StartPreset.start";
 
@@ -42,20 +43,32 @@ public class BindingParser {
         String presetName = FileUtils.readFile(PRESET_FILE).trim();
 
         File bindingsFolder = new File(FRONTIER_BINDINGS_PATH);
-        String currentFileName;
         if(Application.DEBUG) LogUtils.log("Searching for preset: " + presetName);
-        for (final File fileEntry : bindingsFolder.listFiles()) {
-            if (!fileEntry.isDirectory()) {
-                currentFileName = fileEntry.getName();
-                if(currentFileName.endsWith(".binds")) {
-                    if(currentFileName.startsWith(presetName + ".")) {
-                        if(Application.DEBUG) LogUtils.log("Found bindings: " + currentFileName);
-                        bindingsFile = fileEntry;
-                        break;
-                    }
+		for (final File fileEntry : bindingsFolder.listFiles()) {
+			if (!fileEntry.isDirectory() && fileEntry.getName().startsWith(presetName) && fileEntry.getName().endsWith(".binds")) {
+                if(Application.DEBUG) LogUtils.log("Found bindings: " + fileEntry.getName());
+                bindingsFile =  fileEntry;
+                break;
+            }
+		}
+
+        if (bindingsFile == null) {
+            if(Application.DEBUG) LogUtils.log("Could not find preset. Searching default presets.");
+            bindingsFolder = new File(DEFAULT_BINDINGS_PATH);
+            for (final File fileEntry : bindingsFolder.listFiles()) {
+                if (!fileEntry.isDirectory() && fileEntry.getName().equals(presetName + ".binds")) {
+                    if(Application.DEBUG) LogUtils.log("Found bindings: " + fileEntry.getName());
+                    bindingsFile =  fileEntry;
+                    break;
                 }
             }
         }
+
+        //TODO find way to handle default binds that are stored in the games install path, using the same as above works but not sure how to find the install path.
+		if (bindingsFile == null) {
+			LogUtils.log("Could not find preset: " + presetName);
+			bindingsFile = MainWindow.MissingBinds();
+		}
 
         return bindingsFile;
     }
