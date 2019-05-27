@@ -60,7 +60,7 @@ public class BindingParser {
         return bindingsFile;
     }
 
-    public static HashMap<String, EliteBindList> getBindings(boolean resetBindings) {
+	public static HashMap<String, EliteBindList> getBindings(boolean resetBindings) {
         if(!resetBindings && bindings != null) {
             return bindings;
         }
