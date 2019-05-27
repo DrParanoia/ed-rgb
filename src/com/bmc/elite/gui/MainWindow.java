@@ -5,9 +5,10 @@ import com.bmc.elite.config.Application;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
+import java.io.File;
 import java.io.PrintStream;
 
 public class MainWindow extends JFrame {
@@ -52,4 +53,19 @@ public class MainWindow extends JFrame {
         setVisible(Application.USE_WINDOW);
         new Thread(new EliteProcessWatcherRunnable()).start();
     }
+}
+
+	//this is for if the binds file cant be found. it will ask the user to manually select it.
+	public static File MissingBinds() {
+		JFileChooser chooser = new JFileChooser();
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Preset files", "binds");
+		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		chooser.setFileFilter(filter);
+		chooser.setDialogTitle("Please select your preset file.");
+		int returnVal = chooser.showOpenDialog(null);
+		if (returnVal == JFileChooser.CANCEL_OPTION || returnVal == JFileChooser.ERROR_OPTION) {
+			System.exit(1);
+		}
+		return chooser.getSelectedFile();
+	}
 }

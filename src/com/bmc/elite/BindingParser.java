@@ -1,6 +1,7 @@
 package com.bmc.elite;
 
 import com.bmc.elite.config.Application;
+import com.bmc.elite.gui.MainWindow;
 import com.bmc.elite.mappings.Controls;
 import com.bmc.elite.models.EliteBind;
 import com.bmc.elite.models.EliteBindList;
