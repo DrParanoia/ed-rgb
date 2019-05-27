@@ -96,16 +96,20 @@ public class BindingParser {
         String keyName = "";
         if(bind != null) {
             bindAttributes = bind.getAttributes();
-            if(bindAttributes.getNamedItem("Device").getTextContent().equals("Keyboard")) {
-                keyName = bindAttributes.getNamedItem("Key").getTextContent();
+            if(bindAttributes.getNamedItem("Device").getTextContent().equalsIgnoreCase("Keyboard")) {
+                try {
+                    keyName = bindAttributes.getNamedItem("Key").getTextContent();
+                } catch (Exception e) {
+                    keyName = bindAttributes.getNamedItem("key").getTextContent();
+                }
             }
             if(bind.hasChildNodes()) {
                 NodeList bindChildren = bind.getChildNodes();
                 for(int i = 0, length = bindChildren.getLength(); i < length; i++) {
                     Node bindChild = bindChildren.item(i);
-                    if(bindChild.getNodeName().equals("Modifier")) {
+                    if(bindChild.getNodeName().equalsIgnoreCase("Modifier")) {
                         modifierAttributes = bindChild.getAttributes();
-                        if(modifierAttributes.getNamedItem("Device").getTextContent().equals("Keyboard")) {
+                        if(modifierAttributes.getNamedItem("Device").getTextContent().equalsIgnoreCase("Keyboard")) {
                             String modifierKey = modifierAttributes.getNamedItem("Key").getTextContent();
 
                             // TODO: Current modifier highlighting logic is a hack. Needs to be redone.
