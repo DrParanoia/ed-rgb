@@ -5,7 +5,7 @@ import com.bmc.elite.gui.MainWindow;
 import com.bmc.elite.mappings.Controls;
 import com.bmc.elite.models.EliteBind;
 import com.bmc.elite.models.EliteBindList;
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.*;
 
 import javax.xml.parsers.DocumentBuilder;

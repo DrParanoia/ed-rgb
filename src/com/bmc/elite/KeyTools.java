@@ -3,7 +3,7 @@ package com.bmc.elite;
 import com.bmc.elite.animations.AnimationHelper;
 import com.bmc.elite.mappings.KeyMaps;
 import com.logitech.gaming.LogiLED;
-import com.sun.istack.internal.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
