@@ -75,6 +75,16 @@ public class ControlGroups {
 			Controls.FocusLeftPanel, Controls.FocusCommsPanel, Controls.QuickCommsPanel,
 			Controls.FocusRadarPanel, Controls.FocusRightPanel, Controls.UI_Select
 		))),
+        new ControlGroup(Colors.UI, new ArrayList<>(Arrays.asList(
+            Controls.UI_Left, Controls.UI_Right, Controls.UI_Up, Controls.UI_Down, Controls.UI_Select
+        )), new StatusState(new int[] {
+            Flags.DOCKED
+        })),
+        new ControlGroup(Colors.UI, new ArrayList<>(Arrays.asList(
+            Controls.UI_Left, Controls.UI_Right, Controls.UI_Up, Controls.UI_Down
+        )), new StatusState(new int[] {
+            Flags.LANDED_PLANET
+        })),
 		new ControlGroup(Colors.UI, new ArrayList<>(Arrays.asList(
 			Controls.UI_Left, Controls.UI_Right, Controls.UI_Up, Controls.UI_Down, Controls.UI_Select
 		)), new StatusState(new int[] {
