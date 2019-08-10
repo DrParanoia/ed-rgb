@@ -19,7 +19,7 @@ public class MainWindow extends JFrame {
 	public static boolean IN_FOCUS = false;
 	public static boolean USE_WINDOW;
 
-	public MainWindow(boolean useWindow) {
+	public MainWindow(boolean useWindow, boolean alwaysHighlight) {
 		super("Logitech RGB for Elite: Dangerous");
 		USE_WINDOW = useWindow;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -52,7 +52,7 @@ public class MainWindow extends JFrame {
 		}
 
 		setVisible(USE_WINDOW);
-		new Thread(new EliteProcessWatcherRunnable()).start();
+		new Thread(new EliteProcessWatcherRunnable(alwaysHighlight)).start();
 	}
 
 	//this is for if the binds file cant be found. it will ask the user to manually select it.
