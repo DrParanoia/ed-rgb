@@ -57,7 +57,7 @@ public class EliteProcessWatcherRunnable implements Runnable {
                             if(Application.DEBUG) LogUtils.log("Elite gained focus, starting highlighting");
                             lastFocusedProcess = activeWindowExe;
                         } else if(!lastFocusedProcess.isEmpty()) {
-                            if(Application.DEBUG && !lastFocusedProcess.isEmpty()) LogUtils.log(lastFocusedProcess + " lost focus, stopping highlighting");
+                            if(Application.DEBUG && !lastFocusedProcess.isEmpty()) LogUtils.log("Focus swaped from " + lastFocusedProcess + " to " + activeWindowExe + ", stopping highlighting");
                             lastFocusedProcess = "";
                             eliteLed.disable();
                         }
