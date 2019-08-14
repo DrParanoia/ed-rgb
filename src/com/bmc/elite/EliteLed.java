@@ -63,6 +63,7 @@ public class EliteLed {
             }
         }
     }
+
     public void disable() {
         if(enabled) {
             try {

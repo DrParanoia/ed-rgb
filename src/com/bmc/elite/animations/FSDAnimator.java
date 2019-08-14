@@ -1,6 +1,8 @@
 package com.bmc.elite.animations;
 
 import com.bmc.elite.KeyTools;
+import com.bmc.elite.LogUtils;
+import com.bmc.elite.config.Application;
 import com.bmc.elite.journal.enums.JumpType;
 import com.bmc.elite.journal.events.StartJump;
 import com.bmc.elite.lists.LogitechKeysList;
@@ -30,6 +32,7 @@ public class FSDAnimator {
                     starType = null;
                 }
                 FSDCountdown();
+                if (Application.DEBUG) LogUtils.log(starType);
                 break;
             case SupercruiseEntry:
                 chargingFSD = false;
@@ -53,8 +56,9 @@ public class FSDAnimator {
     public void playHyperspaceAnimation() {
         animationHelper.playFromFile("hyperspace_2.eft", 6, true);
     }
+
     public void stopHyperspaceAnimation() {
-        animationHelper.stopPlayingFile("hyperspace.eft");
+        animationHelper.stopPlayingFile("hyperspace_2.eft");
 
         String starFileName = "star_entry_" + starType + ".eft";
         if(getClass().getResource("/eft/" + starFileName) != null) {

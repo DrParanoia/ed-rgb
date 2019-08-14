@@ -176,6 +176,7 @@ public class KeyColorService {
 	public void updateStatus() {
 		updateStatus(FileUtils.readFile(Application.STATUS_FILE_PATH));
 	}
+
 	public void updateStatus(String statusJson) {
 		try {
 			Status newStatus = gson.fromJson(statusJson, Status.class);
